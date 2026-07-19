@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Why your AI agent is flaky — and 7 rules that fix it · Penloom</title>
+<meta name="description" content="A flaky AI agent is almost never a model problem — it's a specification problem. Seven concrete reliability rules plus three paste-able Claude Code guardrails." />
+<link rel="canonical" href="https://penloomstudio.com/reliable-agents.html" />
+<meta property="og:site_name" content="Penloom" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://penloomstudio.com/reliable-agents.html" />
+<meta property="og:title" content="Why your AI agent is flaky — and 7 rules that make it reliable" />
+<meta property="og:description" content="A flaky agent is almost never a model problem. Seven rules — and three paste-able Claude Code guardrails — that turn a demo into something you can ship." />
+<meta property="og:image" content="https://penloomstudio.com/penloom-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Why your AI agent is flaky — and 7 rules that make it reliable" />
+<meta name="twitter:description" content="A flaky agent is almost never a model problem — it's a specification problem. Seven rules plus three paste-able Claude Code guardrails." />
+<meta name="twitter:image" content="https://penloomstudio.com/penloom-card.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Why your AI agent is flaky — and 7 rules that make it reliable",
+  "description": "A flaky AI agent is almost never a model problem — it's a specification problem. Seven concrete reliability rules plus three paste-able Claude Code guardrails.",
+  "image": "https://penloomstudio.com/penloom-card.png",
+  "isAccessibleForFree": true,
+  "author": { "@type": "Organization", "name": "Penloom", "url": "https://penloomstudio.com/" },
+  "publisher": { "@type": "Organization", "name": "Penloom", "logo": { "@type": "ImageObject", "url": "https://penloomstudio.com/penloom-card.png" } },
+  "mainEntityOfPage": "https://penloomstudio.com/reliable-agents.html"
+}
+</script>
+<style>
+  :root{ --ink:#1d2330; --muted:#5b6472; --bg:#f7f7f4; --card:#fff; --accent:#3b5bdb; --line:#e7e7e1; }
+  *{box-sizing:border-box} body{margin:0;font:17px/1.7 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:40px 0 6px}
+  .home{color:var(--accent);text-decoration:none;font-weight:600;font-size:15px}
+  h1{font-size:30px;line-height:1.25;letter-spacing:-.5px;margin:22px 0 6px}
+  .sub{color:var(--muted);font-size:18px;margin:0 0 8px}
+  h2{font-size:22px;margin:34px 0 8px;letter-spacing:-.3px}
+  p{margin:14px 0}
+  ul{margin:12px 0;padding-left:22px}
+  li{margin:6px 0}
+  code{background:#eef1fe;border:1px solid #d7defb;border-radius:5px;padding:1px 5px;font-size:14px}
+  pre{background:#1d2330;color:#e7ebff;border-radius:10px;padding:16px;overflow:auto;font-size:13px;line-height:1.5}
+  pre code{background:none;border:none;color:inherit;padding:0}
+  .cta{background:#eef1fe;border:1px solid #d7defb;border-radius:12px;padding:20px 22px;margin:34px 0}
+  .cta b{color:var(--accent)}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:11px 20px;border-radius:9px;font-weight:600;margin-top:10px}
+  .rule{color:var(--muted)}
+  hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+  footer{color:var(--muted);font-size:14px;text-align:center;padding:30px 0 50px;border-top:1px solid var(--line);margin-top:30px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="home" href="./index.html">← Penloom</a>
+      <h1>Why your AI agent is flaky — and 7 rules that make it reliable</h1>
+      <p class="sub">A flaky agent is almost never a model problem. It's a specification problem.</p>
+    </header>
+
+    <p>You built an AI agent. In the demo it was magic. In the wild it loops, hallucinates a tool
+    call, "forgets" the format you asked for twice, and occasionally does something mildly alarming
+    with your filesystem.</p>
+
+    <p>Here's the uncomfortable truth after shipping a lot of these: <b>a flaky agent is almost never
+    a model problem. It's a <i>specification</i> problem.</b> The model is doing exactly what your
+    prompt, your tools, and your control loop told it to do — which turns out to be far less than you
+    thought you said.</p>
+
+    <p>Below are seven rules that consistently move an agent from "cool demo" to "I trust this on real
+    work." None require a bigger model. Three are paste-able guardrails for Claude Code specifically.</p>
+
+    <h2>1. Make the success criteria machine-checkable, not vibes</h2>
+    <p>"Summarize this well" is unfalsifiable. The agent can't tell when it's done, and neither can
+    you. Replace every vibe with something a script could check:</p>
+    <ul>
+      <li class="rule">❌ "Return a good summary."</li>
+      <li class="rule">✅ "Return 3–5 bullets, each ≤ 20 words, each starting with a verb. Output only the bullets."</li>
+    </ul>
+    <p>The win isn't the format — it's that <i>failure becomes detectable</i>. If you can write an
+    <code>assert</code> for the output, you can build a retry around it. If you can't, you have no
+    idea how often it's wrong.</p>
+
+    <h2>2. Give tools narrow contracts and loud errors</h2>
+    <p>Most "the agent called the wrong tool" bugs are really "the tool description was ambiguous"
+    bugs. A tool named <code>search</code> that sometimes means web search and sometimes a database
+    lookup <i>will</i> get confused. Two rules:</p>
+    <ul>
+      <li>One tool, one job, one unambiguous name (<code>search_web</code>, not <code>search</code>).</li>
+      <li>When a tool fails, return <i>why</i> in plain language: <code>error: 'date' must be YYYY-MM-DD, got '6/27'</code> beats a stack trace or a silent <code>null</code>. The model can recover from a sentence; it cannot recover from <code>undefined</code>.</li>
+    </ul>
+
+    <h2>3. Bound the loop — always</h2>
+    <p>Every autonomous agent needs three hard limits or it will eventually run forever: a <b>max step
+    count</b>, a <b>wall-clock timeout</b>, and a <b>no-progress detector</b> (if the last two actions
+    are identical, stop). The model will not reliably stop itself. This is your job, in code, outside
+    the prompt.</p>
+
+    <h2>4. Prefer deterministic guardrails over polite requests</h2>
+    <p>Anything in the prompt is a <i>request</i>. The model usually honors it. "Usually" is not a
+    security model. If an action is dangerous or irreversible, gate it in code, not in English. In
+    <b>Claude Code</b> you do this with hooks — deterministic scripts that run before a tool call and
+    can block it. The three I put in almost every project:</p>
+
+    <p><b>Guardrail A — block edits to sensitive paths</b> (a <code>PreToolUse</code> hook that
+    refuses writes to <code>.env</code>, <code>.git/</code>, or secrets):</p>
+<pre><code>{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "node -e \"const p=process.env.CLAUDE_TOOL_INPUT_FILE_PATH||''; if(/(^|\\/)\\.env|(^|\\/)\\.git\\/|secrets/i.test(p)){console.error('Blocked: protected path '+p);process.exit(2)}\""
+      }]
+    }]
+  }
+}</code></pre>
+    <p>Exit code <code>2</code> tells Claude Code the action was blocked and feeds the reason back to
+    the model — so it adjusts instead of silently failing.</p>
+
+    <p><b>Guardrail B — never let destructive commands through</b> (a <code>Bash</code> matcher that
+    hard-fails on <code>rm -rf</code>, <code>git reset --hard</code>, fork bombs):</p>
+<pre><code>{
+  "matcher": "Bash",
+  "hooks": [{
+    "type": "command",
+    "command": "node -e \"const c=process.env.CLAUDE_TOOL_INPUT_COMMAND||''; if(/rm\\s+-rf|git\\s+reset\\s+--hard|:\\(\\)\\{/.test(c)){console.error('Blocked destructive command');process.exit(2)}\""
+  }]
+}</code></pre>
+
+    <p><b>Guardrail C — auto-format after every edit</b>, so output stays consistent without asking:</p>
+<pre><code>{
+  "matcher": "Edit|Write",
+  "hooks": [{ "type": "command", "command": "prettier --write \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null || true" }]
+}</code></pre>
+    <p>The pattern that matters: <b>the model proposes, deterministic code disposes.</b> Hooks run
+    whether or not the model "felt like" honoring an instruction.</p>
+
+    <h2>5. Make state explicit and external</h2>
+    <p>If your agent's "memory" is just the growing chat transcript, it will drift — early
+    instructions get diluted and cost climbs every turn. Keep the durable facts (the task, the
+    constraints, what's done) in a small structured object you re-inject each step, and let the
+    transcript be disposable. An agent that re-reads its own goal every loop stays on task far longer
+    than one trusting a 40-message context to hold.</p>
+
+    <h2>6. Test it like software, because it is</h2>
+    <p>You wouldn't ship a function with zero tests; don't ship an agent with zero either. Build a
+    tiny eval set — even 10–15 representative inputs with checkable expected properties (rule #1 makes
+    this possible). Run it on every prompt change. The first time a "harmless" tweak silently breaks 3
+    of 12 cases, you'll understand why this is the highest-leverage 30 minutes in the project.</p>
+
+    <h2>7. Fail loudly to a human, never silently to the user</h2>
+    <p>When the agent is uncertain or a guardrail trips, the worst outcome is confidently shipping a
+    wrong answer. Design an explicit "I'm not sure, here's why" path. A reliable agent that
+    occasionally says <i>"I couldn't verify X, stopping"</i> earns more trust than a confident one
+    that's wrong 5% of the time on work that matters.</p>
+
+    <hr/>
+    <h2>The one-paragraph version</h2>
+    <p>Reliability is not a model you buy; it's a discipline you impose. Make success checkable
+    (#1, #6), make tools unambiguous and loud (#2), bound the loop (#3), enforce the dangerous stuff
+    in code rather than prose (#4), externalize state (#5), and fail loud to a human (#7). Do those
+    and an ordinary model behaves like a dependable one.</p>
+
+    <div class="cta">
+      <b>Want this as a printable checklist + three more paste-able Claude Code guardrails?</b>
+      <p style="margin:8px 0 0">I wrote a free field guide — no email required. It's the 10-minute
+      version of everything above.</p>
+      <a class="btn" href="./field-guide.html">Read the free field guide →</a>
+    </div>
+
+    <div class="cta">
+      <b>Rule #2 biting you — agent calling the wrong tool? Fix it for $2.99.</b>
+      <p style="margin:8px 0 0">The Tool-Calling Reliability Pack is the schema scorecard, five real
+      before→after schema rewrites, and drop-in templates — works for Claude tool use, OpenAI function
+      calling, and any JSON-Schema framework.</p>
+      <a class="btn" href="https://buy.stripe.com/8x2aEWfVwgqG7PB7qD3F608">Get the Reliability Pack — $2.99</a>
+      <p style="margin:10px 0 0;font-size:13.5px;color:#6b7280">Secure Stripe checkout · one-time ·
+      instant email delivery · 14-day guarantee</p>
+    </div>
+
+    <p class="rule">Building agents for real? Penloom makes two practical packs — the
+    <a href="./index.html">Agent Builder's Toolkit and the Claude Code Power-User Pack</a> — that take
+    these rules from checklist to copy-paste.</p>
+
+    <footer>
+      Penloom Studio · penloomstudio@gmail.com · Practical digital tools for people who build with AI.
+    </footer>
+  </div>
+</body>
+</html>

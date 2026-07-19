@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI for Beginners & Dev Toolkits, in Plain English — cogloom</title>
+<meta name="description" content="Learn AI without the jargon. Screenshot-led AI Basics classes for beginners ($9) and battle-tested Claude Code toolkits for devs. Proof first, no hype.">
+<link rel="canonical" href="https://penloomstudio.com/landing-cogloom-motion.html">
+<meta property="og:site_name" content="cogloom">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://penloomstudio.com/landing-cogloom-motion.html">
+<meta property="og:title" content="cogloom — AI, explained like you're smart (not technical)">
+<meta property="og:description" content="Plain-English AI Basics classes for beginners and proof-first Claude Code toolkits for developers. No jargon, no fake benchmarks.">
+<meta property="og:image" content="https://penloomstudio.com/og/cogloom.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="cogloom — AI, explained like you're smart (not technical)">
+<meta name="twitter:description" content="Plain-English AI Basics classes for beginners and proof-first Claude Code toolkits for developers.">
+<meta name="twitter:image" content="https://penloomstudio.com/og/cogloom.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Brand",
+  "name": "cogloom",
+  "url": "https://penloomstudio.com/landing-cogloom-motion.html",
+  "logo": "https://penloomstudio.com/og/cogloom.png",
+  "slogan": "AI, explained like you're smart — not technical.",
+  "description": "cogloom teaches AI in plain English: screenshot-led AI Basics classes for beginners and retirees, and proof-first coding toolkits for developers."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "AI Basics — Class 1: ChatGPT (for total beginners)",
+  "description": "A calm, plain-English, screenshot-led ChatGPT class for total beginners and retirees. Make a free account, learn the screen, and master ten everyday tasks — no jargon, no fear.",
+  "brand": { "@type": "Brand", "name": "cogloom" },
+  "offers": { "@type": "Offer", "price": "9.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://buy.stripe.com/8x200idNo1vM2vhcKX3F605" }
+}
+</script>
+<style>
+  :root{
+    --bg:#0D1117; --panel:#161B22; --line:#232A34;
+    --indigo:#6366F1; --mint:#34D399; --text:#E6EDF3; --dim:#8B949E;
+    --mono:ui-monospace,"JetBrains Mono","SF Mono",Consolas,"Courier New",monospace;
+    --sans:system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:1.6;
+    background-image:radial-gradient(circle at 15% 0%,rgba(99,102,241,.14),transparent 45%),
+                     radial-gradient(circle at 90% 20%,rgba(52,211,153,.08),transparent 40%);}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* top command bar */
+  nav{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(13,17,23,.85);backdrop-filter:blur(8px);z-index:9}
+  .navrow{display:flex;align-items:center;gap:16px;padding:14px 24px;max-width:1080px;margin:0 auto;font-size:14px}
+  .logo{font-weight:700;letter-spacing:-.5px}
+  .logo b{color:var(--mint)}
+  .navrow .sp{flex:1}
+  .navrow a{color:var(--dim)}
+  .navrow a:hover{color:var(--text)}
+  .navrow .nl{display:none}
+  @media(min-width:560px){ .navrow .nl{display:inline} }
+  .pill{border:1px solid var(--indigo);color:var(--indigo)!important;padding:6px 14px;border-radius:6px;white-space:nowrap}
+  .pill:hover{background:var(--indigo);color:#fff!important}
+
+  /* hero terminal */
+  header{padding:72px 0 48px}
+  .prompt{color:var(--mint);font-size:14px;margin-bottom:20px}
+  .prompt .c{color:var(--indigo)}
+  h1{font-size:clamp(34px,6vw,68px);line-height:1.05;font-weight:700;letter-spacing:-2px;font-family:var(--sans);margin-bottom:22px}
+  h1 .g{background:linear-gradient(90deg,var(--indigo),var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .cursor{display:inline-block;width:14px;height:.9em;background:var(--mint);margin-left:4px;vertical-align:-2px}
+  .sub{color:var(--dim);font-size:clamp(15px,2vw,19px);max-width:640px;margin-bottom:34px}
+  .cta{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;font-family:var(--mono);font-size:15px;padding:14px 24px;border-radius:8px;border:1px solid var(--line);transition:.15s}
+  .btn.primary{background:var(--indigo);border-color:var(--indigo);color:#fff;font-weight:600}
+  .btn.primary:hover{box-shadow:0 0 0 4px rgba(99,102,241,.25);transform:translateY(-2px)}
+  .btn.ghost:hover{border-color:var(--mint);color:var(--mint)}
+
+  .termcard{margin-top:56px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+  .termbar{display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);align-items:center}
+  .dot{width:12px;height:12px;border-radius:50%}
+  .termbar .t{margin-left:12px;color:var(--dim);font-size:13px}
+  .termbody{padding:22px;font-size:14px;overflow-x:auto}
+  .termbody .l{white-space:pre;color:var(--dim)}
+  .termbody .k{color:var(--indigo)} .termbody .s{color:var(--mint)} .termbody .o{color:var(--text)}
+
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  .eyebrow{color:var(--mint);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+  h2{font-family:var(--sans);font-size:clamp(26px,4vw,40px);letter-spacing:-1px;margin-bottom:8px}
+  .lead{color:var(--dim);max-width:640px;margin-bottom:36px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;transition:.15s;display:flex;flex-direction:column}
+  .card:hover{border-color:var(--indigo);transform:translateY(-3px)}
+  .card .f{color:var(--mint);font-size:13px;margin-bottom:10px}
+  .card h3{font-family:var(--sans);font-size:19px;margin-bottom:8px}
+  .card p{color:var(--dim);font-size:14px;flex:1}
+  .card .price{font-weight:700;font-size:17px;margin-top:14px}
+  .card .price .free{color:var(--mint)}
+  .card .buy{margin-top:12px;text-align:center}
+  .tag{display:inline-block;margin-top:14px;font-size:12px;color:var(--indigo);border:1px solid var(--line);border-radius:5px;padding:3px 9px;align-self:flex-start}
+  .soon{border-style:dashed;opacity:.85}
+  .soon:hover{border-color:var(--line);transform:none}
+  .soon .f{color:var(--dim)}
+
+  .flagship{display:grid;grid-template-columns:1fr;gap:18px;margin-bottom:18px}
+  @media(min-width:760px){ .flagship{grid-template-columns:1.4fr 1fr} }
+  .flagship .card{border-color:var(--indigo)}
+  .checks{list-style:none;margin:12px 0 0}
+  .checks li{color:var(--dim);font-size:14px;padding-left:22px;position:relative;margin:7px 0}
+  .checks li::before{content:"✓";color:var(--mint);position:absolute;left:0}
+
+  .readrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+  .readrow a.card:hover{border-color:var(--mint)}
+
+  .cta-band{background:linear-gradient(120deg,rgba(99,102,241,.16),rgba(52,211,153,.10));border:1px solid var(--line);border-radius:16px;padding:48px 32px;text-align:center;margin:20px 0}
+  .cta-band h2{margin-bottom:14px}
+  .cta-band .sub{margin:0 auto 28px}
+
+  footer{border-top:1px solid var(--line);padding:36px 0;color:var(--dim);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+  /* progressive enhancement: motion only when JS is running, and never for reduced-motion users */
+  .js .rv{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+  .js .rv.in{opacity:1;transform:none}
+  .js .cursor{animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  @media (prefers-reduced-motion: reduce){
+    .js .rv{opacity:1;transform:none;transition:none}
+    .js .cursor{animation:none}
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+<nav><div class="navrow">
+  <span class="logo">cog<b>loom</b><span style="color:var(--dim)">.dev</span></span>
+  <span class="sp"></span>
+  <a class="nl" href="#classes">classes</a>
+  <a class="nl" href="#toolkits">toolkits</a>
+  <a class="nl" href="#watch">watch</a>
+  <a href="https://buy.stripe.com/8x200idNo1vM2vhcKX3F605" class="pill">Start Class 1 — $9</a>
+</div></nav>
+
+<header class="wrap">
+  <div class="prompt"><span class="c">~/cogloom</span> $ ai --demystify --for you<span class="cursor"></span></div>
+  <h1>AI, explained like<br>you're smart — <span class="g">not technical.</span></h1>
+  <p class="sub">Plain-English AI for beginners, proof-first toolkits for developers. Go from "this stuff is intimidating" to confident everyday user — screenshot by screenshot, with no jargon and no fake benchmarks.</p>
+  <div class="cta">
+    <a href="https://buy.stripe.com/8x200idNo1vM2vhcKX3F605" class="btn primary">Start Class 1 — $9 →</a>
+    <a href="#toolkits" class="btn ghost">Dev toolkits</a>
+  </div>
+
+  <div class="termcard rv">
+    <div class="termbar">
+      <span class="dot" style="background:#FF5F56"></span><span class="dot" style="background:#FFBD2E"></span><span class="dot" style="background:#27C93F"></span>
+      <span class="t">cogloom — bash — the confidence funnel</span>
+    </div>
+    <div class="termbody"><div class="l"><span class="s">$</span> <span class="o">cogloom start --level beginner</span>
+<span class="k">›</span> loading <span class="s">AI Basics</span>: ChatGPT first, the rest to follow
+<span class="k">›</span> fear.remove()      <span class="s">✓ patient, plain-English, screenshots</span>
+<span class="k">›</span> result.showFirst() <span class="s">✓ see the payoff, then learn the how</span>
+<span class="k">›</span> ship.toolkit()     <span class="s">✓ CLAUDE.md kits · prompt packs · checklists</span>
+<span class="k">$</span> <span class="o">you are now: a confident everyday AI user</span></div></div>
+  </div>
+</header>
+
+<section class="wrap" id="classes">
+  <div class="eyebrow rv">Start here · for beginners</div>
+  <h2 class="rv">AI Basics — Class 1: ChatGPT</h2>
+  <p class="lead rv">The patient, screenshot-by-screenshot class for people who find AI intimidating. No jargon, no fear — from "never opened it" to using it every week, in one sitting.</p>
+  <div class="flagship">
+    <div class="card rv">
+      <div class="f">basics/chatgpt — level 1</div>
+      <h3>Class 1: ChatGPT, start to useful</h3>
+      <p>Make a free account, learn the screen, have your first real conversation, and master ten genuinely useful everyday tasks — safely, at your own pace.</p>
+      <ul class="checks">
+        <li>Plain English — every step shown as a screenshot</li>
+        <li>Written for beginners and retirees, not developers</li>
+        <li>Instant PDF · lifetime access · free updates</li>
+      </ul>
+      <div class="price">$9 <span style="color:var(--dim);font-weight:400;font-size:13px">· one-time</span></div>
+      <a class="btn primary buy" href="https://buy.stripe.com/8x200idNo1vM2vhcKX3F605">Start Class 1 — $9 →</a>
+      <a class="btn ghost buy" href="ai-basics-chatgpt.html">Read the full syllabus</a>
+    </div>
+    <div class="card soon rv">
+      <div class="f">basics/next — in production</div>
+      <h3>Classes 2–5: Claude, Gemini, Perplexity, Grok</h3>
+      <p>One class per model, same patient format. They're being written and verified against the live products right now — honestly, they're not ready yet.</p>
+      <p style="margin-top:12px">New classes are announced on our YouTube channel first — <a href="#watch" style="color:var(--mint)">subscribe below</a> to hear when they land.</p>
+      <span class="tag">coming soon</span>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="toolkits">
+  <div class="eyebrow rv">For builders</div>
+  <h2 class="rv">Dev toolkits that pay for themselves</h2>
+  <p class="lead rv">Real deliverables, not theory — the files a working practitioner drops straight into a repo. Every one battle-tested before it's sold.</p>
+  <div class="grid">
+    <div class="card rv">
+      <div class="f">CLAUDE.md — optimizer</div>
+      <h3>The CLAUDE.md Optimizer Pack</h3>
+      <p>Fix the file Claude Code actually reads: trim the bloat, keep the rules that stick, stop repeating yourself to your agent.</p>
+      <div class="price">$2.99</div>
+      <a class="btn ghost buy" href="https://buy.stripe.com/aFa6oGcJk2zQ5HtdP13F607">Get the pack →</a>
+    </div>
+    <div class="card rv">
+      <div class="f">claude-code — power user</div>
+      <h3>The Claude Code Power-User Pack</h3>
+      <p>The workflows, guardrails, and config that turn Claude Code from a toy into a teammate.</p>
+      <div class="price">$17</div>
+      <a class="btn ghost buy" href="https://buy.stripe.com/7sYaEWdNo0rI6LxdP13F602">Get the pack →</a>
+    </div>
+    <div class="card rv">
+      <div class="f">agents — tool calling</div>
+      <h3>The Tool-Calling Reliability Pack</h3>
+      <p>Schemas, retries, and checks that stop your agent picking the wrong tool — the failure mode behind most "it just broke" bugs.</p>
+      <div class="price">$2.99</div>
+      <a class="btn ghost buy" href="https://buy.stripe.com/8x2aEWfVwgqG7PB7qD3F608">Get the pack →</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="read">
+  <div class="eyebrow rv">Free reading</div>
+  <h2 class="rv">Proof first — read before you buy</h2>
+  <p class="lead rv">The same proof-first material we sell, given away where it helps most. No email required.</p>
+  <div class="readrow">
+    <a class="card rv" href="field-guide.html">
+      <div class="f">guide/reliable-agents.pdf</div>
+      <h3>The Reliable Agent Field Guide</h3>
+      <p>Ship an AI agent that doesn't fall over — the free field guide.</p>
+      <div class="price"><span class="free">free</span></div>
+    </a>
+    <a class="card rv" href="claude-md-budget.html">
+      <div class="f">read/claude-md-budget</div>
+      <h3>Your CLAUDE.md is too long</h3>
+      <p>Why Claude Code ignores your instructions file — and the budget that fixes it.</p>
+      <div class="price"><span class="free">free</span></div>
+    </a>
+    <a class="card rv" href="reliable-agents.html">
+      <div class="f">read/flaky-agents</div>
+      <h3>Why your AI agent is flaky</h3>
+      <p>Seven rules that turn an unreliable agent into one you can trust.</p>
+      <div class="price"><span class="free">free</span></div>
+    </a>
+  </div>
+</section>
+
+<section class="wrap" id="watch">
+  <div class="cta-band rv">
+    <div class="eyebrow">Watch first, buy later</div>
+    <h2>New classes &amp; AI tips land on YouTube first.</h2>
+    <p class="sub">Short, proof-first AI explainers — the result on screen before the explanation. Subscribe and you'll hear the moment Class 2 ships.</p>
+    <a href="https://www.youtube.com/@PenloomStudio?sub_confirmation=1" class="btn primary">Subscribe on YouTube →</a>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span>cogloom.dev — proof-first AI &amp; coding. Show the result first.</span>
+  <span>© 2026 cogloom · No fake benchmarks, ever.</span>
+</footer>
+
+<script>
+/* Progressive enhancement only — the page is complete without this. */
+document.documentElement.classList.add('js');
+document.body.classList.add('js');
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+    document.querySelectorAll('.rv').forEach(el => el.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>

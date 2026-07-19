@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free Overdue Invoice Reminder Email Generator (polite → firm) · Penloom</title>
+<meta name="description" content="A free tool that writes a professional payment reminder email for a late invoice. Pick the tone, drop in the invoice details, and copy a polished message — plus see which follow-up touch is due next. No sign-up." />
+<link rel="canonical" href="https://penloomstudio.com/invoice-reminder-generator.html" />
+<meta property="og:site_name" content="Penloom" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://penloomstudio.com/invoice-reminder-generator.html" />
+<meta property="og:title" content="Free Overdue Invoice Reminder Email Generator" />
+<meta property="og:description" content="Write a professional late-payment reminder in seconds — pick the tone, fill in the invoice, copy a polished email. Free, no sign-up. Plus: see which follow-up is due next." />
+<meta property="og:image" content="https://penloomstudio.com/penloom-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Free Overdue Invoice Reminder Email Generator" />
+<meta name="twitter:description" content="Pick the tone, fill in the invoice, copy a polished payment-reminder email. Free, no sign-up." />
+<meta name="twitter:image" content="https://penloomstudio.com/penloom-card.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Overdue Invoice Reminder Email Generator",
+      "url": "https://penloomstudio.com/invoice-reminder-generator.html",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any (web)",
+      "description": "A free, no-sign-up tool that writes a professional payment-reminder email for a late invoice in five escalating tones, and shows which follow-up touch is due next.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "isAccessibleForFree": true,
+      "publisher": { "@type": "Organization", "name": "Penloom", "url": "https://penloomstudio.com/" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I write a polite reminder for a late invoice?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Keep it factual and warm: reference the invoice number and amount, state the due date, ask for a specific payment date, and include the payment link. This generator does it for you — pick the tone that matches how overdue the invoice is and copy the result." }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I send a payment reminder?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use a fixed sequence: a friendly heads-up three days before the due date, a simple nudge on the due date, a firm-but-warm follow-up at 7 days late, a direct ask at 14 days late, and a calm final notice at 30 days late." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this invoice reminder generator free?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. It runs entirely in your browser, requires no sign-up, and nothing you type is sent anywhere or stored." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root{ --ink:#1d2330; --muted:#5b6472; --bg:#f7f7f4; --card:#fff; --accent:#3b5bdb; --line:#e7e7e1; --ok:#1f9d55; }
+  *{box-sizing:border-box} body{margin:0;font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+  header{padding:40px 0 6px}
+  .home{color:var(--accent);text-decoration:none;font-weight:600;font-size:15px}
+  h1{font-size:30px;line-height:1.22;letter-spacing:-.5px;margin:20px 0 6px}
+  .sub{color:var(--muted);font-size:18px;margin:0 0 6px}
+  h2{font-size:21px;margin:32px 0 8px;letter-spacing:-.3px}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  .tool{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin:22px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .row{display:grid;gap:14px;grid-template-columns:1fr}
+  @media(min-width:620px){.row.two{grid-template-columns:1fr 1fr}}
+  label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:0 0 4px}
+  input,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font:inherit;color:var(--ink);background:#fff}
+  input:focus,select:focus{outline:2px solid #c7d2fe;border-color:var(--accent)}
+  .stages{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 2px}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:13.5px;cursor:pointer;color:var(--ink)}
+  .chip.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .hint{font-size:13px;color:var(--muted);margin:8px 0 0}
+  .out{margin-top:18px}
+  .outbox{background:#fbfbf9;border:1px solid var(--line);border-radius:10px;padding:16px;white-space:pre-wrap;font:15px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .subjline{font-weight:600;margin:0 0 10px}
+  .btn{display:inline-block;background:var(--accent);color:#fff;border:none;text-decoration:none;padding:11px 20px;border-radius:9px;font-weight:600;cursor:pointer;font:inherit}
+  .btn:hover{filter:brightness(1.05)}
+  .btn.ghost{background:#eef1fe;color:var(--accent);border:1px solid #d7defb}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+  .copied{color:var(--ok);font-size:14px;font-weight:600}
+  .next{background:#eef1fe;border:1px solid #d7defb;border-radius:10px;padding:12px 15px;margin-top:14px;color:#36406b;font-size:14.5px}
+  .next b{color:var(--accent)}
+  .cta{background:#eef1fe;border:1px solid #d7defb;border-radius:12px;padding:20px 22px;margin:30px 0}
+  .cta b{color:var(--accent)}
+  .cta .btn{margin-top:10px}
+  .rule{color:var(--muted);font-size:14px}
+  ul{margin:12px 0;padding-left:22px} li{margin:6px 0}
+  hr{border:none;border-top:1px solid var(--line);margin:32px 0}
+  footer{color:var(--muted);font-size:14px;text-align:center;padding:30px 0 50px;border-top:1px solid var(--line);margin-top:30px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="home" href="./index.html">← Penloom</a>
+      <h1>Overdue Invoice Reminder Email Generator</h1>
+      <p class="sub">Pick the tone, drop in the invoice details, and copy a professional reminder in seconds. Free, no sign-up — it runs right here in your browser.</p>
+    </header>
+
+    <div class="tool">
+      <div class="row two">
+        <div>
+          <label for="client">Client / company name</label>
+          <input id="client" type="text" placeholder="e.g. Acme Co." />
+        </div>
+        <div>
+          <label for="you">Your name (sign-off)</label>
+          <input id="you" type="text" placeholder="e.g. Jordan" />
+        </div>
+      </div>
+
+      <div class="row two" style="margin-top:14px">
+        <div>
+          <label for="invno">Invoice number</label>
+          <input id="invno" type="text" placeholder="e.g. 1024" />
+        </div>
+        <div>
+          <label for="amount">Amount (with currency)</label>
+          <input id="amount" type="text" placeholder="e.g. $1,200" />
+        </div>
+      </div>
+
+      <div class="row two" style="margin-top:14px">
+        <div>
+          <label for="due">Due date</label>
+          <input id="due" type="date" />
+        </div>
+        <div>
+          <label for="link">Payment link (optional)</label>
+          <input id="link" type="text" placeholder="https://… (leave blank to omit)" />
+        </div>
+      </div>
+
+      <div class="row two" style="margin-top:14px">
+        <div>
+          <label for="fee">Late fee % (optional — used on firmer reminders)</label>
+          <input id="fee" type="text" placeholder="e.g. 1.5" />
+        </div>
+        <div>
+          <label for="tonepick">Tone (auto-suggested from the due date)</label>
+          <div class="stages" id="stages" role="tablist" aria-label="Reminder tone">
+            <button type="button" class="chip" data-stage="0">Heads-up (pre-due)</button>
+            <button type="button" class="chip" data-stage="1">Nudge (due day)</button>
+            <button type="button" class="chip" data-stage="2">Firm (+7d)</button>
+            <button type="button" class="chip" data-stage="3">Direct (+14d)</button>
+            <button type="button" class="chip" data-stage="4">Final notice (+30d)</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="hint" id="suggest"></p>
+
+      <div class="out">
+        <div class="outbox" id="outbox"><span class="subjline">Fill in the fields above — your reminder writes itself here.</span></div>
+        <div class="btnrow">
+          <button class="btn" id="copyBtn" type="button">Copy email</button>
+          <button class="btn ghost" id="copyBody" type="button">Copy body only</button>
+          <span class="copied" id="copied" style="display:none">Copied ✓</span>
+        </div>
+        <div class="next" id="next" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <b>One email is easy. Running the whole sequence — across ten clients — is the hard part.</b>
+      <p style="margin:8px 0 0">This generator writes a single reminder. The thing that actually gets you
+      paid is knowing, at a glance, <i>which</i> invoices are overdue, how many days late each one is, and
+      <i>which touch is due next</i>. That's the <b>Invoice Follow-Up Tracker</b>: a done-for-you spreadsheet
+      (Google Sheets or Excel) that auto-flags every overdue invoice by aging bucket, shows live totals for
+      what you're owed, tells you which reminder to send next — and ships with the polished copy-paste versions
+      of all five emails plus a 10-minute weekly "collections Friday" routine.</p>
+      <a class="btn" href="https://buy.stripe.com/aFa9AS6kW2zQ3zlh1d3F603">Get the Invoice Follow-Up Tracker — $24 →</a>
+    </div>
+    <p class="rule">One-time purchase, delivered by email within minutes. An organizational tool — not
+    accounting, tax, or legal advice. This generator runs entirely in your browser; nothing you type is sent
+    anywhere or saved.</p>
+
+    <hr/>
+
+    <h2>How to use it (and why a sequence works)</h2>
+    <p>Late invoices aren't a confidence problem — they're a system problem. The freelancers who get paid
+    fastest don't write a cleverer guilt-trip email; they run a <b>fixed sequence of touches on a fixed
+    schedule</b>, so they're never deciding in the moment whether it's "too soon" to follow up. Pick the tone
+    that matches how overdue the invoice is:</p>
+    <ul>
+      <li><b>Heads-up (3 days before due)</b> — the most overlooked and most effective: a warm note that the invoice is coming due, so "I forgot" never happens.</li>
+      <li><b>Nudge (due date)</b> — neutral and factual; you're just noting the date arrived.</li>
+      <li><b>Firm (+7 days)</b> — restate the facts, ask them to confirm a payment date.</li>
+      <li><b>Direct (+14 days)</b> — reference your terms, ask for a specific date, mention the late fee if your contract has one.</li>
+      <li><b>Final notice (+30 days)</b> — calm and clear about what happens next. Measured beats angry every time.</li>
+    </ul>
+    <p>Two rules carry most of the result: <b>always reference the invoice number and amount</b> (it reads as
+    records-keeping, not nagging), and <b>ask for a date, not a feeling</b> ("When will this be paid?" beats
+    "please pay soon"). Want the full system, with the tracking sheet that tells you which touch is due for
+    which invoice? <a href="./invoice-follow-up.html">Read the 5-touch walkthrough</a> or grab the
+    <a href="https://buy.stripe.com/aFa9AS6kW2zQ3zlh1d3F603">done-for-you Tracker</a>.</p>
+
+    <footer>
+      Penloom Studio · penloomstudio@gmail.com · Practical digital tools for freelancers &amp; small businesses.
+    </footer>
+  </div>
+
+<script>
+(function(){
+  var STAGE_LABELS = ["a friendly heads-up (pre-due)","a simple nudge (due day)","a firm follow-up (+7 days)","a direct ask (+14 days)","a final notice (+30 days)"];
+  var els = {
+    client: document.getElementById('client'),
+    you: document.getElementById('you'),
+    invno: document.getElementById('invno'),
+    amount: document.getElementById('amount'),
+    due: document.getElementById('due'),
+    link: document.getElementById('link'),
+    fee: document.getElementById('fee'),
+    outbox: document.getElementById('outbox'),
+    suggest: document.getElementById('suggest'),
+    next: document.getElementById('next'),
+    copied: document.getElementById('copied')
+  };
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+  var stage = 1;          // currently selected stage
+  var userPicked = false; // has the user manually overridden the suggestion?
+  var lastSubject = "";
+
+  function val(el, fallback){ var v = (el.value || "").trim(); return v || fallback; }
+  function daysFromDue(){
+    var d = els.due.value;
+    if(!d) return null;
+    var due = new Date(d + "T00:00:00");
+    var now = new Date(); now.setHours(0,0,0,0);
+    return Math.round((now - due) / 86400000); // positive = overdue
+  }
+  function suggestStage(){
+    var n = daysFromDue();
+    if(n === null) return null;
+    if(n < 0) return 0;
+    if(n === 0) return 1;
+    if(n < 14) return 2;
+    if(n < 30) return 3;
+    return 4;
+  }
+  function setStage(s){
+    stage = s;
+    chips.forEach(function(c){ c.classList.toggle('active', parseInt(c.dataset.stage,10) === s); });
+    render();
+  }
+
+  function build(){
+    var client = val(els.client, "[Client]");
+    var you = val(els.you, "[Your name]");
+    var inv = val(els.invno, "[####]");
+    var amt = val(els.amount, "[amount]");
+    var link = (els.link.value || "").trim();
+    var fee = (els.fee.value || "").trim().replace(/[^0-9.]/g, "");
+    var dueRaw = els.due.value;
+    var dueNice = "";
+    if(dueRaw){
+      var dd = new Date(dueRaw + "T00:00:00");
+      dueNice = dd.toLocaleDateString(undefined, {month:"long", day:"numeric"});
+    }
+    var duePhrase = dueNice ? ("on " + dueNice) : "[due date]";
+    var linkLine = link ? ("\n\nHere's the payment link for convenience: " + link) : "";
+    var feeClause = fee ? (" Per our agreement, a " + fee + "% late fee applies to balances past 14 days.") : "";
+
+    var subject, body;
+    switch(stage){
+      case 0:
+        subject = "Heads-up: invoice #" + inv + " is due soon";
+        body = "Hi " + client + ",\n\nQuick heads-up that invoice #" + inv + " for " + amt +
+          " is due " + duePhrase + ". No action needed if it's already queued — just flagging it so nothing slips." +
+          linkLine + "\n\nThanks again for a great project!\n\nBest,\n" + you;
+        break;
+      case 1:
+        subject = "Invoice #" + inv + " is due today";
+        body = "Hi " + client + ",\n\nJust a quick note that invoice #" + inv + " for " + amt +
+          " is due today. Let me know if you need anything from me to get it processed." +
+          linkLine + "\n\nThanks so much,\n" + you;
+        break;
+      case 2:
+        subject = "Following up: invoice #" + inv + " (now past due)";
+        body = "Hi " + client + ",\n\nI wanted to follow up — invoice #" + inv + " for " + amt +
+          " was due " + duePhrase + " and is now about a week past. Could you confirm it's scheduled, or let me know the expected payment date? Happy to resend the invoice if that's helpful." +
+          linkLine + "\n\nAppreciate it,\n" + you;
+        break;
+      case 3:
+        subject = "Action needed: invoice #" + inv + " is 2 weeks overdue";
+        body = "Hi " + client + ",\n\nInvoice #" + inv + " for " + amt + " is now about two weeks overdue." +
+          feeClause + " Could you tell me the date payment will be sent? I'd like to get this closed out this week." +
+          linkLine + "\n\nThank you,\n" + you;
+        break;
+      case 4:
+        subject = "Final reminder: invoice #" + inv + " is 30 days overdue";
+        body = "Hi " + client + ",\n\nThis is a final reminder that invoice #" + inv + " for " + amt +
+          " is now 30 days overdue. If payment or a payment plan isn't arranged this week, I'll have to pause further work and begin my standard collections process." +
+          feeClause + " I'd much rather resolve this directly — please let me know today." +
+          linkLine + "\n\nRegards,\n" + you;
+        break;
+    }
+    return { subject: subject, body: body };
+  }
+
+  function render(){
+    var m = build();
+    lastSubject = m.subject;
+    els.outbox.innerHTML = "";
+    var s = document.createElement('div'); s.className = 'subjline'; s.textContent = "Subject: " + m.subject;
+    var b = document.createElement('div'); b.textContent = m.body;
+    els.outbox.appendChild(s); els.outbox.appendChild(b);
+
+    // "which touch is due next" helper
+    var n = daysFromDue();
+    var nextEl = els.next;
+    if(n !== null && stage < 4){
+      var nextLabels = ["the due-day nudge","the +7-day firm follow-up","the +14-day direct ask","the 30-day final notice"];
+      nextEl.style.display = "block";
+      nextEl.innerHTML = "You're sending <b>" + STAGE_LABELS[stage] + "</b>. " +
+        "In this sequence, the next touch is <b>" + nextLabels[stage] + "</b> — the trick is remembering to send it on time, for every invoice. " +
+        "That's the part the <a href=\"https://buy.stripe.com/aFa9AS6kW2zQ3zlh1d3F603\">Tracker</a> handles for you.";
+    } else {
+      nextEl.style.display = "none";
+    }
+  }
+
+  function maybeAutoSuggest(){
+    if(userPicked) { render(); return; }
+    var s = suggestStage();
+    if(s === null){ render(); return; }
+    var n = daysFromDue();
+    els.suggest.textContent = (n === null) ? "" :
+      (n < 0 ? "This invoice isn't due yet — suggested tone: heads-up." :
+       n === 0 ? "This invoice is due today — suggested tone: nudge." :
+       "This invoice is " + n + " day" + (n===1?"":"s") + " overdue — suggested tone highlighted below.");
+    setStage(s);
+  }
+
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){
+      userPicked = true;
+      els.suggest.textContent = "";
+      setStage(parseInt(c.dataset.stage,10));
+    });
+  });
+  ['client','you','invno','amount','link','fee'].forEach(function(k){
+    els[k].addEventListener('input', render);
+  });
+  els.due.addEventListener('input', maybeAutoSuggest);
+
+  function flashCopied(){
+    els.copied.style.display = "inline";
+    setTimeout(function(){ els.copied.style.display = "none"; }, 1800);
+  }
+  function copyText(text){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flashCopied, function(){ legacyCopy(text); });
+    } else { legacyCopy(text); }
+  }
+  function legacyCopy(text){
+    var ta = document.createElement('textarea'); ta.value = text;
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); flashCopied(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    var m = build(); copyText("Subject: " + m.subject + "\n\n" + m.body);
+  });
+  document.getElementById('copyBody').addEventListener('click', function(){
+    var m = build(); copyText(m.body);
+  });
+
+  setStage(1); // initial
+})();
+</script>
+</body>
+</html>

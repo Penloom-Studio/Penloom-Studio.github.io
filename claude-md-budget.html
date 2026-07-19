@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Your CLAUDE.md is too long — and that's why Claude Code ignores it · Penloom</title>
+<meta name="description" content="Claude Code honors CLAUDE.md rules most of the time — and adherence drops as the file grows. Treat it as an instruction budget: here's how to spend it, and when to graduate a rule into a hook." />
+<link rel="canonical" href="https://penloomstudio.com/claude-md-budget.html" />
+<meta property="og:site_name" content="Penloom" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://penloomstudio.com/claude-md-budget.html" />
+<meta property="og:title" content="Your CLAUDE.md is too long — and that's why Claude Code ignores it" />
+<meta property="og:description" content="CLAUDE.md is an instruction budget, not a wishlist. Why adherence falls as the file grows, how to audit it, and when to move a rule from prose into a deterministic hook." />
+<meta property="og:image" content="https://penloomstudio.com/penloom-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Your CLAUDE.md is too long — and that's why Claude Code ignores it" />
+<meta name="twitter:description" content="Claude Code honors CLAUDE.md rules most of the time, and adherence falls as the file grows. Treat it as an instruction budget — how to spend it, and when to graduate a rule into a hook." />
+<meta name="twitter:image" content="https://penloomstudio.com/penloom-card.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Your CLAUDE.md is too long — and that's why Claude Code ignores it",
+  "description": "Claude Code honors CLAUDE.md rules most of the time — and adherence drops as the file grows. Treat it as an instruction budget — how to spend it, and when to graduate a rule into a hook.",
+  "image": "https://penloomstudio.com/penloom-card.png",
+  "isAccessibleForFree": true,
+  "author": { "@type": "Organization", "name": "Penloom", "url": "https://penloomstudio.com/" },
+  "publisher": { "@type": "Organization", "name": "Penloom", "logo": { "@type": "ImageObject", "url": "https://penloomstudio.com/penloom-card.png" } },
+  "mainEntityOfPage": "https://penloomstudio.com/claude-md-budget.html"
+}
+</script>
+<style>
+  :root{ --ink:#1d2330; --muted:#5b6472; --bg:#f7f7f4; --card:#fff; --accent:#3b5bdb; --line:#e7e7e1; }
+  *{box-sizing:border-box} body{margin:0;font:17px/1.7 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:40px 0 6px}
+  .home{color:var(--accent);text-decoration:none;font-weight:600;font-size:15px}
+  h1{font-size:30px;line-height:1.25;letter-spacing:-.5px;margin:22px 0 6px}
+  .sub{color:var(--muted);font-size:18px;margin:0 0 8px}
+  h2{font-size:22px;margin:34px 0 8px;letter-spacing:-.3px}
+  p{margin:14px 0}
+  ul{margin:12px 0;padding-left:22px}
+  li{margin:6px 0}
+  code{background:#eef1fe;border:1px solid #d7defb;border-radius:5px;padding:1px 5px;font-size:14px}
+  pre{background:#1d2330;color:#e7ebff;border-radius:10px;padding:16px;overflow:auto;font-size:13px;line-height:1.5}
+  pre code{background:none;border:none;color:inherit;padding:0}
+  .cta{background:#eef1fe;border:1px solid #d7defb;border-radius:12px;padding:20px 22px;margin:34px 0}
+  .cta b{color:var(--accent)}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:11px 20px;border-radius:9px;font-weight:600;margin-top:10px}
+  .rule{color:var(--muted)}
+  hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+  footer{color:var(--muted);font-size:14px;text-align:center;padding:30px 0 50px;border-top:1px solid var(--line);margin-top:30px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="home" href="./index.html">← Penloom</a>
+      <h1>Your CLAUDE.md is too long — and that's why Claude Code ignores it</h1>
+      <p class="sub">CLAUDE.md is an instruction budget, not a wishlist. Spend it like one.</p>
+    </header>
+
+    <p>Everyone hits the same wall with Claude Code. You add a rule to <code>CLAUDE.md</code>. It works.
+    You add ten more. They mostly work. You add forty more — and now Claude is cheerfully ignoring the
+    rule you care about most, the one that's been sitting there since day one. So you make it
+    <b>LOUDER</b>, in caps, with three exclamation points. It still gets skipped.</p>
+
+    <p>The instinct is to write more. The fix is almost always to write <i>less</i>. Here's why, and
+    what to do instead.</p>
+
+    <h2>Instruction-following has a budget, and you're overdrawn</h2>
+    <p>This is the part most CLAUDE.md guides skip. Published instruction-following benchmarks and
+    practitioner reports put reliable adherence on the order of <b>150–200 instructions at once</b>
+    (treat the exact number as an estimate, not a spec) — and adherence to any single rule <i>drops</i> as you stack
+    more on top of it. It isn't a cliff; it's a slow tax. Every line you add makes every other line a
+    little less likely to be honored.</p>
+
+    <p>Now subtract what you don't control: Claude Code's own system prompt already spends a chunk of
+    that budget before your file is even read. So the working budget for <i>your</i> project rules is
+    smaller than the headline number — and a sprawling 300-line CLAUDE.md isn't 300 rules followed,
+    it's maybe the first 150 followed well and the rest treated as ambience.</p>
+
+    <p>The mental model that fixes everything downstream: <b>CLAUDE.md is a budget, not a wishlist.</b>
+    You are not writing documentation. You are spending a scarce attention allowance, and every line
+    competes with every other line.</p>
+
+    <h2>The test for every line: would you bet $5 it's followed?</h2>
+    <p>Go through your file line by line and ask one question of each rule: <i>would I bet money this
+    fires every time it's relevant?</i> Three outcomes:</p>
+    <ul>
+      <li><b>Yes, and it's load-bearing</b> — keep it. This is what the budget is for.</li>
+      <li><b>Nice to have, but I wouldn't bet on it</b> — cut it, or move it to a referenced file (below). It's diluting the rules you <i>would</i> bet on.</li>
+      <li><b>It absolutely must happen every time</b> — then it doesn't belong in CLAUDE.md at all. Make it a hook.</li>
+    </ul>
+    <p>That third category is the one people get wrong, so let's be concrete about it.</p>
+
+    <h2>Advisory vs. deterministic: know which one you need</h2>
+    <p>A CLAUDE.md rule is a <i>request</i>. A good model honors it most of the time — in our own
+    testing, roughly 8 in 10 times. For style preferences, naming conventions, "explain before you
+    refactor," that hit rate is completely fine; the cost of a miss is low.</p>
+
+    <p>But some rules can't tolerate a 1-in-5 miss: never commit secrets, never touch
+    <code>production.env</code>, always run the test suite before declaring done. For those, prose is
+    the wrong tool no matter how forcefully you phrase it. You want a <b>hook</b> — a shell command
+    Claude Code runs automatically at a fixed point in its lifecycle. A hook doesn't ask the model to
+    cooperate; it fires deterministically, every time, whether the model "felt like it" or not.</p>
+
+    <p>Here's the graduation in practice. The CLAUDE.md version — advisory, ~80%:</p>
+<pre><code># in CLAUDE.md
+- Never edit .env files or anything under .git/. Never commit secrets.</code></pre>
+
+    <p>The hook version — deterministic, 100%. A <code>PreToolUse</code> hook that <i>blocks</i> the
+    write before it happens:</p>
+<pre><code>{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "node -e \"const p=process.env.CLAUDE_TOOL_INPUT_FILE_PATH||''; if(/(^|\\/)\\.env|(^|\\/)\\.git\\/|secrets/i.test(p)){console.error('Blocked: protected path '+p);process.exit(2)}\""
+      }]
+    }]
+  }
+}</code></pre>
+    <p>Exit code <code>2</code> tells Claude Code the action was refused and feeds the reason back to
+    the model, so it adapts instead of failing silently. The rule it replaced can now leave CLAUDE.md
+    entirely — you just bought back a line of budget <i>and</i> upgraded a must-happen rule from 80% to
+    100%. That's the trade you're looking for on every critical line.</p>
+
+    <h2>Every rule needs a reason — or it doesn't generalize</h2>
+    <p>"Use tabs, not spaces" is a rule that applies exactly once, literally. "Use tabs, not spaces —
+    our linter rejects spaces and the build fails" is a rule the model can <i>reason from</i>: it now
+    knows the underlying constraint and will make the right call in situations you never spelled out.
+    A rule with a reason generalizes. A bare command gets followed only in the exact case you wrote,
+    and quietly dropped the moment the context shifts an inch. Reasons aren't padding — they're what
+    makes a rule worth its place in the budget.</p>
+
+    <h2>Progressive disclosure: keep the hot path short</h2>
+    <p>You don't actually have to choose between "short file" and "thorough guidance." Keep CLAUDE.md
+    to the rules that apply to <i>most</i> tasks, and push the rest into focused files you reference by
+    path:</p>
+<pre><code># CLAUDE.md (the always-loaded hot path — keep it lean)
+- Run `npm test` before declaring any task done.
+- API conventions live in docs/api-guidelines.md — read it before touching routes/.
+- DB migrations: follow docs/migrations.md exactly.</code></pre>
+    <p>Claude pulls <code>docs/migrations.md</code> into context only when it's actually doing a
+    migration. The detailed guidance still exists, fully — it just isn't taxing your budget on the 90%
+    of tasks where it's irrelevant. Your CLAUDE.md stays a tight, high-adherence core; the depth lives
+    one hop away, loaded on demand.</p>
+
+    <h2>The 20-minute audit</h2>
+    <p>Open your CLAUDE.md right now and do this pass:</p>
+    <ul>
+      <li><b>Count the lines.</b> Past ~150 and climbing? That alone explains a lot of "it ignored me."</li>
+      <li><b>Delete every rule you wouldn't bet $5 on.</b> Be ruthless. A diluted file follows nothing well.</li>
+      <li><b>Find the must-happen rules and make them hooks.</b> Secrets, destructive commands, test-before-done. Move them out of prose.</li>
+      <li><b>Add a reason to every surviving rule.</b> If you can't articulate why, you don't need the rule.</li>
+      <li><b>Move task-specific depth into referenced files.</b> Keep the hot path lean.</li>
+    </ul>
+    <p>Almost everyone who does this honestly ends up with a <i>shorter</i> file that Claude follows
+    <i>more</i> reliably. That's not a paradox — it's the budget working as intended.</p>
+
+    <hr/>
+    <h2>The one-paragraph version</h2>
+    <p>Instruction-following is a scarce budget, not a wishlist. Models reliably follow ~150–200 rules
+    and adherence drops as you pile on more, so every line in CLAUDE.md should be one you'd bet money
+    on. Cut what you wouldn't bet on, give every survivor a reason so it generalizes, push task-specific
+    depth into referenced files, and graduate the must-happen rules out of advisory prose into
+    deterministic hooks. Shorter file, higher adherence.</p>
+
+    <div class="cta">
+      <b>Want the copy-paste version of this fix — for $2.99?</b>
+      <p style="margin:8px 0 0">The CLAUDE.md Optimizer Pack is the 60-second scorecard, the mechanism
+      in plain English, five real before→after rewrites, and drop-in templates. Works for Claude Code,
+      the API, Cursor, or any agent that loads an instruction file.</p>
+      <a class="btn" href="https://buy.stripe.com/aFa6oGcJk2zQ5HtdP13F607">Get the Optimizer Pack — $2.99</a>
+      <p style="margin:10px 0 0;font-size:13.5px;color:#6b7280">Secure Stripe checkout · one-time ·
+      instant email delivery · 14-day guarantee</p>
+    </div>
+
+    <div class="cta">
+      <b>Want CLAUDE.md templates that already follow this — plus ready-to-paste hooks?</b>
+      <p style="margin:8px 0 0">The Claude Code Power-User Pack ships lean CLAUDE.md starting points,
+      five deterministic hooks (including the secrets guard above), subagents, and slash-command skills
+      — the copy-paste version of this whole article.</p>
+      <a class="btn" href="./index.html">See the Power-User Pack →</a>
+    </div>
+
+    <p class="rule">New to this? Start with the <a href="./field-guide.html">free field guide</a> — seven
+    reliability rules and three paste-able Claude Code guardrails, no email required.</p>
+
+    <footer>
+      Penloom Studio · penloomstudio@gmail.com · Practical digital tools for people who build with AI.
+    </footer>
+  </div>
+</body>
+</html>

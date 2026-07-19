@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ship a Reliable AI Agent — The Free Field Guide · Penloom</title>
+<meta name="description" content="Free field guide: 7 rules that make an AI agent reliable, 3 deterministic Claude Code guardrails you can paste today, and a pre-ship checklist. By Penloom." />
+<link rel="canonical" href="https://penloomstudio.com/field-guide.html" />
+<meta property="og:site_name" content="Penloom" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://penloomstudio.com/field-guide.html" />
+<meta property="og:title" content="Ship a Reliable AI Agent — The Free Field Guide" />
+<meta property="og:description" content="7 rules that make an AI agent reliable, 3 deterministic Claude Code guardrails you can paste today, and a pre-ship checklist. Free, no email required." />
+<meta property="og:image" content="https://penloomstudio.com/penloom-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Ship a Reliable AI Agent — The Free Field Guide" />
+<meta name="twitter:description" content="7 rules that make an AI agent reliable, 3 paste-ready Claude Code guardrails, and a pre-ship checklist. Free." />
+<meta name="twitter:image" content="https://penloomstudio.com/penloom-card.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Ship a Reliable AI Agent — The Free Field Guide",
+  "description": "7 rules that make an AI agent reliable, 3 deterministic Claude Code guardrails you can paste today, and a pre-ship checklist.",
+  "image": "https://penloomstudio.com/penloom-card.png",
+  "isAccessibleForFree": true,
+  "author": { "@type": "Organization", "name": "Penloom", "url": "https://penloomstudio.com/" },
+  "publisher": { "@type": "Organization", "name": "Penloom", "logo": { "@type": "ImageObject", "url": "https://penloomstudio.com/penloom-card.png" } },
+  "mainEntityOfPage": "https://penloomstudio.com/field-guide.html"
+}
+</script>
+<style>
+  :root{ --ink:#1d2330; --muted:#5b6472; --bg:#f7f7f4; --card:#fff; --accent:#3b5bdb; --line:#e7e7e1; }
+  *{box-sizing:border-box} body{margin:0;font:16px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:48px 0 14px}
+  .home{font-size:14px}
+  .logo{font-weight:800;font-size:22px;letter-spacing:-.5px;margin-top:10px}
+  .logo span{color:var(--accent)}
+  h1{font-size:30px;line-height:1.25;margin:22px 0 6px}
+  .sub{color:var(--muted);font-size:19px;margin:0 0 8px}
+  .free{display:inline-block;background:#e7fbef;border:1px solid #b9e9cd;color:#157347;font-weight:700;font-size:13px;padding:3px 10px;border-radius:999px;margin-top:8px}
+  h2{font-size:22px;margin:34px 0 4px;border-top:1px solid var(--line);padding-top:26px}
+  h3{font-size:17px;margin:22px 0 2px}
+  p{margin:10px 0}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  pre{background:#1d2330;color:#eef1fe;padding:14px 16px;border-radius:10px;overflow:auto;font-size:13px;line-height:1.5}
+  code{background:#eef1fe;color:#2a3566;padding:1px 5px;border-radius:5px;font-size:13px}
+  pre code{background:none;color:inherit;padding:0}
+  blockquote{border-left:3px solid var(--accent);margin:14px 0;padding:4px 16px;color:var(--muted);background:#fff;border-radius:0 8px 8px 0}
+  ul.check{list-style:none;padding-left:4px}
+  ul.check li{margin:6px 0;padding-left:26px;position:relative}
+  ul.check li:before{content:"☐";position:absolute;left:0;color:var(--accent);font-weight:700}
+  .cta{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:18px 0}
+  .cta h3{margin-top:0}
+  .price{font-weight:700;color:var(--accent)}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:11px 20px;border-radius:9px;font-weight:600;margin-top:8px}
+  .btn:hover{filter:brightness(1.05)}
+  a{color:var(--accent)}
+  footer{color:var(--muted);font-size:14px;padding:30px 0 50px;border-top:1px solid var(--line);margin-top:36px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="home"><a href="./index.html">← Penloom storefront</a></div>
+      <div class="logo">Pen<span>loom</span></div>
+      <h1>Ship a Reliable AI Agent</h1>
+      <p class="sub">The free field guide — the 10-minute version of everything that keeps an AI agent on the rails.</p>
+      <span class="free">FREE · share it freely</span>
+    </header>
+
+    <p>Almost every "my agent is flaky" problem traces back to the same handful of missing rules.
+    Fix these seven and most of the flakiness disappears. None of this needs a framework — it's
+    prompt discipline plus three lines of deterministic config. Copy anything here into your own agents.</p>
+
+    <div class="cta" style="background:#eef1fe;border-color:#c9d4f5">
+      <h3 style="margin-top:0">Get the next field guides — free</h3>
+      <p style="margin-bottom:12px">New paste-ready guides on shipping reliable AI agents, plus first dibs and the
+      occasional discount on the packs. No spam, unsubscribe anytime. The guide above stays free, no email needed —
+      this is only if you want the next ones.</p>
+      <a class="btn" href="mailto:penloomstudio@gmail.com?subject=Send%20me%20the%20next%20field%20guides&body=Add%20me%20to%20the%20free%20field-guide%20list.">Email me the next guides →</a>
+    </div>
+
+    <h2>Part 1 — The 7 rules that make an agent reliable</h2>
+
+    <h3>1. Give it exactly one objective, restated every loop.</h3>
+    <p>A vague agent wanders. Drift is the #1 cause of "it did something weird."</p>
+    <pre><code>You are {ROLE}. Your single objective is {OBJECTIVE}.
+Each loop: (1) restate the goal in one line, (2) list the steps, (3) do ONE step,
+(4) check the result against the goal before continuing.</code></pre>
+
+    <h3>2. Ban silent success.</h3>
+    <p>Most "it said it worked but it didn't" failures come from the model narrating success it never verified.</p>
+    <pre><code>Report outcomes faithfully. If a step failed, say so and include the error.
+If you skipped something, say so. Never claim an action succeeded without evidence.
+Never present a guess as a fact; when uncertain, give a confidence (0–1) and the caveat.</code></pre>
+
+    <h3>3. Put a wall in front of irreversible actions.</h3>
+    <p>Sending money, emailing a customer, deleting data, publishing — these need an explicit stop, not a hope.</p>
+    <pre><code>Before any irreversible action (send money/email, delete, publish), STOP, show exactly
+what you will do, and ask for explicit confirmation. Approval for one action is not
+approval for the next. When in doubt, ask.</code></pre>
+
+    <h3>4. Plan before doing — and check after each step.</h3>
+    <p>For anything over two steps, force a numbered plan first, then a one-line check after each step:
+    <code>Step N: &lt;result&gt; — on track? yes/no</code>. If "no," revise the <em>remaining</em> plan instead of
+    plowing ahead. Catching a wrong turn at step 2 is cheap; at step 9 it isn't.</p>
+
+    <h3>5. Ground before answering.</h3>
+    <p>An agent that answers from memory when a tool or source is available will confidently invent things.
+    Check sources first, prefer fresh citable data over training knowledge, name which source you used.
+    If sources conflict, follow the most recent/authoritative and say which.</p>
+
+    <h3>6. Fail twice, then stop.</h3>
+    <p>Infinite-retry loops burn tokens and produce garbage. Cap it: "If a step fails twice, stop and
+    report what you tried — do not invent a result." A bounded failure you can see beats an endless loop you can't.</p>
+
+    <h3>7. Constrain the tools, not just the prose.</h3>
+    <p>"Only use the tools provided; if no tool fits, say so plainly." Then make the <em>definitions</em> tight:
+    every tool needs a one-line "use this when…", required vs optional params marked, and an explicit
+    "what to do on error." Vague tool descriptions are where agents go off-script.</p>
+
+    <h2>Part 2 — Three deterministic guardrails (paste-ready)</h2>
+    <blockquote>Prompts <em>persuade</em> a model; hooks and permissions <em>enforce</em>. For the things that
+    must never happen, don't rely on instructions the model can skim past — use config it physically cannot cross.</blockquote>
+
+    <h3>A. Block edits to protected paths (PreToolUse hook).</h3>
+    <p>A CLAUDE.md line saying "never touch /infra" is a suggestion. This is a wall:</p>
+    <pre><code># fires before a file write; non-zero exit blocks the action
+case "$f" in
+  */infra/*|*/.env|*.generated.*) echo "protected path: $f" &gt;&amp;2; exit 2 ;;
+esac</code></pre>
+
+    <h3>B. Keep one-way doors in "ask," not "allow."</h3>
+    <p>Allow-list the safe, reversible commands (formatters, tests, reads). Keep the irreversible ones —
+    <code>git push</code>, dependency installs, deploys — in <em>ask</em> so a human taps through. Zero friction on
+    reversible actions, a deliberate pause on one-way doors.</p>
+
+    <h3>C. Right-size your CLAUDE.md.</h3>
+    <p>A 600-line CLAUDE.md gets skimmed and ignored. Keep only <strong>universal</strong> rules there; move
+    "sometimes" rules into on-demand skills so they load only when relevant. Signal-to-noise is what makes
+    the model actually follow it.</p>
+
+    <h2>Part 3 — The pre-ship checklist</h2>
+    <ul class="check">
+      <li>Single objective stated, and restated each loop</li>
+      <li>"Honest reporter" rule present (no silent success, no guessed facts)</li>
+      <li>Irreversible actions gated behind an explicit confirm</li>
+      <li>Plan-then-check structure for multi-step tasks</li>
+      <li>Grounding rule: sources before memory, cite what's used</li>
+      <li>Retry cap (fail twice → stop and report)</li>
+      <li>Tool definitions: one-line "use when," params marked, error behavior defined</li>
+      <li>Deterministic guardrails for the must-never-happen cases (not just prose)</li>
+      <li>An eval you can re-run: fixed prompts + expected behavior, scored the same each time</li>
+      <li>You watched a full real run end-to-end at least once</li>
+    </ul>
+    <p>That last line matters most. The fastest way to find what's flaky is to read one complete transcript,
+    start to finish, before you trust it with anything.</p>
+
+    <h2>Want the complete systems this is drawn from?</h2>
+    <p>This guide is the overview. Fixing ONE specific problem today? Start with a <strong>$2.99 quick
+    fix</strong>: <a href="https://buy.stripe.com/aFa6oGcJk2zQ5HtdP13F607">the CLAUDE.md Optimizer Pack</a>
+    (Claude ignoring your instruction file) or
+    <a href="https://buy.stripe.com/8x2aEWfVwgqG7PB7qD3F608">the Tool-Calling Reliability Pack</a>
+    (wrong tool, invented parameters). Going deep? The full libraries — every prompt, pattern, subagent,
+    hook, and a re-runnable eval suite — are two small Penloom packs:</p>
+
+    <div class="cta">
+      <h3>The Agent Builder's Toolkit — <span class="price">$19</span></h3>
+      <p>23 reliability-focused system prompts, tool-definition patterns, a full agent
+      <strong>evaluation rubric + 12-prompt test suite</strong>, and 10 copy-paste starter agents.
+      The complete version of Parts 1 &amp; 3 above.</p>
+      <a class="btn" href="https://buy.stripe.com/aFa3cu9x8deub1N9yL3F601">Get the Toolkit — $19</a>
+    </div>
+
+    <div class="cta">
+      <h3>The Claude Code Power-User Pack — <span class="price">$17</span></h3>
+      <p>4 CLAUDE.md templates, 5 ready-to-run subagents, 5 deterministic hooks, 5 slash-command skills,
+      and an annotated settings.json. The complete version of Part 2 above.</p>
+      <a class="btn" href="https://buy.stripe.com/7sYaEWdNo0rI6LxdP13F602">Get the Pack — $17</a>
+    </div>
+
+    <p>They pair up: the Toolkit is the <em>prompt &amp; evaluation</em> layer; the Pack is the
+    <em>config &amp; guardrail</em> layer. Builders who ship agents tend to want both. One-time digital
+    purchase, delivered by email within minutes.</p>
+
+    <footer>
+      Penloom · <a href="./index.html">storefront</a> · penloomstudio@gmail.com · Share this guide freely — keep it intact. v1.0
+    </footer>
+  </div>
+</body>
+</html>

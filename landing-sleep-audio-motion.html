@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rain Sounds & Brown Noise for Deep Sleep — Dusk</title>
+<meta name="description" content="Long-form rain and brown noise soundscapes for deep, uninterrupted sleep — no ads, no fades, no loop click. Dusk is coming to Spotify and Apple Music.">
+<link rel="canonical" href="https://penloomstudio.com/landing-sleep-audio-motion.html">
+<meta property="og:site_name" content="Dusk">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://penloomstudio.com/landing-sleep-audio-motion.html">
+<meta property="og:title" content="Dusk — Sleep Sounds Made to Last the Night">
+<meta property="og:description" content="Long-form rain and brown noise soundscapes for deep, uninterrupted sleep. No ads, no fades, no loop click. Coming to Spotify & Apple Music.">
+<meta property="og:image" content="https://penloomstudio.com/og/sleep-audio.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dusk — Sleep Sounds Made to Last the Night">
+<meta name="twitter:description" content="Long-form rain and brown noise soundscapes for deep, uninterrupted sleep. Coming to Spotify & Apple Music.">
+<meta name="twitter:image" content="https://penloomstudio.com/og/sleep-audio.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Brand",
+  "name": "Dusk",
+  "url": "https://penloomstudio.com/landing-sleep-audio-motion.html",
+  "logo": "https://penloomstudio.com/og/sleep-audio.png",
+  "slogan": "Sleep sounds made for you, not everyone.",
+  "description": "Dusk crafts long-form sleep and ambient audio — steady rain, deep brown noise, and slow soundscapes built to run all night with no fades, no ads, and no jarring loop point."
+}
+</script>
+<style>
+  :root{
+    --night:#0a0a18; --night2:#0f1024; --haze:#171a35;
+    --lav:#b7b1e8; --blue:#8fb6e6; --glow:#c9c3f2; --text:#d7d6ee; --dim:#7d7ea3;
+    --line:#23253f;
+    --sans:"Inter",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--night);color:var(--text);line-height:1.75;font-weight:300;overflow-x:hidden;
+    background-image:
+      radial-gradient(90% 60% at 50% -10%,#1b1c3e,transparent 60%),
+      radial-gradient(60% 50% at 80% 20%,rgba(143,182,230,.10),transparent 60%),
+      radial-gradient(70% 60% at 15% 40%,rgba(183,177,232,.10),transparent 60%);}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:920px;margin:0 auto;padding:0 28px}
+
+  nav{padding:24px 0}
+  .navrow{display:flex;align-items:center;max-width:920px;margin:0 auto;padding:0 28px}
+  .brand{font-size:20px;letter-spacing:6px;font-weight:400;text-transform:uppercase;color:var(--glow)}
+  .navrow .sp{flex:1}
+  .navrow a{color:var(--dim);font-size:14px;letter-spacing:1px;margin-left:22px}
+  .navrow a:hover{color:var(--text)}
+
+  /* stars + moon (decorative, CSS only) */
+  .sky{position:fixed;inset:0;z-index:-1;opacity:.6;background-image:
+    radial-gradient(1px 1px at 10% 20%,#fff,transparent),
+    radial-gradient(1px 1px at 30% 70%,#cfd,transparent),
+    radial-gradient(1.4px 1.4px at 60% 30%,#fff,transparent),
+    radial-gradient(1px 1px at 80% 60%,#dde,transparent),
+    radial-gradient(1px 1px at 45% 85%,#fff,transparent),
+    radial-gradient(1.2px 1.2px at 90% 15%,#fff,transparent);animation:twinkle 7s ease-in-out infinite}
+  @keyframes twinkle{50%{opacity:.35}}
+  .moon{position:fixed;top:12%;right:8%;width:120px;height:120px;border-radius:50%;z-index:-1;
+    background:radial-gradient(circle at 35% 35%,#f3efd6,#cfc9b0);box-shadow:0 0 80px 20px rgba(243,239,214,.18);opacity:.5}
+
+  header{padding:90px 0 70px;text-align:center}
+  .halo{width:14px;height:14px;border-radius:50%;margin:0 auto 34px;background:var(--glow);
+    box-shadow:0 0 0 10px rgba(201,195,242,.08),0 0 40px 8px rgba(201,195,242,.5);animation:breathe 5s ease-in-out infinite}
+  @keyframes breathe{50%{transform:scale(1.5);box-shadow:0 0 0 20px rgba(201,195,242,.04),0 0 60px 14px rgba(201,195,242,.5)}}
+  h1{font-size:clamp(36px,6.5vw,72px);font-weight:200;line-height:1.12;letter-spacing:-1px;color:#eceaf8}
+  h1 em{font-style:italic;color:var(--lav);font-weight:300}
+  .sub{font-size:clamp(16px,2.2vw,20px);color:var(--dim);max-width:560px;margin:26px auto 34px;font-weight:300}
+  .badge{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:100px;
+    padding:10px 22px;font-size:14px;letter-spacing:1px;color:var(--lav);background:rgba(183,177,232,.05)}
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--lav);box-shadow:0 0 12px 2px rgba(183,177,232,.6)}
+
+  section{padding:70px 0}
+  h2{text-align:center;font-weight:200;font-size:clamp(28px,4.5vw,44px);color:#eceaf8;letter-spacing:-.5px;margin-bottom:12px}
+  .lead{text-align:center;color:var(--dim);max-width:560px;margin:0 auto 50px;font-weight:300;font-size:17px}
+
+  /* sound cards */
+  .sounds{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:840px;margin:0 auto}
+  .sound{border:1px solid var(--line);border-radius:20px;padding:32px 28px;background:rgba(255,255,255,.015);text-align:left}
+  .sound .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--lav);margin-bottom:14px}
+  .sound h3{font-weight:300;font-size:21px;color:#eceaf8;margin-bottom:8px}
+  .sound .len{font-size:13px;color:var(--blue);letter-spacing:1px;margin-bottom:14px}
+  .sound p{color:var(--dim);font-size:15px}
+  .soundnote{text-align:center;color:var(--dim);font-size:14.5px;max-width:560px;margin:36px auto 0}
+
+  /* principles */
+  .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;text-align:center}
+  .row h3{font-weight:300;font-size:20px;color:#eceaf8;margin-bottom:10px}
+  .row .n{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--lav);margin-bottom:14px}
+  .row p{color:var(--dim);font-size:15px}
+
+  /* streaming-soon panel — honest, no button */
+  .soon{border:1px solid var(--line);border-radius:20px;padding:52px 36px;text-align:center;
+    background:linear-gradient(180deg,rgba(183,177,232,.06),transparent)}
+  .soon h2{margin-bottom:16px}
+  .soon p{color:var(--dim);max-width:560px;margin:0 auto;font-size:16px}
+  .soon p + p{margin-top:14px}
+
+  footer{padding:44px 0 40px;text-align:center;color:#5b5c7d;font-size:13px;letter-spacing:1px;border-top:1px solid var(--line)}
+  .disc{color:#494a68;font-size:12px;margin-top:10px;letter-spacing:.4px}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div><div class="moon" aria-hidden="true"></div>
+
+<nav><div class="navrow">
+  <span class="brand">Dusk</span>
+  <span class="sp"></span>
+  <a href="#sounds">Sounds</a>
+  <a href="#why">Why Dusk</a>
+  <a href="#streaming">Streaming</a>
+</div></nav>
+
+<header class="wrap">
+  <div class="halo" aria-hidden="true"></div>
+  <h1>Sleep sounds made<br>to <em>last the night</em>.</h1>
+  <p class="sub">Dusk crafts long-form rain, brown noise, and ambient soundscapes for deep, uninterrupted sleep. No ads. No fades. No loop click that jolts you awake at 3am.</p>
+  <span class="badge"><span class="dot" aria-hidden="true"></span>Coming to Spotify &amp; Apple Music</span>
+</header>
+
+<section class="wrap" id="sounds">
+  <h2>The first recordings</h2>
+  <p class="lead">Three finished masters — the textures every Dusk release is built from.</p>
+  <div class="sounds">
+    <div class="sound">
+      <div class="k">01 · Rain</div>
+      <h3>Steady Rain</h3>
+      <div class="len">3-minute study</div>
+      <p>Soft, even rainfall with no thunder and no swell — the quiet, low-volume rain sleepers actually search for.</p>
+    </div>
+    <div class="sound">
+      <div class="k">02 · Rain, long</div>
+      <h3>Steady Rain — Extended</h3>
+      <div class="len">10 minutes, seamless</div>
+      <p>The same rainfall carried long: one continuous take with no jarring loop point, made to disappear behind your thoughts.</p>
+    </div>
+    <div class="sound">
+      <div class="k">03 · Noise</div>
+      <h3>Deep Brown Noise</h3>
+      <div class="len">3-minute study</div>
+      <p>Warm, low-frequency noise — darker and rounder than white noise, a steady floor for minds that won't settle.</p>
+    </div>
+  </div>
+  <p class="soundnote">These masters are mixed and finished. Extended overnight versions are planned for Dusk's first streaming release.</p>
+</section>
+
+<section class="wrap" id="why">
+  <h2>Quiet by design</h2>
+  <p class="lead">For you, not everyone — three rules every Dusk track follows.</p>
+  <div class="row">
+    <div><div class="n">01 · Long-form</div><h3>Built to run</h3><p>Real-length tracks made for whole nights — not thirty-second loops stretched thin.</p></div>
+    <div><div class="n">02 · Seamless</div><h3>Nothing to wake you</h3><p>No fades, no abrupt transitions, no loop click. The sound simply continues.</p></div>
+    <div><div class="n">03 · Honest</div><h3>No gimmicks</h3><p>No ads, no upsells, no miracle claims. Just carefully made sound, tuned for rest.</p></div>
+  </div>
+</section>
+
+<section class="wrap" id="streaming">
+  <div class="soon">
+    <div class="halo" style="animation-delay:1s" aria-hidden="true"></div>
+    <h2>Streaming, soon.</h2>
+    <p>Dusk's first release — extended rain and brown noise masters under the Dusk artist name — is planned for Spotify, Apple Music, and other streaming platforms. No date is set yet.</p>
+    <p>There is nothing to buy or sign up for yet. When the release is live, this page will link straight to it.</p>
+  </div>
+</section>
+
+<footer class="wrap">
+  Dusk — long-form sleep &amp; ambient audio · © 2026 Dusk
+  <div class="disc">Dusk supports rest and relaxation. It is not a medical device and does not treat sleep disorders — consult a clinician for chronic insomnia.</div>
+</footer>
+</body>
+</html>

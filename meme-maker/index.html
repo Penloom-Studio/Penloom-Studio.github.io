@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The No-App Meme Maker — Meme Vault</title>
+<meta name="description" content="Make a meme in your browser. 120 original caption lines, seven joke formats, your own photo or a plain background. No app, no account, no watermark, no subscription. Works offline.">
+<meta name="theme-color" content="#111318">
+<meta property="og:title" content="The No-App Meme Maker">
+<meta property="og:description" content="Pick a format, pick a caption, get an image. 120 original lines built in. No app, no account, no watermark.">
+<style>
+:root{
+  --bg:#0f1116; --panel:#171a21; --line:#262b35; --ink:#e9ecf2; --dim:#98a1b2;
+  --accent:#ffd23f; --accent-ink:#191a12; --ok:#4ade80;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+a{color:var(--accent)}
+.wrap{max-width:1120px;margin:0 auto;padding:24px 18px 72px}
+header.top{padding:34px 0 18px;border-bottom:1px solid var(--line);margin-bottom:26px}
+header.top h1{margin:0 0 8px;font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.02em}
+header.top p{margin:0;color:var(--dim);max-width:62ch}
+.kicker{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+
+.app{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:22px;align-items:start}
+@media (max-width:860px){.app{grid-template-columns:1fr}}
+
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.stage canvas{max-width:100%;max-height:66vh;width:auto;height:auto;display:block;margin:0 auto;border-radius:8px;background:#000}
+.stage .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.panel + .panel{margin-top:16px}
+fieldset{border:0;padding:0;margin:0 0 18px}
+legend,.lbl{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;display:block}
+select,textarea,input[type=text]{
+  width:100%;background:#0d1015;color:var(--ink);border:1px solid var(--line);
+  border-radius:9px;padding:10px 11px;font:inherit;font-size:15px
+}
+textarea{min-height:92px;resize:vertical}
+select:focus,textarea:focus,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{
+  font:inherit;font-weight:600;cursor:pointer;border-radius:9px;padding:10px 14px;
+  background:#20252f;color:var(--ink);border:1px solid var(--line)
+}
+button:hover{border-color:#3a4152}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.wide{width:100%}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.swatches button{width:34px;height:34px;padding:0;border-radius:8px;border:2px solid transparent}
+.swatches button[aria-pressed=true]{border-color:var(--accent)}
+.hint{color:var(--dim);font-size:13px;margin:8px 0 0}
+.status{color:var(--ok);font-size:13px;min-height:1.4em;margin-top:10px}
+.pill{display:inline-block;font-size:12px;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:2px 9px;margin-right:6px}
+
+section.copy{margin-top:56px;border-top:1px solid var(--line);padding-top:34px}
+section.copy h2{font-size:clamp(21px,3vw,27px);margin:38px 0 12px;letter-spacing:-.01em}
+section.copy h3{font-size:17px;margin:22px 0 6px}
+section.copy p,section.copy li{color:#c7cddb;max-width:74ch}
+section.copy ol,section.copy ul{padding-left:20px}
+section.copy li{margin-bottom:9px}
+.note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:14px 16px;margin:20px 0}
+.note p{margin:0;max-width:none}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;color:var(--dim);font-size:14px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <span class="kicker">Meme Vault · free tool</span>
+  <h1>The No-App Meme Maker</h1>
+  <p>Pick a format, pick or type a caption, get an image. Everything below runs in this page — no app to install, no account, no watermark, no subscription, and no data leaves your device. It works with the wi-fi off.</p>
+</header>
+
+<div class="app">
+
+  <div class="stage">
+    <canvas id="cv" width="1080" height="1350" aria-label="Meme preview"></canvas>
+    <div class="row">
+      <button class="primary" id="download">Download PNG</button>
+      <button id="shuffle">Shuffle caption</button>
+      <button id="copytext">Copy caption text</button>
+    </div>
+    <p class="status" id="status" role="status"></p>
+  </div>
+
+  <div>
+    <div class="panel">
+      <fieldset>
+        <label class="lbl" for="fmt">Joke format</label>
+        <select id="fmt"></select>
+        <p class="hint" id="fmthint"></p>
+      </fieldset>
+
+      <fieldset>
+        <label class="lbl" for="cat">Subject</label>
+        <select id="cat"></select>
+      </fieldset>
+
+      <fieldset>
+        <label class="lbl" for="caption">Caption — pick one above, or write your own</label>
+        <textarea id="caption" spellcheck="true"></textarea>
+        <p class="hint" id="wordcount"></p>
+      </fieldset>
+
+      <fieldset>
+        <label class="lbl" for="layout">Layout</label>
+        <select id="layout">
+          <option value="top-bottom">Top / bottom (setup up, punchline down)</option>
+          <option value="stacked">Stacked at the bottom</option>
+          <option value="single">One block, bottom</option>
+        </select>
+      </fieldset>
+    </div>
+
+    <div class="panel">
+      <fieldset>
+        <label class="lbl" for="shape">Shape</label>
+        <select id="shape">
+          <option value="4:5">4:5 vertical — safest all-purpose</option>
+          <option value="1:1">1:1 square — works everywhere</option>
+          <option value="9:16">9:16 — Stories only</option>
+        </select>
+      </fieldset>
+
+      <fieldset>
+        <span class="lbl">Background</span>
+        <div class="grid2">
+          <button id="upload-btn" type="button">Use my photo</button>
+          <button id="gradient" type="button">New gradient</button>
+        </div>
+        <input id="upload" type="file" accept="image/*" class="sr">
+        <div class="swatches" id="swatches" style="margin-top:10px"></div>
+        <p class="hint">Your photo never leaves this page — it is drawn straight onto the canvas. We ship plain colours and generated gradients rather than famous meme templates on purpose: those images belong to somebody, and a caption on one is their picture, not yours.</p>
+      </fieldset>
+
+      <fieldset>
+        <span class="lbl">Text</span>
+        <div class="grid2">
+          <button id="textcolor" type="button">Light / dark text</button>
+          <button id="reset" type="button">Reset</button>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<section class="copy">
+  <h2>The method — the whole pipeline, in six steps</h2>
+  <p>This page does steps 1 to 5 for you. They are printed anyway, because once you know them you can make a clean meme in any tool you already own, forever, without this page or any other.</p>
+  <ol>
+    <li><strong>Pick your surface.</strong> Your phone's own Photos app (Markup on iPhone, annotate on Android) can crop, add text and adjust contrast. You do not need a paid plan for a single text-on-image job.</li>
+    <li><strong>Crop to the platform first, caption second.</strong> Square (1:1) works everywhere but crops badly on some feeds; 4:5 vertical is the safest all-purpose shape; 9:16 is for Stories only and gets ugly bars anywhere else. Decide the shape before you place text, or you will re-crop around your own caption later.</li>
+    <li><strong>Leave a margin.</strong> Text jammed to the edge gets clipped by thumbnail crops and app UI — the reply bar, the like-button row. Keep roughly 8–10% of the frame clear on every side. This page holds 9% and will not let text cross it.</li>
+    <li><strong>Use a stroke or a solid backing bar.</strong> Never let text float loose on a busy photo. A thin dark outline around light text (or light around dark) is what makes captions legible over any background without a specific brand font.</li>
+    <li><strong>One typeface, two sizes at most.</strong> Setup line smaller, punchline bigger. That is the entire "professional meme font" trick — it was never about a font, it was about the size relationship doing the pacing for you.</li>
+    <li><strong>The sound-off test.</strong> Look at it for two seconds with the caption covered by your thumb, then uncover it. If the joke does not land in that two seconds, the caption is too long, not too unfunny — cut words, do not rewrite.</li>
+  </ol>
+
+  <h2>Seven formats, in words</h2>
+  <p>These are structural patterns, not specific templates. Nobody owns "a sentence in two parts", and describing the <em>shape</em> of a joke rather than reproducing anyone's image is what keeps this clean to use anywhere.</p>
+  <ol>
+    <li><strong>Top/Bottom.</strong> Setup on top, punchline on bottom, over one image. The oldest shape for a reason — it forces the setup to one line, which is most of the editing done for you.</li>
+    <li><strong>The List.</strong> Three items that build normally, a fourth that breaks the pattern. Works as pure text; the escalation carries it.</li>
+    <li><strong>The Comparison.</strong> Two captions on the same image, contrasting a claim against reality. The comedy lives in how small the gap is, not how big.</li>
+    <li><strong>The Translation.</strong> What was said, then what was actually meant. Works especially well for workplace and relationship humour because everyone already has a mental list of these.</li>
+    <li><strong>The Reaction Beat.</strong> One still image, one caption naming the internal monologue nobody said out loud. The image should be doing almost nothing.</li>
+    <li><strong>The Wrong Category.</strong> Describe something ordinary in language from a higher-stakes context — a group chat notification as a crime-scene report. The mismatch in register is the joke.</li>
+    <li><strong>The Escalation.</strong> The same sentence shape three or four times, each worse or more specific, landing on the most specific. The "you know it's true when" shape.</li>
+  </ol>
+
+  <h2>The thirty-second quality pass</h2>
+  <p>Run this before you send it. It is the same pass professional caption writers use, minus the app that charges you to do it.</p>
+  <ol>
+    <li><strong>Read it out loud, once.</strong> If you stumble on a word, so will the reader — cut it.</li>
+    <li><strong>Cover the punchline with your thumb.</strong> Does the setup alone make you curious? If it is already funny without the punchline, the punchline is doing nothing.</li>
+    <li><strong>Count the words in the punchline.</strong> More than about twelve and it is explaining the joke instead of landing it. The word counter under the caption box turns this into a number.</li>
+    <li><strong>Check it reads on mute.</strong> No sound, no context beyond the image and the words. If it depends on a song you had in your head, it will not survive being forwarded.</li>
+    <li><strong>Ask if a stranger would need it explained.</strong> If yes, either the reference is too narrow for this chat, or one word is doing too much unstated work.</li>
+  </ol>
+
+  <h2>Sizing, for where it is going</h2>
+  <ul>
+    <li><strong>Instagram feed / general sharing:</strong> 4:5 vertical or 1:1 square. Safest defaults, crop cleanly almost everywhere.</li>
+    <li><strong>Stories:</strong> 9:16 only. Using this shape anywhere else adds black bars.</li>
+    <li><strong>Group chat:</strong> any shape works, but keep it under about 3MB so the messaging app does not compress it into mush.</li>
+    <li><strong>Printed as a gag gift:</strong> export the largest your tool allows and check it at 100% zoom before printing — text that looks sharp shrunk down can go soft blown up.</li>
+  </ul>
+
+  <div class="note">
+    <p><strong>On templates and copyright.</strong> This maker ships no famous meme images, and that is deliberate rather than stingy. Most of the images circulating as "templates" are somebody's photograph, film still or stock shot, and a caption on one does not make it yours. Your own photo, a plain colour, or a generated gradient carries the same joke and carries no claim with it.</p>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Meme Vault</strong> — the No-App Meme Maker. 120 original caption lines, written for this tool and free to use, edit and post. No account, no watermark, no renewal date.</p>
+</footer>
+</div>
+
+<script>
+// ---- CORE (self-checked by selfcheck.mjs — do not move these markers) ----
+// Everything between the CORE markers is pure logic with no DOM: layout maths, the caption bank,
+// text fitting and wrapping. selfcheck.mjs extracts this exact block out of this exact file and
+// asserts against it, so the test can never drift away from what ships.
+
+const FORMATS = ["Top/Bottom", "The List", "Comparison", "Translation", "Reaction Beat", "Wrong Category", "Escalation"];
+
+const CATS = [["work", "Work & office"], ["chat", "Group chat & friends"], ["love", "Relationships"], ["pets", "Pets & parenting"], ["self", "Self-deprecating"]];
+
+// The 120 original lines, ours, from the kit. [id, subject, format, text]
+const BANK = [
+[1,"work","Reaction Beat","Me, reading \"quick call?\" like it's a subpoena."],
+[2,"work","Translation","What I said: \"no worries!\" What I meant: I will remember this until I retire."],
+[3,"work","Reaction Beat","Turned my camera off to make a face nobody will ever know about."],
+[4,"work","Comparison","The meeting that could have been an email, hosting a meeting about why nobody reads email."],
+[5,"work","Escalation","Day 1: excited to help. Day 30: \"per my last email.\" Day 90: out of office, permanently, in spirit."],
+[6,"work","Translation","\"Circling back\" is just \"I forgot\" wearing a blazer."],
+[7,"work","The List","My calendar has three meetings about scheduling a meeting."],
+[8,"work","Reaction Beat","Someone said \"let's take this offline\" and I have never seen them again."],
+[9,"work","Comparison","The Slack status that says \"in a meeting\" while I am, in fact, in bed."],
+[10,"work","Wrong Category","Reply-all is a weapon and nobody in this company has gun safety training."],
+[11,"work","Comparison","My inbox: 4,000 unread. My anxiety: also unread, also growing."],
+[12,"work","Reaction Beat","\"Does this work for everyone?\" — sent to fourteen people, none of whom will answer."],
+[13,"work","Escalation","You know it's a real Monday when the coffee machine is broken, then the wifi, then your will to live, in that order."],
+[14,"work","Comparison","My out-of-office reply has more personality than I do in meetings."],
+[15,"work","Translation","\"Just a friendly reminder\" is corporate for \"I am so tired of you.\""],
+[16,"work","Translation","The professional version of screaming is \"as previously discussed.\""],
+[17,"work","Reaction Beat","Spent 45 minutes formatting a slide nobody will read for four seconds."],
+[18,"work","Comparison","My LinkedIn says \"passionate about growth.\" My calendar says otherwise."],
+[19,"work","Escalation","First interview: nervous but hopeful. Sixth interview: reading the job posting like a hostage note."],
+[20,"work","Translation","\"Let's sync\" is what people say instead of admitting nobody knows what's happening."],
+[21,"chat","Reaction Beat","Left on read for three days, then answered with \"lol yeah\" like nothing happened."],
+[22,"chat","Wrong Category","The group chat member who only shows up to disagree with the plan they never suggested an alternative to."],
+[23,"chat","Comparison","Someone: \"who's free Friday?\" Me, checking a calendar that has never had anything on it: \"let me check.\""],
+[24,"chat","Escalation","Day 1 of the group trip planning: \"so excited!!\" Day 40: still no dates, no hotel, no hope."],
+[25,"chat","Wrong Category","My read receipts are the closest thing I have to a confession booth."],
+[26,"chat","Reaction Beat","\"One sec\" from someone who then goes fully offline for eleven hours."],
+[27,"chat","Reaction Beat","The chat's unread count hit 400 and I've accepted that I now live outside the timeline."],
+[28,"chat","Comparison","Someone sends a paragraph, gets one thumbs-up back, and has to live with that."],
+[29,"chat","Comparison","Plan: dinner at 7. Reality: still deciding at 8:45 whether we're even doing dinner."],
+[30,"chat","Translation","The friend who says \"I'm five minutes away\" from a location that is, geographically, not five minutes away."],
+[31,"chat","Wrong Category","Voice memo length as a direct measurement of how bad someone's day was."],
+[32,"chat","Reaction Beat","\"We should do this more often\" — a sentence said only at the exact moment nobody plans to."],
+[33,"chat","Wrong Category","Every group chat has one member who only communicates in screenshots of other conversations."],
+[34,"chat","Translation","Sent \"on my way,\" have not yet put on pants."],
+[35,"chat","Reaction Beat","The chat goes quiet for two weeks, then someone says \"guys\" and it's back like nothing happened."],
+[36,"chat","Wrong Category","My friends found out where I was via my location, not my actual replies."],
+[37,"chat","Reaction Beat","\"It's giving...\" followed by a pause so long it should count as its own sentence."],
+[38,"chat","Reaction Beat","Someone left the group chat and rejoined nine minutes later like we didn't all see it."],
+[39,"chat","Reaction Beat","Asked \"you up?\" at 1am and answered honestly, which was the real mistake."],
+[40,"chat","Reaction Beat","The group chat's group photo is four years old and nobody has the energy to fix it."],
+[41,"love","Comparison","\"We need to talk\" ranked just under a fire alarm for things that ruin your whole day."],
+[42,"love","Translation","What I said: \"I'm fine.\" What I meant: ask me again in twenty minutes when I've built a whole case."],
+[43,"love","Escalation","Year 1: \"you're so easy to talk to.\" Year 5: full conversations conducted entirely in eyebrows."],
+[44,"love","Wrong Category","My love language is sending a meme instead of saying the actual feeling out loud."],
+[45,"love","Translation","Told them \"no rush,\" internally began a countdown."],
+[46,"love","Reaction Beat","The silence after \"what are you thinking about\" has never once contained good news."],
+[47,"love","Wrong Category","\"I already ate\" is sometimes a lie and sometimes a warning."],
+[48,"love","Escalation","First date: nervous laugh at everything. Fifth date: comfortable enough to argue about restaurant choice like it's a courtroom."],
+[49,"love","Reaction Beat","The relationship milestone of correcting each other's texting shorthand mid-argument."],
+[50,"love","Wrong Category","\"Fine\" is a complete sentence and also a complete lie."],
+[51,"love","Reaction Beat","We've reached the stage where silence in the car is comfortable, not concerning, mostly."],
+[52,"love","Wrong Category","My love language is remembering the small thing you mentioned once, three months ago."],
+[53,"love","Translation","\"It's not a big deal\" said in a tone that confirms it is, in fact, a very big deal."],
+[54,"love","Wrong Category","The domestic Olympic event of deciding what to eat when neither of you has an opinion until the other one picks."],
+[55,"love","Comparison","Every couple has one person who runs on time and one who runs on \"we'll get there.\""],
+[56,"love","Wrong Category","\"Are you mad?\" \"No.\" — the most contested two words in any relationship."],
+[57,"love","Escalation","Sent a text, watched it stay unread for six hours, drafted and deleted three follow-ups."],
+[58,"love","Comparison","The exact tone shift between \"hey\" and \"hey.\" has ended more evenings than either party admits."],
+[59,"love","Wrong Category","We argue about the thermostat like it's a matter of national security."],
+[60,"love","Escalation","Year one: butterflies. Year three: comfortable silence. Year five: fighting over who left the cap off."],
+[61,"pets","Reaction Beat","The dog's entire personality changes the moment a treat bag makes a sound from another room."],
+[62,"pets","Wrong Category","My cat has never once acted like it needed me, and yet here I am, needed."],
+[63,"pets","Escalation","Toddler logic: refuses the blue cup, screams for the blue cup, refuses the blue cup again."],
+[64,"pets","Comparison","The dog's \"guard dog\" bark and its \"there's a leaf on the porch\" bark are, tragically, identical."],
+[65,"pets","Wrong Category","My cat sleeping in a sunbeam has more peace than I've had in a calendar year."],
+[66,"pets","Wrong Category","Parenting is negotiating with someone who cannot read, cannot vote, and somehow still wins."],
+[67,"pets","Reaction Beat","The dog has three toys and a favorite is decided purely by whichever one you touch first."],
+[68,"pets","Escalation","Bedtime routine, hour one: calm. Hour two: negotiations. Hour three: someone is crying and it might be me."],
+[69,"pets","Wrong Category","My cat's stare has ended more of my confidence than any performance review ever has."],
+[70,"pets","Reaction Beat","The dog barked at the vacuum for six years and it has still not won a single round."],
+[71,"pets","Wrong Category","A toddler's \"I do it myself\" is the single most expensive sentence in the English language."],
+[72,"pets","Reaction Beat","My cat only wants attention exactly when I'm on a call."],
+[73,"pets","Wrong Category","Explained bedtime rules to a toddler like presenting a legal argument to a judge who is not listening."],
+[74,"pets","Comparison","The dog's separation anxiety and my separation anxiety are, somehow, in perfect sync."],
+[75,"pets","Translation","\"We're leaving in five minutes\" — a sentence that has never once been true in a house with small children."],
+[76,"pets","Escalation","My cat knocked one thing off the shelf, made eye contact, and knocked off a second thing."],
+[77,"pets","Wrong Category","The dog considers \"sitting near the food\" the same as \"not begging for food.\""],
+[78,"pets","Comparison","Every school pickup line moves at the exact speed of a Monday morning meeting nobody wanted."],
+[79,"pets","Wrong Category","My cat's 3am zoomies operate on a schedule I have never once been consulted about."],
+[80,"pets","Reaction Beat","Told the dog \"no\" in my sternest voice, watched it interpret this as an invitation."],
+[81,"self","Wrong Category","My productivity system is one sticky note and a deep, unshakeable sense of guilt."],
+[82,"self","Translation","Told myself I'd go to bed early, currently negotiating with myself at midnight over \"one more episode.\""],
+[83,"self","Reaction Beat","My to-do list has three items from last month that have simply been re-copied, not completed, for weeks."],
+[84,"self","Wrong Category","Morning me makes plans that afternoon me treats as a hostile takeover."],
+[85,"self","Wrong Category","I have the organizational skills of a filing cabinet that's been pushed down a flight of stairs."],
+[86,"self","Escalation","Day 1 of the diet: full of resolve. Day 3: eating standing at the counter at 11pm, no plate, no shame."],
+[87,"self","Wrong Category","My relationship with my gym membership is best described as \"long-distance.\""],
+[88,"self","Reaction Beat","I've read the same paragraph of this book four times and could not tell you a single word of it."],
+[89,"self","Wrong Category","My bank app opens like it's about to deliver a diagnosis."],
+[90,"self","Reaction Beat","Set three alarms, woke up to none of them, blamed all three equally."],
+[91,"self","Escalation","My browser has 40 tabs open and at least six of them are the same tab, opened by accident, twice."],
+[92,"self","Wrong Category","I've achieved a level of \"I'll deal with it later\" that should be studied academically."],
+[93,"self","Comparison","My laundry has two settings: freshly folded and \"the chair now has a permanent function.\""],
+[94,"self","Reaction Beat","Told myself I'd start eating better and then had cereal for dinner, standing up, over the sink."],
+[95,"self","Comparison","My inbox and my conscience are both sitting at \"unread: 4,000+\" and I've made peace with both."],
+[96,"self","Wrong Category","Every plant I've ever owned has died on a schedule so consistent it might be a personality trait."],
+[97,"self","Reaction Beat","I have never once used the \"notes\" app for anything except the three words I forgot immediately after."],
+[98,"self","Comparison","My sleep schedule and my houseplants are both technically alive, in the loosest sense of the word."],
+[99,"self","Reaction Beat","Woke up with a plan, executed none of it, felt strangely at peace by 9pm anyway."],
+[100,"self","Comparison","My phone battery and my social battery hit 20% at almost exactly the same moment, every day."],
+[101,"self","Escalation","Bought a planner in January with real intentions; by March it's a coaster with good posture."],
+[102,"self","Wrong Category","My relationship with deadlines is that I respect them deeply, from a distance, right up until the last hour."],
+[103,"self","Wrong Category","I know exactly how many steps it takes to convince myself a Tuesday can also be a rest day."],
+[104,"self","Comparison","My grocery list and the things actually in my cart share, at best, a passing acquaintance."],
+[105,"self","Reaction Beat","Set a \"5 more minutes\" timer on my phone that has, historically, never once been honored."],
+[106,"self","Wrong Category","I've mastered the art of looking productive while accomplishing absolutely nothing measurable."],
+[107,"self","Wrong Category","My New Year's resolutions and my actual behavior have never met in person."],
+[108,"self","Escalation","The gap between \"I'll just check one thing online\" and forty-five minutes later is a documented mystery."],
+[109,"self","Wrong Category","My houseplants and I are in an unspoken agreement that neither of us will thrive, but we'll try."],
+[110,"self","Reaction Beat","Every \"quick errand\" I've ever run has, without exception, taken exactly three times as long."],
+[111,"self","Wrong Category","My email drafts folder is a graveyard of things I almost said."],
+[112,"self","Wrong Category","I treat my own bedtime like a suggestion made by someone I don't respect."],
+[113,"self","Wrong Category","My weekend plans and my weekend reality have filed for an amicable separation."],
+[114,"self","Reaction Beat","Told myself this would be \"a quick nap,\" woke up in a different part of the day entirely."],
+[115,"self","Wrong Category","My fridge has more expired condiments than actual meals, and I've stopped being surprised."],
+[116,"self","Wrong Category","I've reached the stage of adulthood where \"I'm tired\" is less a statement and more a permanent condition."],
+[117,"self","Wrong Category","My \"I'll answer that later\" pile has developed its own weather system."],
+[118,"self","Escalation","Every year I say this is the year I get organized, and every year the sticky notes multiply instead."],
+[119,"self","Wrong Category","My relationship with my own calendar is that I make the plans and someone else, also me, breaks them."],
+[120,"self","Reaction Beat","Closed 30 tabs, felt triumphant for four minutes, opened 12 more by accident."]
+].map(([id, cat, format, text]) => ({ id, cat, format, text }));
+
+const SHAPES = { "1:1": [1080, 1080], "4:5": [1080, 1350], "9:16": [1080, 1920] };
+
+// Step 3 of the method, enforced rather than suggested: 9% clear on every side.
+const MARGIN = 0.09;
+function safeArea(w, h) {
+  const mx = Math.round(w * MARGIN), my = Math.round(h * MARGIN);
+  return { x: mx, y: my, w: w - 2 * mx, h: h - 2 * my };
+}
+
+// xorshift — deterministic so "shuffle" is reproducible and testable.
+function rng(seed) {
+  let s = (seed >>> 0) || 0x9e3779b9;
+  return () => { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+}
+
+function pickLine(bank, { format, cat, seed }) {
+  const pool = bank.filter(l =>
+    (!format || format === "any" || l.format === format) &&
+    (!cat || cat === "any" || l.cat === cat));
+  if (!pool.length) return null;
+  return pool[Math.floor(rng(seed)() * pool.length)];
+}
+
+// Setup / punchline. Step 5 says the size relationship does the pacing, which needs a split point.
+// Take the strong delimiter nearest the middle so neither half is a stub.
+function splitCaption(text) {
+  const t = String(text || "").trim();
+  const rules = [
+    [/\.\s+/g, 1], [/\?\s+/g, 1], [/!\s+/g, 1], [/:\s+/g, 1], [/\s+—\s+/g, 0], [/\s+-\s+/g, 0],
+  ];
+  const mid = t.length / 2;
+  let best = null, bestD = Infinity;
+  for (const [re, keep] of rules) {
+    const r = new RegExp(re.source, "g");
+    let m;
+    while ((m = r.exec(t))) {
+      const setupEnd = m.index + keep, punchStart = m.index + m[0].length;
+      if (setupEnd < 8 || t.length - punchStart < 8) continue;
+      const d = Math.abs(setupEnd - mid);
+      if (d < bestD) { bestD = d; best = [setupEnd, punchStart]; }
+    }
+  }
+  if (!best) return { setup: "", punch: t };
+  return { setup: t.slice(0, best[0]).trim(), punch: t.slice(best[1]).trim() };
+}
+
+// Greedy wrap. `measure(str, size)` returns pixel width. A single word wider than the box is left
+// alone on its line rather than dropped — never lose a word to make the maths tidy.
+function wrapText(text, maxWidth, size, measure) {
+  const words = String(text).trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  const lines = [];
+  let line = words[0];
+  for (let i = 1; i < words.length; i++) {
+    const test = line + " " + words[i];
+    if (measure(test, size) <= maxWidth) line = test;
+    else { lines.push(line); line = words[i]; }
+  }
+  lines.push(line);
+  return lines;
+}
+
+// Largest size at which the text fits the box in at most maxLines. Descends in whole pixels from
+// `max` and stops at `min` — at min it returns min even if it overflows, so text always renders.
+function fitFont(text, boxW, boxH, maxLines, measure, { max = 96, min = 20, lineHeight = 1.18 } = {}) {
+  for (let size = max; size > min; size--) {
+    const lines = wrapText(text, boxW, size, measure);
+    if (lines.length <= maxLines && lines.length * size * lineHeight <= boxH) return { size, lines };
+  }
+  return { size: min, lines: wrapText(text, boxW, min, measure) };
+}
+
+// Where each text block sits. Returns blocks in draw order with their own box.
+// The rule from Step 5 is a hard invariant here: the punchline is never smaller than the setup.
+function layout(caption, shape, mode, measure) {
+  const [W, H] = SHAPES[shape] || SHAPES["4:5"];
+  const safe = safeArea(W, H);
+  const { setup, punch } = splitCaption(caption);
+  const blocks = [];
+  const half = Math.floor(safe.h * 0.28);
+
+  if (mode === "single" || !setup) {
+    const box = { x: safe.x, y: safe.y + safe.h - half, w: safe.w, h: half };
+    const f = fitFont(caption.trim() || " ", box.w, box.h, 5, measure, { max: Math.round(W * 0.085) });
+    blocks.push({ role: "punch", box, ...f, align: "bottom" });
+  } else if (mode === "top-bottom") {
+    const topBox = { x: safe.x, y: safe.y, w: safe.w, h: half };
+    const botBox = { x: safe.x, y: safe.y + safe.h - half, w: safe.w, h: half };
+    const s = fitFont(setup, topBox.w, topBox.h, 3, measure, { max: Math.round(W * 0.062) });
+    const p = fitFont(punch, botBox.w, botBox.h, 4, measure, { max: Math.round(W * 0.088) });
+    if (p.size < s.size) s.size = p.size;
+    blocks.push({ role: "setup", box: topBox, ...s, align: "top" });
+    blocks.push({ role: "punch", box: botBox, ...p, align: "bottom" });
+  } else {
+    const zone = { x: safe.x, y: safe.y + Math.round(safe.h * 0.42), w: safe.w, h: Math.round(safe.h * 0.58) };
+    const s = fitFont(setup, zone.w, Math.round(zone.h * 0.4), 3, measure, { max: Math.round(W * 0.058) });
+    const p = fitFont(punch, zone.w, Math.round(zone.h * 0.55), 4, measure, { max: Math.round(W * 0.085) });
+    if (p.size < s.size) s.size = p.size;
+    const sH = s.lines.length * s.size * 1.18, pH = p.lines.length * p.size * 1.18;
+    const total = sH + pH + s.size * 0.5;
+    const startY = zone.y + zone.h - total;
+    blocks.push({ role: "setup", box: { x: zone.x, y: startY, w: zone.w, h: sH }, ...s, align: "top" });
+    blocks.push({ role: "punch", box: { x: zone.x, y: startY + sH + s.size * 0.5, w: zone.w, h: pH }, ...p, align: "top" });
+  }
+  return { W, H, safe, blocks };
+}
+
+// Cover-crop: the source rectangle to draw so the image fills WxH with no bars and no squash.
+function coverRect(srcW, srcH, dstW, dstH) {
+  const scale = Math.max(dstW / srcW, dstH / srcH);
+  const sw = Math.min(srcW, dstW / scale), sh = Math.min(srcH, dstH / scale);
+  return { sx: (srcW - sw) / 2, sy: (srcH - sh) / 2, sw, sh };
+}
+
+// Step 6 turned into a number: the punchline word count, and whether it is over the twelve-word line.
+function punchWords(caption) {
+  const { setup, punch } = splitCaption(caption);
+  const n = punch.trim() ? punch.trim().split(/\s+/).length : 0;
+  return { words: n, over: n > 12, hasSetup: Boolean(setup) };
+}
+
+// Backgrounds we own outright: flat colours and a deterministic two-stop gradient.
+const SWATCHES = ["#111318", "#f4f1ea", "#c1121f", "#1d3557", "#2a9d8f", "#ffd23f", "#6b4de6", "#e07a5f"];
+function gradientStops(seed) {
+  const r = rng(seed);
+  const h1 = Math.floor(r() * 360), h2 = (h1 + 40 + Math.floor(r() * 120)) % 360;
+  return [`hsl(${h1} 62% 22%)`, `hsl(${h2} 58% 46%)`];
+}
+// ---- /CORE ----
+
+// ---- UI (not self-checked: DOM wiring only) ----
+const $ = id => document.getElementById(id);
+const cv = $("cv"), ctx = cv.getContext("2d");
+const FONT = '800 %SIZE%px ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+const measure = (str, size) => { ctx.font = FONT.replace("%SIZE%", size); return ctx.measureText(str).width; };
+
+const state = { caption: BANK[0].text, shape: "4:5", mode: "top-bottom", bg: { type: "gradient", value: 20260807 }, light: true, img: null, seed: 1 };
+
+function paintBackground(W, H) {
+  if (state.bg.type === "image" && state.img) {
+    const { sx, sy, sw, sh } = coverRect(state.img.width, state.img.height, W, H);
+    ctx.drawImage(state.img, sx, sy, sw, sh, 0, 0, W, H);
+  } else if (state.bg.type === "gradient") {
+    const [a, b] = gradientStops(state.bg.value);
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, a); g.addColorStop(1, b);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  } else {
+    ctx.fillStyle = state.bg.value; ctx.fillRect(0, 0, W, H);
+  }
+}
+
+function drawBlock(b, W) {
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.lineJoin = "round";
+  const lh = b.size * 1.18;
+  const height = b.lines.length * lh;
+  let y = b.align === "bottom" ? b.box.y + b.box.h - height : b.box.y;
+  ctx.font = FONT.replace("%SIZE%", b.size);
+  ctx.lineWidth = Math.max(3, b.size * 0.15);           // Step 4: the stroke is what makes it legible
+  ctx.strokeStyle = state.light ? "rgba(0,0,0,.92)" : "rgba(255,255,255,.92)";
+  ctx.fillStyle = state.light ? "#ffffff" : "#0b0d11";
+  for (const line of b.lines) {
+    ctx.strokeText(line, W / 2, y);
+    ctx.fillText(line, W / 2, y);
+    y += lh;
+  }
+}
+
+function render() {
+  const L = layout(state.caption, state.shape, state.mode, measure);
+  cv.width = L.W; cv.height = L.H;
+  paintBackground(L.W, L.H);
+  for (const b of L.blocks) drawBlock(b, L.W);
+  const pw = punchWords(state.caption);
+  $("wordcount").textContent = pw.words
+    ? `Punchline: ${pw.words} word${pw.words === 1 ? "" : "s"}${pw.over ? " — over twelve. Cut it." : ""}`
+    : "";
+  $("wordcount").style.color = pw.over ? "#ffb4a2" : "";
+}
+
+function say(msg) { $("status").textContent = msg; clearTimeout(say._t); say._t = setTimeout(() => { $("status").textContent = ""; }, 3200); }
+
+// build the controls
+$("fmt").innerHTML = ['<option value="any">Any format</option>']
+  .concat(FORMATS.map(f => `<option value="${f}">${f}</option>`)).join("");
+$("cat").innerHTML = ['<option value="any">Anything</option>']
+  .concat(CATS.map(([v, l]) => `<option value="${v}">${l}</option>`)).join("");
+const FMT_HINT = {
+  any: "", "Top/Bottom": "Setup on top, punchline on bottom. Forces the setup to one line.",
+  "The List": "Three that build normally, a fourth that breaks the pattern.",
+  Comparison: "A claim against reality. The smaller the gap, the funnier.",
+  Translation: "What was said, then what was meant.",
+  "Reaction Beat": "One image doing almost nothing; the caption names the internal monologue.",
+  "Wrong Category": "Something ordinary described in higher-stakes language.",
+  Escalation: "The same shape, three or four times, each one worse.",
+};
+$("swatches").innerHTML = SWATCHES.map(c =>
+  `<button type="button" data-color="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join("");
+
+function shuffle() {
+  state.seed = (state.seed * 1103515245 + 12345) >>> 0;
+  const line = pickLine(BANK, { format: $("fmt").value, cat: $("cat").value, seed: state.seed });
+  if (!line) return say("No line in the bank matches that format and subject — try Any.");
+  state.caption = line.text;
+  $("caption").value = line.text;
+  render();
+}
+
+$("caption").value = state.caption;
+$("caption").addEventListener("input", e => { state.caption = e.target.value; render(); });
+$("fmt").addEventListener("change", e => { $("fmthint").textContent = FMT_HINT[e.target.value] || ""; shuffle(); });
+$("cat").addEventListener("change", shuffle);
+$("shuffle").addEventListener("click", shuffle);
+$("shape").addEventListener("change", e => { state.shape = e.target.value; render(); });
+$("layout").addEventListener("change", e => { state.mode = e.target.value; render(); });
+$("textcolor").addEventListener("click", () => { state.light = !state.light; render(); });
+$("gradient").addEventListener("click", () => {
+  state.bg = { type: "gradient", value: (Date.now() ^ (Math.random() * 1e9)) >>> 0 };
+  document.querySelectorAll("#swatches button").forEach(b => b.setAttribute("aria-pressed", "false"));
+  render();
+});
+$("swatches").addEventListener("click", e => {
+  const b = e.target.closest("button[data-color]");
+  if (!b) return;
+  state.bg = { type: "color", value: b.dataset.color };
+  document.querySelectorAll("#swatches button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  render();
+});
+$("upload-btn").addEventListener("click", () => $("upload").click());
+$("upload").addEventListener("change", e => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const img = new Image();
+  img.onload = () => { state.img = img; state.bg = { type: "image" }; render(); say("Photo loaded — it stays on your device."); };
+  img.onerror = () => say("That file would not open as an image.");
+  img.src = URL.createObjectURL(file);
+});
+$("download").addEventListener("click", () => {
+  render();
+  const a = document.createElement("a");
+  a.download = "meme-" + state.shape.replace(":", "x") + ".png";
+  a.href = cv.toDataURL("image/png");
+  a.click();
+  say("Saved. No watermark, nothing to renew.");
+});
+$("copytext").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(state.caption); say("Caption copied."); }
+  catch { say("Copy blocked by the browser — select the text in the box instead."); }
+});
+$("reset").addEventListener("click", () => {
+  state.caption = BANK[0].text; state.shape = "4:5"; state.mode = "top-bottom";
+  state.bg = { type: "color", value: "#111318" }; state.light = true; state.img = null;
+  $("caption").value = state.caption; $("shape").value = "4:5"; $("layout").value = "top-bottom";
+  $("fmt").value = "any"; $("cat").value = "any"; $("fmthint").textContent = "";
+  render(); say("Back to the start.");
+});
+
+render();
+</script>
+</body>
+</html>

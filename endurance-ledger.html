@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Endurance Ledger — Twelve Sourced Day-Counts</title>
+<meta name="description" content="Twelve documented endurance records with the exact day-count and the source you can check — and a live counter that puts your own streak next to theirs.">
+<link rel="canonical" href="https://penloomstudio.com/endurance-ledger.html">
+<meta property="og:title" content="The Endurance Ledger — Twelve Sourced Day-Counts">
+<meta property="og:description" content="You are on day 9. Poon Lim was on day 133. Twelve documented endurance records, every number sourced, next to your own live count.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://penloomstudio.com/endurance-ledger.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "The Endurance Ledger",
+  "description": "Twelve documented endurance records, each with the count, what happened, what the person actually did, and a named source.",
+  "numberOfItems": 12,
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"Poon Lim — 133 days"},
+    {"@type":"ListItem","position":2,"name":"Ernest Shackleton and the crew of the Endurance — 497 days"},
+    {"@type":"ListItem","position":3,"name":"Ada Blackjack — 8 months alone"},
+    {"@type":"ListItem","position":4,"name":"Douglas Mawson — about 30 days alone, 100 miles"},
+    {"@type":"ListItem","position":5,"name":"Louis Zamperini — 47 days adrift, then two years"},
+    {"@type":"ListItem","position":6,"name":"Juliane Koepcke — 11 days"},
+    {"@type":"ListItem","position":7,"name":"Jan Baalsrud — about two months"},
+    {"@type":"ListItem","position":8,"name":"Joshua Slocum — 3 years, 2 months, 2 days"},
+    {"@type":"ListItem","position":9,"name":"Gertrude Ederle — about 14 and a half hours"},
+    {"@type":"ListItem","position":10,"name":"Emil Zátopek — 8 days, three distances"},
+    {"@type":"ListItem","position":11,"name":"Charles Goodyear — 10 years"},
+    {"@type":"ListItem","position":12,"name":"Shizo Kanakuri — 54 years, 246 days"}
+  ]
+}
+</script>
+<style>
+  /* Self-contained: no CDN, no webfonts, no external requests. Grit and Glory palette. */
+  :root{
+    --navy:#0B1B2B; --navy2:#0E2234; --line:#1E3450;
+    --parchment:#E8DCC0; --ember:#C6862F; --dim:#8FA1B5;
+    --display:"Roboto Serif","Arial Narrow",Georgia,serif;
+    --serif:Georgia,"Source Serif 4",serif;
+    --sans:system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--navy);color:var(--parchment);font-family:var(--sans);font-size:17px;line-height:1.7}
+  a{color:var(--ember)}
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px}
+  header.hero{padding:64px 0 34px;border-bottom:1px solid var(--line)}
+  h1{font-family:var(--display);font-size:clamp(32px,6vw,52px);line-height:1.1;letter-spacing:-.5px}
+  .sub{color:var(--dim);margin-top:14px;font-family:var(--serif);font-size:19px}
+  h2{font-family:var(--display);font-size:clamp(22px,4vw,30px);margin:52px 0 14px;line-height:1.2}
+  h3{font-family:var(--display);font-size:21px;line-height:1.25}
+  p{margin:14px 0}
+  .tabular{font-variant-numeric:tabular-nums}
+
+  /* the counter — the reason this is a page and not a file */
+  .counter{background:var(--navy2);border:1px solid var(--line);border-radius:14px;padding:24px;margin:34px 0}
+  .counter label{display:block;font-size:14px;color:var(--dim);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  input[type=date],input[type=number]{padding:11px 13px;border-radius:9px;border:1px solid var(--line);
+    background:var(--navy);color:var(--parchment);font:inherit;font-variant-numeric:tabular-nums}
+  input[type=number]{width:120px}
+  .btn{padding:11px 18px;border-radius:9px;border:1px solid var(--ember);background:transparent;
+    color:var(--ember);font:inherit;cursor:pointer}
+  .btn:hover{background:var(--ember);color:var(--navy)}
+  .yourday{font-family:var(--display);font-size:clamp(26px,5vw,38px);margin-top:20px;line-height:1.2}
+  .yourday b{color:var(--ember)}
+  .versus{margin-top:10px;font-family:var(--serif);font-size:19px;color:var(--parchment)}
+  .versus .dim{color:var(--dim)}
+  .bar{height:8px;background:var(--line);border-radius:99px;margin-top:16px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--ember);width:0;transition:width .5s ease}
+  .passedlist{margin-top:14px;font-size:15px;color:var(--dim)}
+
+  .rec{border-top:1px solid var(--line);padding:26px 0}
+  .rec.passed{border-left:3px solid var(--ember);padding-left:16px}
+  .count{color:var(--ember);font-family:var(--display);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+  .field{margin:12px 0}
+  .field b{color:var(--dim);font-weight:600}
+  .src{font-size:14px;color:var(--dim);word-break:break-word}
+  .badge{display:none;font-size:13px;color:var(--navy);background:var(--ember);border-radius:99px;padding:2px 10px;margin-left:8px;vertical-align:middle}
+  .rec.passed .badge{display:inline-block}
+  .note{background:var(--navy2);border:1px solid var(--line);border-left:3px solid var(--ember);
+    border-radius:10px;padding:16px 18px;margin:18px 0;font-size:16px}
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:28px 0 60px;color:var(--dim);font-size:15px}
+  ul{margin:14px 0 14px 22px}
+  li{margin:6px 0}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <h1>The Endurance Ledger</h1>
+  <p class="sub">Twelve people who held on longer than anybody thought a person could — with the exact count, the thing they actually did each day, and the source you can check. Put your own count next to theirs.</p>
+</div></header>
+
+<main class="wrap">
+
+  <section class="counter" aria-labelledby="counterHead">
+    <h2 id="counterHead" style="margin-top:0">Your count</h2>
+    <p style="margin-top:4px;color:var(--dim);font-size:15px">Enter the day this started, or type the day number you are on. Nothing is sent anywhere — the number is kept in your own browser and you can clear it in one tap.</p>
+    <div class="row" style="margin-top:14px">
+      <div>
+        <label for="startDate">Day one was</label>
+        <input type="date" id="startDate">
+      </div>
+      <div>
+        <label for="dayNum">…or I am on day</label>
+        <input type="number" id="dayNum" min="1" step="1" inputmode="numeric" placeholder="9">
+      </div>
+      <div style="align-self:flex-end"><button class="btn" id="clearBtn" type="button">Clear</button></div>
+    </div>
+    <p class="yourday" id="yourDay">You are on day <b>—</b>.</p>
+    <p class="versus" id="versus"><span class="dim">Enter a date or a day number and the ledger will sort itself around you.</span></p>
+    <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+    <p class="passedlist" id="passed"></p>
+  </section>
+
+  <h2>Why day-counts and not quotes</h2>
+  <p>A quote tells you how somebody felt. A count tells you what they survived. &ldquo;Never give up&rdquo; is a sentiment. &ldquo;One hundred and thirty-three days on an eight-foot raft&rdquo; is a measurement — and when you are in the fourth bad month of something, a measurement is more use than a sentiment, because you can put your own number next to it.</p>
+  <p>A count is also falsifiable. Every number here can be checked against the source listed under it. If one of them is wrong, you can prove it is wrong, and that is exactly the property most motivational material is built to avoid.</p>
+
+  <h2>How to use it</h2>
+  <p>Pick the record whose <em>shape</em> matches yours — not its severity. Nobody reading this is on a raft. That is not the point.</p>
+  <ul>
+    <li><b>No end date in sight.</b> Poon Lim. Ada Blackjack. Shackleton.</li>
+    <li><b>The thing you were waiting for arrived, and it changed nothing.</b> Charles Goodyear. Douglas Mawson.</li>
+    <li><b>You already failed at this once, publicly.</b> Gertrude Ederle. Shizo Kanakuri.</li>
+    <li><b>Your body is the thing that broke.</b> Jan Baalsrud. Juliane Koepcke.</li>
+    <li><b>You have to do the extra thing nobody asked for.</b> Emil Zátopek. Joshua Slocum. Louis Zamperini.</li>
+  </ul>
+
+  <h2>The twelve records</h2>
+  <div id="records">
+  <article class="rec" id="rec0" data-days="133">
+    <div class="count tabular">133 days</div>
+    <h3>Poon Lim &mdash; 133 days<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> The British merchant ship <i>Benlomond</i> was torpedoed by the German submarine U-172 in the South Atlantic and sank in about two minutes. Of the men aboard, Poon Lim, a ship's steward, was the only survivor. He found an eight-foot square wooden raft and got onto it. 133 days alone, 23 November 1942 to 5 April 1943 — roughly 750 miles of drift.</p>
+    <p class="field"><b>What they actually did.</b> When the tinned rations ran out he collected rainwater in the canvas of his life jacket. He pulled the wire out of his flashlight, bent it into a fish hook, and fished. He caught seabirds. More than one ship's crew saw him and did not stop. A navy patrol plane dropped a marker buoy and a storm took it. He kept the raft's routine going anyway. Brazilian fishermen found him about nine nautical miles off the Pará coast, and he walked ashore under his own power. Told nobody had lasted longer, he said, “I hope no one will ever have to break that record.” — Poon Lim.</p>
+    <p class="src"><b>Source.</b> Wikipedia, "Poon Lim" (https://en.wikipedia.org/wiki/Poon_Lim); War History Online, "Mess Steward Poon Lim Survived 133 Days Lost At Sea".</p>
+  </article>
+  <article class="rec" id="rec1" data-days="497">
+    <div class="count tabular">497 days</div>
+    <h3>Ernest Shackleton and the crew of the <i>Endurance</i> &mdash; 497 days<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> <i>Endurance</i> was beset in the ice on 14 February 1915 and the ship was crushed and sank on 27 October 1915. The crew lived on drifting floes for roughly four and a half months, reached Elephant Island in April 1916, and were nowhere near any shipping route. The last man came off Elephant Island on 30 August 1916. Twenty-eight men went in. Twenty-eight came home.</p>
+    <p class="field"><b>What they actually did.</b> Six men took a twenty-two-foot lifeboat, the <i>James Caird</i>, 800 miles across the Southern Ocean in sixteen days. Three of them then crossed the uncharted interior of South Georgia in thirty-six hours without stopping. Shackleton then made four separate attempts to get a ship back through the ice to the twenty-two men still on Elephant Island. The fourth one, the Chilean tug <i>Yelcho</i>, worked.</p>
+    <p class="src"><b>Source.</b> Wikipedia, "Imperial Trans-Antarctic Expedition" (https://en.wikipedia.org/wiki/Imperial_Trans-Antarctic_Expedition).</p>
+  </article>
+  <article class="rec" id="rec2" data-days="203">
+    <div class="count tabular">8 months alone</div>
+    <h3>Ada Blackjack &mdash; 8 months alone<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> Five people landed on Wrangel Island on 15 September 1921: four men and Ada Blackjack, an Iñupiaq seamstress hired to sew. Three of the men left on 28 January 1923 to cross the frozen Chukchi Sea for supplies and were never seen again. The fourth, Lorne Knight, had scurvy. She nursed him until he died on 23 June 1923.</p>
+    <p class="field"><b>What they actually did.</b> She had been hired to sew, not to survive. She taught herself to trap and shoot foxes, to build a boat, and to make parkas out of reindeer skin, and she kept doing it alone for months after the last other human being died. The expedition's cat was the only living thing left with her. She was taken off on 19 August 1923 — 203 days after the three men walked out onto the ice.</p>
+    <p class="src"><b>Source.</b> Wikipedia, "Ada Blackjack" (https://en.wikipedia.org/wiki/Ada_Blackjack).</p>
+  </article>
+  <article class="rec" id="rec3" data-days="31">
+    <div class="count tabular">about 30 days alone, 100 miles</div>
+    <h3>Douglas Mawson &mdash; about 30 days alone, 100 miles<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> On 14 December 1912, Belgrave Ninnis, his dog team and the sledge carrying most of the food went through a crevasse. Mawson and Xavier Mertz turned for home more than 300 miles out with almost nothing. Mertz died on 8 January 1913. Mawson reached Cape Denison on 8 February 1913.</p>
+    <p class="field"><b>What they actually did.</b> Mawson cut his sledge in half with a penknife to lighten it and hauled the remainder alone for about a month. On 17 January he broke through the lid of a crevasse and was left hanging on the rope, and pulled himself back out. When he finally got to Cape Denison on 8 February, the relief ship <i>Aurora</i> had sailed hours earlier. He had missed it by a single day, and there was another winter to sit out. He sat it out.</p>
+    <p class="src"><b>Source.</b> Wikipedia, "Far Eastern Party" (https://en.wikipedia.org/wiki/Far_Eastern_Party).</p>
+  </article>
+  <article class="rec" id="rec4" data-days="47">
+    <div class="count tabular">47 days adrift, then two years</div>
+    <h3>Louis Zamperini &mdash; 47 days adrift, then two years<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> His B-24 went into the Pacific on a search flight on 27 May 1943. Three of the eleven men aboard survived the crash. Their emergency rations were gone the first night. Francis McNamara died on day 33 and was buried at sea. Zamperini and Russell Phillips made land on day 47 — in the Marshall Islands, which were held by Japan. They were taken prisoner immediately, and held until August 1945.</p>
+    <p class="field"><b>What they actually did.</b> They caught rain, caught fish, and answered each other's questions to keep their minds working. Reaching land, the thing they had counted days toward, made their situation worse, and they kept going for two more years anyway. Zamperini had run the 5,000 metres at the 1936 Olympics and finished eighth.</p>
+    <p class="src"><b>Source.</b> Wikipedia, "Louis Zamperini" (https://en.wikipedia.org/wiki/Louis_Zamperini).</p>
+  </article>
+  <article class="rec" id="rec5" data-days="11">
+    <div class="count tabular">11 days</div>
+    <h3>Juliane Koepcke &mdash; 11 days<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> LANSA Flight 508 broke up in a thunderstorm over the Peruvian Amazon on Christmas Eve 1971. Ninety-one people died. A seventeen-year-old, still strapped into a row of seats, did not, and woke on the forest floor with a broken collarbone and a deep cut in her arm.</p>
+    <p class="field"><b>What they actually did.</b> Her father, a biologist, had once told her that if she were ever lost she should find water and follow it downstream. She did exactly that for eleven days, on a bag of sweets. Maggots got into the wound in her arm; she found an abandoned hut, poured gasoline into the wound and flushed them out herself. Lumber workers found her on the eleventh day, and she led the searchers back to the crash site.</p>
+    <p class="src"><b>Source.</b> Juliane Diller, <i>When I Fell From the Sky</i> (Nicholas Brealey, 2011); Werner Herzog, <i>Wings of Hope</i> (1998), filmed with her at the site.</p>
+  </article>
+  <article class="rec" id="rec6" data-days="60">
+    <div class="count tabular">about two months</div>
+    <h3>Jan Baalsrud &mdash; about two months<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> Roughly two months from March 1943, across Nazi-occupied arctic Norway. Twelve commandos crossed from Britain to supply the Norwegian resistance, made contact with the wrong man, and were ambushed. Eleven died. Baalsrud swam for the rocks and a bullet took off one of his big toes on the way.</p>
+    <p class="field"><b>What they actually did.</b> He ran barefoot through snow until the shooting stopped behind him. He was buried by an avalanche and dug himself out. He went snowblind from glare. When frostbite reached his feet, he amputated his own toes with a pocket knife, in stages, over weeks — the last of them in a cave where he lay for more than a fortnight. Villagers who could have been executed for it moved him in relays and finally took him over the Swedish border by reindeer sledge, weighing about thirty-five kilograms. He lived another forty-five years.</p>
+    <p class="src"><b>Source.</b> Explorersweb, "Great Survival Stories: Jan Baalsrud Evades Nazi Dragnet" (https://explorersweb.com/great-survival-stories-jan-baalsrud-evades-nazi-dragnet/); David Howarth, <i>We Die Alone</i> (1955).</p>
+  </article>
+  <article class="rec" id="rec7" data-days="1160">
+    <div class="count tabular">3 years, 2 months, 2 days</div>
+    <h3>Joshua Slocum &mdash; 3 years, 2 months, 2 days<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> He rebuilt a derelict thirty-six-foot oyster sloop called <i>Spray</i> and sailed her around the world alone — the first person recorded to do it. Departed Boston 24 April 1895, returned to Newport 27 June 1898, over 46,000 miles. He was fifty-one when he left.</p>
+    <p class="field"><b>What they actually did.</b> He navigated by dead reckoning and a tin clock he had bought for a dollar. He could not swim, and thought learning was a waste of time. The relevant detail is not the courage; it is the arithmetic. Three years and two months is over a thousand days, and almost none of them contained anything memorable. He kept the log anyway.</p>
+    <p class="src"><b>Source.</b> Wikipedia, "Joshua Slocum" (https://en.wikipedia.org/wiki/Joshua_Slocum).</p>
+  </article>
+  <article class="rec" id="rec8">
+    <div class="count tabular">about 14 and a half hours</div>
+    <h3>Gertrude Ederle &mdash; about 14 and a half hours<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> One crossing of the English Channel, starting from Cap Gris-Nez at 07:08 on 6 August 1926. Only five people had ever completed the swim, all of them men, and the fastest had taken sixteen and a half hours. Her own first attempt, the year before, had ended in a rough sea. She was twenty years old and had lost much of her hearing to childhood measles.</p>
+    <p class="field"><b>What they actually did.</b> She modified her own goggles because nothing on sale kept the salt out. Partway across the weather turned, with squalls and a tide setting the wrong way, and she kept swimming. She came ashore at Kingsdown, in Kent — the sixth person in history to finish, and the fastest of all of them by nearly two hours. Her time stood as the women's record for thirty-five years. She spent much of the rest of her life teaching deaf children to swim. <i>(Sources differ on the exact minute: 14:31 is most often cited, and a shore-to-shore reading gives 14:34. The margin over the men's record is not disputed.)</i></p>
+    <p class="src"><b>Source.</b> Britannica, "Gertrude Ederle" (https://www.britannica.com/biography/Gertrude-Ederle); Wikipedia, "Gertrude Ederle" (https://en.wikipedia.org/wiki/Gertrude_Ederle).</p>
+  </article>
+  <article class="rec" id="rec9" data-days="8">
+    <div class="count tabular">8 days, three distances</div>
+    <h3>Emil Zátopek &mdash; 8 days, three distances<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> 20 to 27 July 1952: the 10,000 metres, the 5,000 metres, and the marathon, at one Olympic Games. Having won the first two in Helsinki, he entered the marathon — a distance he had never raced in his life.</p>
+    <p class="field"><b>What they actually did.</b> Near halfway he pulled alongside the favourite, Jim Peters, and asked whether the pace was too fast. Peters told him it was not fast enough; he was joking. Zátopek took him at his word, went to the front, and won in 2:23:03.2. The second man arrived more than two and a half minutes later. Seventy years on, nobody has repeated the treble. The transferable part is smaller than the achievement: he asked a direct question of the person who knew, and then acted on the answer without arguing with it.</p>
+    <p class="src"><b>Source.</b> World Athletics Heritage, "Marking the centenary of the birth of Zátopek" (https://worldathletics.org/heritage/news/emil-zatopek-olympic-treble-helsinki-1952); Wikipedia, "Athletics at the 1952 Summer Olympics — Men’s marathon".</p>
+  </article>
+  <article class="rec" id="rec10" data-days="3652">
+    <div class="count tabular">10 years</div>
+    <h3>Charles Goodyear &mdash; 10 years<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> First experiments in 1834; patent granted in 1844. Raw rubber turned to glue in summer and cracked in winter, and he set out to fix it with no laboratory, no training and no money. He sold the household furniture. He was imprisoned for debt repeatedly, and referred to the succession of prisons as his hotels.</p>
+    <p class="field"><b>What they actually did.</b> He mixed compounds in kitchen pans. In the winter of 1839, in Woburn, Massachusetts, he dropped a sulphur-treated scrap onto a hot stove and it charred instead of melting — the discovery. It then took him another five years to reproduce and control the process well enough to patent it, while the press treated him as a crank and no backer would touch him. <b>The five years after the breakthrough were harder than the five before it.</b> That is the part of this story worth keeping.</p>
+    <p class="src"><b>Source.</b> Connecticut History, "Charles Goodyear and the Vulcanization of Rubber" (https://connecticuthistory.org/charles-goodyear-and-the-vulcanization-of-rubber/); Lemelson-MIT, "Charles Goodyear" (https://lemelson.mit.edu/resources/charles-goodyear).</p>
+  </article>
+  <article class="rec" id="rec11" data-days="19972">
+    <div class="count tabular">54 years, 246 days</div>
+    <h3>Shizo Kanakuri &mdash; 54 years, 246 days<span class="badge">you have passed this</span></h3>
+    <p class="field"><b>What happened.</b> He started the Olympic marathon on 14 July 1912 and finished it on 20 March 1967. Official elapsed time: 54 years, 246 days, 5 hours, 32 minutes, 20.3 seconds. He was twenty, one of Japan's first two Olympians, and the race was run in about thirty-two degrees of heat. At around thirty kilometres he stopped at a house, was given a glass of water, lay down and slept until the next morning. He went home to Japan without reporting to anybody, and remained an official missing person in Sweden for half a century.</p>
+    <p class="field"><b>What they actually did.</b> He ran two more Olympic marathons, in 1920 and 1924, and rarely spoke of the first. When Swedish television tracked him down in Kumamoto in 1967, aged seventy-five, they invited him back. In a suit rather than running kit, he walked across the line he had never reached. It is often told as a joke. It is not one: it is fifty-four years of an unfinished thing, and then finishing it.</p>
+    <p class="src"><b>Source.</b> Guinness World Records, "Longest marathon in history" (https://www.guinnessworldrecords.com/news/2019/8/longest-marathon-in-history-the-athlete-that-took-more-than-half-a-century); Wikipedia, "Shizo Kanakuri" (https://en.wikipedia.org/wiki/Shizo_Kanakuri).</p>
+  </article>
+  </div>
+
+  <h2>Three rules for your own count</h2>
+  <ol style="margin-left:22px">
+    <li style="margin:10px 0"><b>Write the action, not the mood.</b> &ldquo;Sent the email.&rdquo; &ldquo;Walked to the corner and back.&rdquo; &ldquo;Did not open it.&rdquo; Moods are weather; you are recording work.</li>
+    <li style="margin:10px 0"><b>Missing a day does not reset the count.</b> Mawson missed the ship by hours and the count kept running. If you skip four days, write day 47, not day 1. This page has no streak to break, on purpose — a broken streak is a reason to quit.</li>
+    <li style="margin:10px 0"><b>Do not grade the entries.</b> A day where the only entry is &ldquo;got up&rdquo; is a valid entry. Twelve people in this ledger had a great many days exactly like that, and none of those days made it into the story.</li>
+  </ol>
+
+  <h2>How every fact here was checked</h2>
+  <p>Every count was read against at least one primary or reference source, and the source is printed under the record so you can go and disagree with it. Where sources conflict, the conflict is stated rather than resolved silently — see Gertrude Ederle&rsquo;s crossing time. Nothing has been rounded up for effect.</p>
+  <p>Three things are deliberately absent: <b>no invented dialogue</b>; <b>no unsourced quotations</b> (a number of famous lines associated with these people could not be traced to a contemporary record, so they are not here); and <b>no claim about anybody&rsquo;s inner state</b>, because none of that is recoverable and inventing it is how motivational writing usually goes wrong.</p>
+
+  <h2>What this is not</h2>
+  <p>This is not therapy, medical advice, or a treatment plan. Nothing here is a substitute for a doctor, a counsellor, or a crisis service, and endurance is not the correct answer to every hard situation — sometimes the correct answer is to stop, and to ask somebody for help. If you are in danger, contact your local emergency number or crisis line.</p>
+
+  <p style="margin-top:32px"><a href="landing-grit-glory-motion.html">More from Grit and Glory</a> &nbsp;·&nbsp; <a href="index.html">Penloom Studio</a></p>
+</main>
+
+<footer class="wrap">
+  © 2026 Penloom Studio — Grit and Glory. Every story sourced. Nothing invented.
+  The historical facts are nobody&rsquo;s property — go and check them.
+</footer>
+
+<script>
+/* Self-contained. The records below are the SAME twelve verified in
+   companies/grit-glory/products/2026-08-07-the-endurance-ledger/CONTENT.md — not re-researched.
+   `days` is the number used for ranking against the visitor's own count; `count` is the record's
+   own stated duration and is what the page displays. Ederle's crossing is under a day, so it has
+   no rank — and per the source content NO precise minute is stated, because reputable sources
+   disagree (14:31 vs 14:34). Do not "tighten" that. */
+(function(){
+  // The twelve records are STATIC HTML above — search engines and the SEO audit read text, not a
+  // script. This only reads the day-counts already on the page and marks what the visitor passed.
+  var ranked = [].slice.call(document.querySelectorAll('#records .rec[data-days]'))
+    .map(function(el){ return { el: el, days: Number(el.dataset.days),
+                                name: el.querySelector('h3').textContent.replace(/you have passed this$/, '').split(' — ')[0] }; })
+    .sort(function(a, b){ return a.days - b.days; });
+
+  var dateEl = document.getElementById('startDate'),
+      numEl  = document.getElementById('dayNum'),
+      outEl  = document.getElementById('yourDay'),
+      vsEl   = document.getElementById('versus'),
+      barEl  = document.getElementById('bar'),
+      passEl = document.getElementById('passed'),
+      clear  = document.getElementById('clearBtn');
+
+  var KEY = 'endurance-ledger';
+  function store(v){ try { v == null ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} }
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){ return null; } }
+
+  function daysFromDate(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+    if (!m) return null;
+    var start = Date.UTC(+m[1], +m[2]-1, +m[3]);
+    var now = new Date();
+    var today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    var d = Math.floor((today - start) / 86400000) + 1;   // the first day is day 1, not day 0
+    return d >= 1 ? d : null;                             // a future date is not a count
+  }
+  function plural(n){ return n === 1 ? '' : 's'; }
+
+  function render(n){
+    ranked.forEach(function(x){ x.el.classList.remove('passed'); });
+    if (!n) {
+      outEl.innerHTML = 'You are on day <b>&mdash;</b>.';
+      vsEl.innerHTML = '<span class="dim">Enter a date or a day number and the ledger will sort itself around you.</span>';
+      barEl.style.width = '0'; passEl.textContent = '';
+      return;
+    }
+    var passed = ranked.filter(function(x){ return n >= x.days; });
+    var next = ranked.filter(function(x){ return n < x.days; })[0];
+    passed.forEach(function(x){ x.el.classList.add('passed'); });
+
+    outEl.innerHTML = 'You are on day <b class="tabular">' + n + '</b>.';
+
+    if (next) {
+      var prev = passed.length ? passed[passed.length - 1].days : 0;
+      var pct = Math.max(0, Math.min(100, Math.round(((n - prev) / (next.days - prev)) * 100)));
+      barEl.style.width = pct + '%';
+      vsEl.innerHTML = next.name + ' was on day <b class="tabular">' + next.days + '</b>. ' +
+        '<span class="dim">' + (next.days - n) + ' day' + plural(next.days - n) + ' from here.</span>';
+    } else {
+      barEl.style.width = '100%';
+      vsEl.innerHTML = 'You have passed every count in this ledger. <span class="dim">Kanakuri&rsquo;s is the longest at ' + ranked[ranked.length-1].days + ' days.</span>';
+    }
+    passEl.textContent = passed.length
+      ? 'Passed so far: ' + passed.map(function(x){ return x.name + ' (' + x.days + ')'; }).join(' · ')
+      : 'Nobody in the ledger is behind you yet. That is what day ' + n + ' looks like.';
+  }
+
+  function fromInputs(save){
+    var n = numEl.value ? Math.floor(Number(numEl.value)) : null;
+    if (!n || n < 1) n = daysFromDate(dateEl.value);
+    render(n);
+    if (save) store(numEl.value ? {n: Math.floor(Number(numEl.value))} : (dateEl.value ? {d: dateEl.value} : null));
+  }
+
+  dateEl.addEventListener('change', function(){ numEl.value = ''; fromInputs(true); });
+  numEl.addEventListener('input', function(){ fromInputs(true); });
+  clear.addEventListener('click', function(){ dateEl.value = ''; numEl.value = ''; store(null); render(null); });
+
+  // ?day=9 — a shareable/deep-linkable count, and what the preview screenshot uses.
+  var qday = Number(new URLSearchParams(location.search).get('day'));
+  if (qday >= 1) {
+    numEl.value = Math.floor(qday);
+  } else {
+    var saved = load();
+    if (saved && saved.d) dateEl.value = saved.d;
+    if (saved && saved.n) numEl.value = saved.n;
+  }
+  fromInputs(false);
+
+  // ponytail: one runnable check, in the page, run on load — a silent off-by-one in the day count
+  // is the only thing here that would quietly lie to a visitor.
+  (function selfcheck(){
+    var ok = true, log = [];
+    var t = new Date(), iso = function(dt){ return dt.toISOString().slice(0,10); };
+    var today = new Date(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()));
+    var eq = function(a,b,m){ if (a !== b) { ok = false; log.push(m + ' — got ' + a + ', want ' + b); } };
+    eq(daysFromDate(iso(today)), 1, 'today is day 1');
+    eq(daysFromDate(iso(new Date(today.getTime() - 8*86400000))), 9, 'eight days ago is day 9');
+    eq(daysFromDate(iso(new Date(today.getTime() + 86400000))), null, 'a future date is not a count');
+    eq(daysFromDate('nonsense'), null, 'garbage is not a count');
+    eq(ranked[0].days, 8, 'the shortest ranked count is 8 days');
+    eq(ranked.length, 11, 'eleven records are rankable; Ederle is under a day and has no rank');
+    if (!ok) console.error('endurance-ledger selfcheck FAIL:', log.join('; '));
+  })();
+})();
+</script>
+</body>
+</html>

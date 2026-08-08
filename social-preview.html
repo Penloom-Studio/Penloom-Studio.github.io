@@ -1,0 +1,139 @@
+<!doctype html><html lang=en><meta charset=utf8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Social Preview — assets as customers will see them</title>
+<!--
+  Renders governance/social-preview-manifest.json the way each asset actually posts:
+  carousels in a phone with swipe dots (IG/Pinterest), shorts in a 9:16 phone player.
+  Regenerate the manifest:  node agent/gen-social-preview-manifest.mjs
+  Serve over http (fetch of the manifest is blocked on file://):
+    node agent/os-dashboard.mjs  is not needed — any static server works, e.g.
+    python -m http.server 8080   then open  http://127.0.0.1:8080/storefront/social-preview.html
+-->
+<style>
+:root{color-scheme:dark light}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 system-ui,Segoe UI,sans-serif;background:#1b1d21;color:#e6edf3}
+header{position:sticky;top:0;z-index:5;background:#111316;border-bottom:1px solid #2a2e35;padding:14px 20px;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+header h1{font-size:17px;margin:0}header .sub{color:#8b949e;font-size:12px}
+.filters{margin-left:auto;display:flex;gap:6px}
+.filters button{background:#20242b;color:#c9d1d9;border:1px solid #2f343c;border-radius:20px;padding:5px 14px;cursor:pointer;font-size:13px}
+.filters button.on{background:#2f81f7;border-color:#2f81f7;color:#fff}
+main{padding:20px;max-width:1200px;margin:auto}
+.brand-h{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#8b949e;margin:26px 0 6px;border-bottom:1px solid #2a2e35;padding-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:26px;align-items:start}
+.post{display:flex;flex-direction:column;align-items:center}
+
+/* --- phone shell --- */
+.phone{width:280px;max-width:100%;background:#0a0b0d;border:1px solid #33383f;border-radius:34px;padding:12px 10px 14px;box-shadow:0 10px 30px rgba(0,0,0,.45);position:relative}
+.phone .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:96px;height:20px;background:#0a0b0d;border-radius:0 0 14px 14px;z-index:3}
+.screen{background:#000;border-radius:24px;overflow:hidden}
+
+/* --- carousel (IG/Pinterest post): 4:5 slides --- */
+.ig{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#000;color:#fff;font-size:13px}
+.ig .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(45deg,#f9ce34,#ee2a7b,#6228d7);flex:0 0 auto}
+.ig .more{margin-left:auto;color:#c9d1d9;letter-spacing:1px}
+.track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.track::-webkit-scrollbar{display:none}
+.track img{flex:0 0 100%;width:100%;aspect-ratio:4/5;object-fit:cover;scroll-snap-align:start;display:block;background:#111}
+.dots{display:flex;justify-content:center;gap:6px;padding:9px 0 4px;background:#000}
+.dots i{width:6px;height:6px;border-radius:50%;background:#3a3f47;transition:background .15s,transform .15s}
+.dots i.on{background:#2f81f7;transform:scale(1.25)}
+
+/* --- short (Reel/TikTok): 9:16 player, caption overlaid like the feed --- */
+.short .screen{position:relative;aspect-ratio:9/16}
+.short video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;display:block}
+.short .overlay{position:absolute;left:0;right:0;bottom:0;padding:34px 12px 12px;z-index:2;pointer-events:none;
+  background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff;font-size:13px;white-space:pre-line;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.short .handle{font-weight:700;margin-bottom:3px}
+
+/* --- caption block under a carousel --- */
+.cap{padding:10px 12px 4px;background:#000;color:#e6edf3;font-size:13px;white-space:pre-line}
+.cap .handle{font-weight:700}
+.meta{color:#8b949e;font-size:11px;margin-top:8px;text-align:center}
+.badge{display:inline-block;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#8b949e;border:1px solid #2f343c;border-radius:20px;padding:1px 8px;margin-top:6px}
+#msg{padding:40px;text-align:center;color:#8b949e}
+#msg code{background:#20242b;padding:2px 6px;border-radius:5px;color:#c9d1d9}
+</style>
+
+<header>
+  <h1>📱 Social Preview</h1>
+  <span class=sub id=sub>loading…</span>
+  <div class=filters>
+    <button data-f=all class=on>All</button>
+    <button data-f=carousel>Carousels</button>
+    <button data-f=short>Shorts</button>
+  </div>
+</header>
+<main><div id=msg>Loading manifest…</div><div id=root></div></main>
+
+<script>
+const MANIFEST='../governance/social-preview-manifest.json';
+const ASSET=p=>'../'+p;                       // page lives in storefront/, assets are repo-root-relative
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const capHandle=c=>{const s=String(c||'');const m=s.match(/#(\w+)/);return m?m[1]:'brand';};
+let ITEMS=[],FILTER='all';
+
+fetch(MANIFEST).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(m=>{ITEMS=Array.isArray(m)?m:(m.items||[]);document.getElementById('msg').style.display='none';draw();})
+  .catch(e=>{document.getElementById('msg').innerHTML=
+    'Could not load the manifest ('+esc(e.message)+').<br><br>'+
+    'Open this page over http, not file://. From the repo root:<br><br>'+
+    '<code>python -m http.server 8080</code><br>then visit '+
+    '<code>http://127.0.0.1:8080/storefront/social-preview.html</code><br><br>'+
+    'Regenerate the manifest with <code>node agent/gen-social-preview-manifest.mjs</code>.';});
+
+function slidesTrack(files){
+  const track='<div class="track">'+files.map(f=>`<img src="${esc(ASSET(f))}" alt="" loading=lazy>`).join('')+'</div>';
+  const dots='<div class="dots">'+files.map((_,i)=>`<i class="${i===0?'on':''}"></i>`).join('')+'</div>';
+  return track+dots;
+}
+function carouselCard(it){
+  const h=capHandle(it.caption);
+  return `<div class="post" data-type="carousel">
+    <div class="phone"><div class="notch"></div><div class="screen">
+      <div class="ig"><span class="av"></span><b>@${esc(it.brand||h)}</b><span class="more">•••</span></div>
+      ${slidesTrack(it.files)}
+      <div class="cap"><span class="handle">@${esc(it.brand||h)}</span> ${esc((it.caption||'').replace(/\s*#\w+/g,'').trim())}
+${esc(((it.caption||'').match(/#\w+/g)||[]).join(' '))}</div>
+    </div></div>
+    <div class="meta">carousel · ${it.files.length} slides <span class="badge">${esc(it.brand||'')}</span></div>
+  </div>`;
+}
+function shortCard(it){
+  const src=it.files&&it.files[0];
+  return `<div class="post short" data-type="short">
+    <div class="phone tall"><div class="notch"></div><div class="screen">
+      <video controls preload="none" playsinline muted src="${esc(ASSET(src))}"></video>
+      <div class="overlay"><div class="handle">@${esc(it.brand||'')}</div>${esc(it.caption||'')}</div>
+    </div></div>
+    <div class="meta">short · 9:16 <span class="badge">${esc(it.brand||'')}</span></div>
+  </div>`;
+}
+function draw(){
+  const shown=ITEMS.filter(it=>FILTER==='all'||it.type===FILTER);
+  const nCar=ITEMS.filter(i=>i.type==='carousel').length, nShort=ITEMS.filter(i=>i.type==='short').length;
+  document.getElementById('sub').textContent=`${nCar} carousels · ${nShort} shorts · shown as they post`;
+  const byBrand={};
+  for(const it of shown)(byBrand[it.brand||'—']??=[]).push(it);
+  const root=document.getElementById('root');
+  root.innerHTML=Object.keys(byBrand).sort().map(b=>
+    `<div class="brand-h">${esc(b)} <span style="color:#6a7078">(${byBrand[b].length})</span></div>`+
+    `<div class="grid">`+byBrand[b].map(it=>it.type==='carousel'?carouselCard(it):shortCard(it)).join('')+`</div>`
+  ).join('')||'<div id=msg>No items match this filter.</div>';
+  // swipe dots follow the scroll position (CSS shows them; JS lights the active one)
+  root.querySelectorAll('.track').forEach(t=>{
+    const dots=t.nextElementSibling.querySelectorAll('i');
+    t.addEventListener('scroll',()=>{
+      const i=Math.round(t.scrollLeft/t.clientWidth);
+      dots.forEach((d,j)=>d.classList.toggle('on',j===i));
+    },{passive:true});
+  });
+}
+document.querySelector('.filters').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  FILTER=b.dataset.f;
+  document.querySelectorAll('.filters button').forEach(x=>x.classList.toggle('on',x===b));
+  draw();
+});
+</script>
+</html>

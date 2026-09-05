@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+<title>Forge Log</title>
+<meta name="description" content="Log food and workouts in two taps. Free forever. No account, no billing.">
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0b0d10">
+<link rel="icon" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font: 16px/1.4 -apple-system, system-ui, Segoe UI, Roboto, sans-serif;
+    background: #0b0d10;
+    color: #eceef0;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  header { padding: 20px 16px 8px; }
+  header h1 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
+  header p { margin: 4px 0 0; color: #9aa1a9; font-size: 13px; }
+  main { padding: 0 16px 96px; max-width: 560px; margin: 0 auto; }
+  section { margin-top: 20px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: #9aa1a9; margin: 0 0 8px; }
+  .totals { display: flex; gap: 12px; }
+  .totals .card { flex: 1; background: #15181c; border-radius: 14px; padding: 14px; }
+  .totals .card b { display: block; font-size: 22px; }
+  .totals .card span { color: #9aa1a9; font-size: 12px; }
+  .row { display: flex; align-items: center; justify-content: space-between; background: #15181c; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
+  .row .meta { color: #9aa1a9; font-size: 12px; }
+  .row button.del { background: none; border: none; color: #ff6b6b; font-size: 18px; padding: 4px 8px; }
+  .repeat-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .repeat-list button { background: #1c2127; border: 1px solid #262c34; color: #eceef0; border-radius: 999px; padding: 8px 14px; font-size: 13px; }
+  .fab-row { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, #0b0d10 30%); }
+  .fab-row button { flex: 1; padding: 14px; border-radius: 14px; border: none; font-size: 15px; font-weight: 600; }
+  #addMeal { background: #f2a71b; color: #17130a; }
+  #addSet { background: #1c2127; color: #eceef0; border: 1px solid #262c34; }
+  dialog { border: none; border-radius: 16px; padding: 0; width: min(92vw, 420px); background: #15181c; color: #eceef0; }
+  dialog::backdrop { background: rgba(0,0,0,0.55); }
+  .sheet { padding: 18px; }
+  .sheet h3 { margin: 0 0 12px; }
+  .sheet label { display: block; font-size: 12px; color: #9aa1a9; margin: 10px 0 4px; }
+  .sheet input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #262c34; background: #0b0d10; color: #eceef0; font-size: 15px; }
+  .sheet .actions { display: flex; gap: 10px; margin-top: 16px; }
+  .sheet .actions button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 600; }
+  .sheet .save { background: #f2a71b; color: #17130a; }
+  .sheet .cancel { background: #1c2127; color: #eceef0; }
+  .badge { display: inline-block; background: #1c2127; color: #9aa1a9; border-radius: 8px; padding: 2px 8px; font-size: 11px; margin-left: 8px; }
+  .settings-btn { position: absolute; top: 20px; right: 16px; background: none; border: none; color: #9aa1a9; font-size: 20px; }
+  .promise { font-size: 12px; color: #6fbf73; margin-top: 6px; }
+  .empty { color: #9aa1a9; font-size: 13px; padding: 12px 2px; }
+</style>
+</head>
+<body>
+<header style="position:relative">
+  <h1>Forge Log</h1>
+  <p>Two taps. Free forever. No account, no billing — ever.</p>
+  <p class="promise">Your data never leaves this phone unless you export it.</p>
+  <button class="settings-btn" id="openSettings" aria-label="Settings">&#9881;</button>
+</header>
+<main>
+  <section>
+    <h2>Today</h2>
+    <div class="totals">
+      <div class="card"><b id="tCalories">0</b><span>calories in</span></div>
+      <div class="card"><b id="tBurned">0</b><span>calories burned</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Repeat</h2>
+    <div class="repeat-list" id="repeatList"><p class="empty">Nothing logged yet.</p></div>
+  </section>
+
+  <section>
+    <h2>Entries</h2>
+    <div id="entries"><p class="empty">Log a meal or a set below.</p></div>
+  </section>
+</main>
+
+<div class="fab-row">
+  <button id="addMeal">+ Meal</button>
+  <button id="addSet">+ Set</button>
+</div>
+
+<dialog id="mealDialog">
+  <form class="sheet" method="dialog" id="mealForm">
+    <h3>Log meal</h3>
+    <label for="mealName">Food</label>
+    <input id="mealName" required autocomplete="off">
+    <label for="mealCalories">Calories</label>
+    <input id="mealCalories" type="number" min="0" inputmode="numeric" required>
+    <div class="actions">
+      <button type="button" id="openScan" class="cancel">Scan barcode</button>
+    </div>
+    <div class="actions">
+      <button type="button" class="cancel" data-close>Cancel</button>
+      <button type="submit" class="save">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="scanDialog">
+  <div class="sheet">
+    <h3>Scan barcode</h3>
+    <video id="scanVideo" muted playsinline style="width:100%;border-radius:10px;background:#000"></video>
+    <canvas id="scanCanvas" style="display:none"></canvas>
+    <p id="scanStatus" style="color:#9aa1a9;font-size:12px">Point the camera at a barcode.</p>
+    <label for="manualBarcode">Or type the barcode number</label>
+    <input id="manualBarcode" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 5449000000996">
+    <div class="actions">
+      <button type="button" id="lookupManual" class="save">Look up</button>
+      <button type="button" class="cancel" data-close id="closeScan">Cancel</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="setDialog">
+  <form class="sheet" method="dialog" id="setForm">
+    <h3>Log set</h3>
+    <label for="setName">Exercise</label>
+    <input id="setName" required autocomplete="off">
+    <label for="setWeight">Weight</label>
+    <input id="setWeight" type="number" min="0" inputmode="decimal">
+    <label for="setReps">Reps</label>
+    <input id="setReps" type="number" min="0" inputmode="numeric">
+    <label for="setBurned">Calories burned (optional)</label>
+    <input id="setBurned" type="number" min="0" inputmode="numeric">
+    <div class="actions">
+      <button type="button" class="cancel" data-close>Cancel</button>
+      <button type="submit" class="save">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="settingsDialog">
+  <div class="sheet">
+    <h3>Your data</h3>
+    <p style="color:#9aa1a9;font-size:13px">Export your whole history to a file you keep, or import one back in. No account, ever.</p>
+    <div class="actions">
+      <button type="button" id="exportJson" class="save">Export JSON</button>
+      <button type="button" id="exportCsv" class="cancel">Export CSV</button>
+    </div>
+    <label for="importFile">Import a file back in</label>
+    <input id="importFile" type="file" accept="application/json,.csv,text/csv">
+    <div class="actions">
+      <button type="button" class="cancel" data-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script type="module" src="./app.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

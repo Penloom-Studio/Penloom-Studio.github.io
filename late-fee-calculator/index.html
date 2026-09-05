@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Late-Fee Calculator — penloom works</title>
+<link rel="canonical" href="https://penloomstudio.com/late-fee-calculator/">
+<meta name="description" content="Work out the late fee on an overdue freelance invoice — percentage per month or flat fee — and copy the exact wording for your follow-up email and your next invoice. Free, no signup, nothing leaves your browser.">
+<meta property="og:title" content="Can I charge a late fee on my freelance invoices?">
+<meta property="og:description" content="Free late-fee calculator for freelancers: the math, the follow-up sentence, and the invoice clause that makes the fee stick next time.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://penloomstudio.com/late-fee-calculator/">
+<style>
+  :root{ --ink:#1A2B3C; --green:#1E9E6A; --sand:#F4EFE6; --amber:#E0A83B; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand);color:var(--ink);
+    font:400 17px/1.55 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+  .wrap{max-width:720px;margin:0 auto;padding:32px 20px 64px}
+  h1{font-size:1.9rem;line-height:1.2;font-weight:700;margin:0 0 6px}
+  h2{font-size:1.15rem;font-weight:700;margin:32px 0 10px}
+  .sub{margin:0 0 24px;opacity:.75}
+  .card{background:#fff;border:1px solid #e3dbcc;border-radius:12px;padding:20px;margin:16px 0}
+  fieldset{border:0;padding:0;margin:0 0 14px}
+  legend{font-weight:700;margin-bottom:8px}
+  label{display:block;font-weight:600;font-size:.92rem;margin:12px 0 4px}
+  input[type=number]{width:100%;padding:10px 12px;font-size:1rem;font-family:inherit;
+    border:1px solid #cfc5b2;border-radius:8px;background:#fffdf9;color:inherit}
+  input:focus-visible,button:focus-visible,[type=radio]:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+  .radios label{display:inline-flex;align-items:center;gap:8px;font-weight:600;margin:0 18px 0 0}
+  .out{background:var(--ink);color:#fff;border-radius:12px;padding:20px;margin-top:8px}
+  .out .row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #ffffff22}
+  .out .row:last-child{border:0}
+  .big{font-size:1.6rem;font-weight:700;color:#7FE3B8}
+  .err{color:#FFC9C9;font-weight:600}
+  pre{white-space:pre-wrap;background:#fffdf9;border:1px dashed #cfc5b2;border-radius:8px;
+    padding:14px;font:400 15px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:8px 0}
+  button{font:600 15px/1 inherit;padding:11px 16px;border-radius:8px;border:0;
+    background:var(--green);color:#fff;cursor:pointer}
+  .note{font-size:.88rem;opacity:.8}
+  .up{background:#fff;border:2px solid var(--amber);border-radius:12px;padding:20px;margin-top:32px}
+  footer{margin-top:32px;font-size:.85rem;opacity:.75}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Can I charge a late fee on my freelance invoices?</h1>
+<p class="sub">Short answer: yes — <em>if</em> the fee was in your agreement or on your invoice terms before
+the work started, or the client has since agreed to it. If it wasn't in writing anywhere, chase the base
+amount first and add the clause for your next client. Then use this to work out the number.</p>
+
+<div class="card">
+  <form id="f">
+    <fieldset class="radios">
+      <legend>How are you charging?</legend>
+      <label><input type="radio" name="method" value="pct" checked> Percentage per month</label>
+      <label><input type="radio" name="method" value="flat"> Flat fee</label>
+    </fieldset>
+
+    <label for="bal">Original invoice balance ($)</label>
+    <input type="number" id="bal" min="0" step="0.01" value="2000" inputmode="decimal">
+
+    <div id="pctBox">
+      <label for="rate">Monthly late rate (%) — 1.5% is the common figure (18%/yr)</label>
+      <input type="number" id="rate" min="0" step="0.01" value="1.5" inputmode="decimal">
+      <label for="months">Months (or part months) overdue</label>
+      <input type="number" id="months" min="0" step="1" value="2" inputmode="numeric">
+    </div>
+
+    <div id="flatBox" class="hidden">
+      <label for="flat">Flat fee per period ($)</label>
+      <input type="number" id="flat" min="0" step="0.01" value="25" inputmode="decimal">
+      <label for="periods">Periods overdue</label>
+      <input type="number" id="periods" min="0" step="1" value="2" inputmode="numeric">
+    </div>
+  </form>
+</div>
+
+<div class="out" id="out" aria-live="polite"></div>
+
+<h2>The wording to put in your follow-up</h2>
+<pre id="followup"></pre>
+<button type="button" id="copy1">Copy this</button>
+
+<h2>The wording to put on the invoice (next time)</h2>
+<pre id="clause"></pre>
+<button type="button" id="copy2">Copy this</button>
+
+<h2>Late fee or interest? They are not the same thing</h2>
+<p>Worth getting right before you write it down, because the label changes the rules. A <strong>late
+fee</strong> is a fixed charge for breaking the payment terms — a flat $25, or a set percentage of the
+overdue balance for each month it sits. It is priced as compensation for the hassle, and it stops
+growing when you say it stops.</p>
+<p><strong>Interest</strong> is a running charge on money you are owed, accruing over time on the unpaid
+balance. Calling it interest is what pulls in a different rulebook: many states cap the interest rate a
+business may charge, the cap is usually stricter when your client is a consumer rather than another
+business, and some places require the rate to be disclosed in a particular way before it can be charged
+at all. A modest late fee that was agreed in writing up front is the lower-risk route for a solo
+freelancer, and it is what this calculator writes for you. If you want to charge true interest, or the
+sum is large, check your state's rules — or ask someone local who knows them — before you invoice it.</p>
+<p class="note">Either way, the arithmetic here is the same: rate times balance times periods. It is the
+wording and the ceiling that differ.</p>
+
+<h2>Three guardrails before you send it</h2>
+<ul>
+  <li><strong>Put it in writing first.</strong> A fee the client never agreed to is hard to enforce and sours the relationship.</li>
+  <li><strong>Check your local caps.</strong> Some states and countries cap late-fee or interest rates, and consumer vs. business clients can differ. Keep it modest — a flat $25 or 1.5%/mo is rarely contested — and confirm with a local professional for large sums.</li>
+  <li><strong>Offer a grace note.</strong> "I'll waive the fee if it's paid within 5 days" often gets you the base amount fast, which is usually the real win.</li>
+</ul>
+
+<div class="up">
+  <strong>This is one page out of the Get-Paid Pack.</strong>
+  <p style="margin:8px 0 0">The pack is the rest of the job: the six-email follow-up sequence, the invoice
+  template, the payment-terms clause that makes this fee enforceable next time, and the phone and text
+  scripts for when email stops working. This calculator does the math — the pack does the chasing.</p>
+  <p style="margin:8px 0 0">Want the schedule first? Read the free
+  <a href="/late-payment-follow-up-email/">six-touch follow-up calendar and two full emails</a>.</p>
+  <p style="margin:12px 0 0"><a href="https://buy.stripe.com/6oU3cugZA3DU1rd3an3F609"
+    style="display:inline-block;background:var(--green);color:#fff;text-decoration:none;font-weight:600;
+    padding:11px 16px;border-radius:8px">Get the Get-Paid Pack — $12</a></p>
+</div>
+
+<footer>
+  <p>This is general information and editable template language, not legal or financial advice. Rules vary
+  by state and country.</p>
+  <p>penloom works — get paid faster without the awkward email. Works offline; nothing you type leaves this page.</p>
+</footer>
+</div>
+
+<script>
+// ponytail: money math kept in cents-free floats + round at the edge; invoices are small enough.
+function calc(v){
+  var bal = v.bal, fee;
+  if (!(bal >= 0)) return {error:"Enter an invoice balance of 0 or more."};
+  if (v.method === "pct") {
+    if (!(v.rate >= 0) || !(v.months >= 0)) return {error:"Enter a rate and a number of months (0 or more)."};
+    var monthly = bal * (v.rate / 100);
+    fee = monthly * v.months;
+    return {monthly: monthly, fee: fee, total: bal + fee, bal: bal};
+  }
+  if (!(v.flat >= 0) || !(v.periods >= 0)) return {error:"Enter a flat fee and a number of periods (0 or more)."};
+  fee = v.flat * v.periods;
+  return {monthly: v.flat, fee: fee, total: bal + fee, bal: bal};
+}
+var $ = function(id){ return document.getElementById(id); };
+var money = function(n){ return "$" + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); };
+
+function read(){
+  return {
+    method: document.querySelector('input[name=method]:checked').value,
+    bal: parseFloat($("bal").value), rate: parseFloat($("rate").value),
+    months: parseFloat($("months").value), flat: parseFloat($("flat").value),
+    periods: parseFloat($("periods").value)
+  };
+}
+
+function render(){
+  var v = read(), pct = v.method === "pct";
+  $("pctBox").classList.toggle("hidden", !pct);
+  $("flatBox").classList.toggle("hidden", pct);
+  var r = calc(v);
+  if (r.error){ $("out").innerHTML = '<p class="err">' + r.error + '</p>'; return; }
+  $("out").innerHTML =
+    '<div class="row"><span>Original balance</span><span>' + money(r.bal) + '</span></div>' +
+    '<div class="row"><span>' + (pct ? "Fee per month" : "Fee per period") + '</span><span>' + money(r.monthly) + '</span></div>' +
+    '<div class="row"><span>Total late fee</span><span>' + money(r.fee) + '</span></div>' +
+    '<div class="row"><span>New total due</span><span class="big">' + money(r.total) + '</span></div>';
+  var terms = pct ? v.rate + "% per month" : money(v.flat) + " per period";
+  $("followup").textContent =
+    "Quick note on invoice [#0001], which is now " + (pct ? v.months + " month(s)" : v.periods + " period(s)") +
+    " past due. The terms we agreed carry a late charge of " + terms + ", so " + money(r.fee) +
+    " has been added and the amount outstanding is " + money(r.total) + ". " +
+    "Settle it by [NEW DEADLINE] and nothing further is added: [PAYMENT LINK].";
+  $("clause").textContent = pct
+    ? "Payment is due within [TERMS]. After that date a late charge of " + v.rate + "% of the outstanding " +
+      "amount is added for each month, or part month, the invoice remains unpaid."
+    : "Payment is due within [TERMS]. An invoice unpaid after that date carries a late charge of " +
+      money(v.flat) + ", repeated for every further 30 days it remains outstanding.";
+}
+
+$("f").addEventListener("input", render);
+function copier(srcId, btn){
+  btn.addEventListener("click", function(){
+    var t = $(srcId).textContent, done = function(){ btn.textContent = "Copied"; setTimeout(function(){ btn.textContent = "Copy this"; }, 1500); };
+    if (navigator.clipboard) { navigator.clipboard.writeText(t).then(done, done); return; }
+    var ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta);
+    ta.select(); try { document.execCommand("copy"); } catch(e){} ta.remove(); done();
+  });
+}
+copier("followup", $("copy1")); copier("clause", $("copy2"));
+render();
+
+// self-check: the pack's worked example — $2,000 at 1.5%/mo, 2 months = $30/mo, $60 fee, $2,060 due.
+(function(){
+  var a = calc({method:"pct", bal:2000, rate:1.5, months:2});
+  var b = calc({method:"flat", bal:2000, flat:25, periods:2});
+  var ok = a.monthly === 30 && a.fee === 60 && a.total === 2060 && b.fee === 50 && b.total === 2050
+        && calc({method:"pct", bal:NaN}).error;
+  if (!ok) console.error("late-fee math self-check FAILED", a, b);
+})();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

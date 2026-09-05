@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Pick the Right AI Tool for Each Task You Do</title>
+<link rel="canonical" href="https://penloomstudio.com/which-ai-tool-for-which-task/">
+<meta name="description" content="Pick the task you actually do, get one answer — including when a general chat assistant is already enough. No listicle, no affiliate links. Better software, built by AI — because you deserved it yesterday.">
+<meta property="og:title" content="How to Pick the Right AI Tool for Each Task You Do">
+<meta property="og:description" content="One task in, one answer out. Includes when ChatGPT alone is enough, and what to use offline.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/which-ai-tool-for-which-task/">
+<style>
+  :root { color-scheme: light dark;
+    --bg:#fff; --fg:#131820; --muted:#5a6473; --line:#c9d2de; --accent:#0e7f95; --panel:#f5f8fa; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0b0f16; --fg:#e6ebf2; --muted:#95a2b3; --line:#2a3644; --accent:#33d6f0; --panel:#121a25; }
+  }
+  * { box-sizing: border-box; }
+  body { max-width: 46rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--fg); background: var(--bg); }
+  h1 { font-size: 2rem; line-height: 1.18; margin: .3rem 0 1rem; }
+  h2 { font-size: 1.22rem; line-height: 1.3; margin: 2.2rem 0 .5rem; }
+  h3 { font-size: 1.02rem; margin: 1.4rem 0 .35rem; }
+  a { color: var(--accent); }
+  .kicker { color: var(--muted); font-size: .82rem; letter-spacing: .05em; text-transform: uppercase; margin: 0; }
+  .lede { font-size: 1.08rem; }
+  .router { border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.15rem 1.3rem;
+    background: var(--panel); margin: 1.6rem 0 2rem; }
+  .router h2 { margin-top: 0; }
+  .tasks { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0; margin: .9rem 0 0; list-style: none; }
+  .tasks button { font: inherit; font-size: .93rem; cursor: pointer; padding: .5rem .8rem;
+    border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--fg); }
+  .tasks button:hover { border-color: var(--accent); }
+  .tasks button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #08121a; font-weight: 600; }
+  #answer { margin-top: 1.2rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  #answer p { margin: .45rem 0; }
+  #answer .pick { font-size: 1.06rem; font-weight: 600; }
+  .label { color: var(--muted); font-size: .8rem; letter-spacing: .05em; text-transform: uppercase; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
+  th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  ul, ol { padding-left: 1.15rem; } li { margin: .4rem 0; }
+  blockquote { margin: 1.2rem 0; padding: .1rem 1rem; border-left: 3px solid var(--line); color: var(--muted); }
+  .cta { margin: 2.4rem 0 0; padding: 1.1rem 1.2rem; border: 1px solid var(--line); border-radius: 12px; }
+  footer { margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "FAQPage",
+   "url": "https://penloomstudio.com/which-ai-tool-for-which-task/",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "How to Match Your Tasks to the Right AI Tool",
+     "acceptedAnswer": { "@type": "Answer", "text": "Name the task as a verb and an output — \"turn 40 pages into 10 bullets\", \"log a habit every day\". If the output is text, a general chat assistant already does it. If the output is a record you keep and re-open, you want a small dedicated tool that stores it. That single test routes almost every task without trying anything." }
+    },
+    {
+     "@type": "Question",
+     "name": "Is ChatGPT Enough or Do You Need Multiple AI Tools",
+     "acceptedAnswer": { "@type": "Answer", "text": "For anything that produces text once — drafting, rewriting, summarising, explaining — one general assistant is enough, and a second tool adds tabs, not output. You need a second tool only when the task needs memory between sessions, offline access, or a structured record. Add tools on evidence of a gap, not on a review." }
+    },
+    {
+     "@type": "Question",
+     "name": "What AI Tool Should I Learn First in 2026",
+     "acceptedAnswer": { "@type": "Answer", "text": "One general chat assistant, learned properly. Everything else is a variation on prompting it well: paste the source, state the output you want, state the length, and correct it once. Learning a second tool before you have hit a wall with the first is the most common way people lose a weekend and gain nothing." }
+    },
+    {
+     "@type": "Question",
+     "name": "What AI Tool Replaces Multiple Other Tools",
+     "acceptedAnswer": { "@type": "Answer", "text": "A general chat assistant replaces the writing, rewriting, summarising and brainstorming tools — those were always one capability sold four times. It does not replace anything that must store your data, run offline or work when the service is down. Consolidate the text tools; keep the record-keeping ones small and separate." }
+    },
+    {
+     "@type": "Question",
+     "name": "How to Choose the Right AI Tool for Organizing Your Life",
+     "acceptedAnswer": { "@type": "Answer", "text": "Organising is record-keeping, not text generation, so judge on storage, not cleverness: does it open instantly, does it work without an account, can you export everything, and does it still open in five years. A tool that writes beautiful summaries but locks your list behind a login has failed the actual job." }
+    },
+    {
+     "@type": "Question",
+     "name": "How to Avoid AI Tool Overload and Stay Productive",
+     "acceptedAnswer": { "@type": "Answer", "text": "Cap it deliberately: one general assistant, plus at most one small tool per record you actually keep. Before adding anything, write down the task it does that your current setup cannot. If you cannot write that sentence, the tool is a tab, not a tool." }
+    },
+    {
+     "@type": "Question",
+     "name": "What Happens When You Stop Using an AI Tool",
+     "acceptedAnswer": { "@type": "Answer", "text": "That depends entirely on where the data lives. If it is on a server behind an account, stopping means losing access to your own history unless you export first. If the tool is a file on your device, stopping means nothing — the data is still there. Check the export button before you put six months of anything into a tool." }
+    },
+    {
+     "@type": "Question",
+     "name": "AI Tools That Work Offline: Privacy, Speed, and Control",
+     "acceptedAnswer": { "@type": "Answer", "text": "Anything that needs a model to generate new text needs a connection, unless you run a model locally. But most day-to-day tasks — logging, tracking, quizzing, keeping lists — need no model at all and can run entirely in your browser with no network calls. Both AI Forge apps on this page work with the wi-fi off." }
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+
+<p class="kicker">AI Forge</p>
+<h1>How to Pick the Right AI Tool for Each Task You Do</h1>
+
+<p class="lede">One page, no listicle, no affiliate links. Pick the task you actually do below and you get one answer — including, often, the answer that you already have the tool and do not need another one.</p>
+
+<div class="router">
+  <h2>Route your task</h2>
+  <p class="label">Pick the task</p>
+  <ul class="tasks" id="tasks"></ul>
+  <div id="answer" hidden>
+    <p class="label" id="a-task"></p>
+    <p class="pick" id="a-pick"></p>
+    <p id="a-why"></p>
+    <p><span class="label">Is a general assistant enough?</span><br><span id="a-chat"></span></p>
+    <p><span class="label">Offline / no-account option</span><br><span id="a-offline"></span></p>
+  </div>
+  <noscript><p>The router needs JavaScript. The same routing rule is written out in plain language below, under <a href="#match">How to Match Your Tasks to the Right AI Tool</a>.</p></noscript>
+</div>
+
+<h2>The whole rule, in one line</h2>
+<p>If the task produces <strong>text you read once</strong>, a general chat assistant already does it and a second tool is a second tab. If the task produces <strong>a record you re-open</strong> — a list, a log, a streak, a history — you want a small dedicated tool, and the thing to judge it on is whether the record is still yours next year.</p>
+<p>That is the entire routing logic. Everything below is that rule applied to the questions people actually ask.</p>
+
+<h2 id="match">How to Match Your Tasks to the Right AI Tool</h2>
+<p>Write the task as a verb and an output: "turn 40 pages into 10 bullets", "log a habit every day", "rewrite this paragraph so it is shorter". Then ask whether the output is text you consume once or a record you keep. Text once &rarr; general assistant. Record you keep &rarr; a small tool that stores it, judged on storage and export rather than on cleverness. Almost every task routes on that single question, with no trial signups involved.</p>
+
+<h2>Is ChatGPT Enough or Do You Need Multiple AI Tools</h2>
+<p>For anything that produces text once — drafting, rewriting, summarising, explaining, brainstorming — one general assistant is enough, and adding a second one gives you tabs rather than output. You need a second tool only when the task needs memory between sessions, offline access, or a structured record. Add a tool on evidence of a specific gap, never on the strength of a review.</p>
+
+<h2>What AI Tool Should I Learn First in 2026</h2>
+<p>One general chat assistant, learned properly. Nearly every other tool in this category is a variation on prompting one well: paste the source, state the output you want, state the length, correct it once. Learning a second tool before hitting a real wall with the first is the most reliable way to lose a weekend and gain nothing.</p>
+
+<h2>What AI Tool Replaces Multiple Other Tools</h2>
+<p>A general assistant replaces the writing, rewriting, summarising and brainstorming tools, because those were always one capability sold four times over. It replaces nothing that has to store your data, run offline, or keep working when a service goes down. So: consolidate the text tools ruthlessly, and keep the record-keeping ones small, separate and exportable.</p>
+
+<h2>How to Choose the Right AI Tool for Organizing Your Life</h2>
+<p>Organising is record-keeping, not text generation, so judge on the boring things: does it open instantly, does it work without an account, can you export everything in one click, and will the file still open in five years. A tool that writes a beautiful weekly summary but keeps your list behind a login has failed the job you hired it for.</p>
+
+<h2>How to Avoid AI Tool Overload and Stay Productive</h2>
+<p>Cap the stack on purpose: one general assistant, plus at most one small tool per record you genuinely keep. Before adding anything, write one sentence naming the task it does that your current setup cannot. If you cannot write that sentence, what you found is a tab, not a tool.</p>
+
+<h2>What Happens When You Stop Using an AI Tool</h2>
+<p>It depends entirely on where the data lives. If it sits on a server behind an account, stopping means losing access to your own history unless you exported it first. If the tool is a file on your device, stopping costs you nothing — the data is still sitting there. Find the export button <em>before</em> you commit six months of anything.</p>
+
+<h2>AI Tools That Work Offline: Privacy, Speed, and Control</h2>
+<p>Anything that generates new text needs either a connection or a model running locally on your machine. But a large share of everyday tasks — logging, tracking, quizzing, keeping lists — need no model at all, and can run entirely inside your browser with no network calls at all. Both apps below do exactly that.</p>
+
+<h2>The two apps we built, and the tasks they route from</h2>
+<table>
+<tr><th>App</th><th>The record it keeps</th><th>What it does not do</th></tr>
+<tr>
+  <td><a href="/apps/forge-habits/">Forge Habits</a></td>
+  <td>Habits and daily check-ins, unlimited, stored in your own browser, exportable.</td>
+  <td>No account, no cap, no subscription, no ads, no network calls.</td>
+</tr>
+<tr>
+  <td><a href="/apps/forge-trivia/">Forge Trivia</a></td>
+  <td>A history quiz you can play with the wi-fi off.</td>
+  <td>No ads, no account, no subscription, no network calls.</td>
+</tr>
+</table>
+<p>Both are single HTML files. We built them because we read the one- and two-star reviews of the leading apps in each category first: 309 reviews for habit trackers, where price and value was the largest complaint cluster, and 661 for ad-funded history quizzes, where 96% of every review we could classify was about advertising. The full citations ship inside each product.</p>
+
+<h2>Why there are no third-party tool names on this page</h2>
+<p>Our own rule is that we do not call a piece of software better without evidence, and we have not yet sat with a stopwatch and run the current crop of tools ourselves. Until we have, naming a winner would be exactly the ranked listicle this page exists to replace. So this page routes on the shape of your task, which does not go stale, rather than on a leaderboard that goes stale in a month.</p>
+
+<div class="cta">
+  <p><strong>Where these questions came from.</strong> They are the literal phrasings people search and ask in the communities we harvest for this niche — including r/productivity, r/ProductivityApps, r/ChatGPTPro, r/AI_Agents, r/automation and r/ArtificialIntelligence. We keep the harvest and answer the questions in the words they were asked in, rather than the words we would prefer.</p>
+  <p>Something on this page wrong or out of date? Tell us and we will fix it: <a href="mailto:hello@penloomstudio.com?subject=Correction%20to%20the%20AI%20tool%20router">hello@penloomstudio.com</a>.</p>
+</div>
+
+<footer>
+  <p>AI Forge &middot; Better software, built by AI &mdash; because you deserved it yesterday.</p>
+</footer>
+
+<script>
+const ROUTES = [
+  { id:"summarise", task:"Summarise something long",
+    pick:"A general chat assistant. No second tool needed.",
+    why:"Summarising is a one-shot text output. Paste the source, ask for the exact number of bullets you want, and correct it once. Dedicated “summariser” products are a prompt with a price tag.",
+    chat:"Yes — this is the clearest case where one tool is the whole answer.",
+    offline:"Not offline: generating a summary needs a model. Nothing here changes that unless you run a model locally." },
+  { id:"rewrite", task:"Rewrite or tighten my writing",
+    pick:"A general chat assistant, with the instruction stated as a constraint.",
+    why:"Say what you want measured — shorter by half, plainer words, same meaning — rather than “improve this”. The constraint is what produces a usable edit; the tool is interchangeable.",
+    chat:"Yes. A dedicated rewriting app is the same capability with fewer controls.",
+    offline:"Not offline for the rewrite itself." },
+  { id:"habit", task:"Track a habit or a daily streak",
+    pick:"A small dedicated tracker that stores the record on your device — ours is <a href=\"/apps/forge-habits/\">Forge Habits<\/a>.",
+    why:"A streak is a record you re-open every day for months. That makes storage, not intelligence, the whole product. Unlimited habits, no account, one-click export.",
+    chat:"No. A chat assistant has no reliable place to keep the record between sessions.",
+    offline:"Yes — runs entirely in your browser with no network calls." },
+  { id:"capture", task:"Capture notes, tasks and ideas so nothing is lost",
+    pick:"A small tool that stores locally and exports — capture first, sort later.",
+    why:"The failure mode is friction at the moment of capture, not weak organisation afterwards. Anything that makes you log in before you can write the thing down will lose the thing.",
+    chat:"Partly — an assistant can sort what you already captured, but it is not where you should keep it.",
+    offline:"Yes, if the tool stores in your browser or in plain files." },
+  { id:"brainstorm", task:"Brainstorm and generate ideas",
+    pick:"A general chat assistant — then paste the keepers into whatever holds your records.",
+    why:"Idea generation is one-shot text and the volume is the point. The step people skip is moving the two good ideas somewhere permanent before the tab closes.",
+    chat:"Yes.",
+    offline:"Not offline for the generating half." },
+  { id:"jobapp", task:"Apply for jobs or tailor a résumé",
+    pick:"A general chat assistant for the drafting, and your own eyes for the send.",
+    why:"The risk here is not writing quality, it is sending near-identical text to many employers and leaving template artefacts in it. Tailoring per role is the work; generating volume is not.",
+    chat:"Yes for the drafting. Nothing should be auto-sent unread.",
+    offline:"Not offline." },
+  { id:"spreadsheet", task:"Data entry, spreadsheets and forms",
+    pick:"Whatever your spreadsheet already does — formulas and validation before anything AI.",
+    why:"Most “AI data entry” tasks are a fill-down, a lookup or a rule the spreadsheet has shipped for thirty years. Reach for a model only for the messy free-text column it genuinely cannot parse.",
+    chat:"Only for the messy column. Not for the structured work.",
+    offline:"Yes — your spreadsheet works offline." },
+  { id:"quiz", task:"Test my recall on facts",
+    pick:"A quiz you can open cold — ours is <a href=\"/apps/forge-trivia/\">Forge Trivia<\/a>.",
+    why:"Recall practice needs a fixed question set and instant repetition, not generation. A model inventing questions on the fly cannot be checked for correctness while you are playing.",
+    chat:"No — an assistant will happily invent a plausible wrong question.",
+    offline:"Yes — plays with the wi-fi off, no ads, no account." },
+  { id:"week", task:"Plan and schedule my week",
+    pick:"Your existing calendar for the record; an assistant only to draft the plan.",
+    why:"The calendar is the record and it already syncs to your phone. An assistant is useful for turning a messy list into a proposed order — then you put the result in the calendar yourself.",
+    chat:"Yes for the drafting half, no for the storing half.",
+    offline:"The calendar half, yes." }
+];
+
+const list = document.getElementById("tasks");
+const box  = document.getElementById("answer");
+ROUTES.forEach(r => {
+  const li = document.createElement("li");
+  const b  = document.createElement("button");
+  b.type = "button"; b.textContent = r.task;
+  b.setAttribute("aria-pressed", "false");
+  b.addEventListener("click", () => show(r, b));
+  li.appendChild(b); list.appendChild(li);
+});
+
+function show(r, btn) {
+  list.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === btn)));
+  document.getElementById("a-task").textContent  = r.task;
+  document.getElementById("a-pick").innerHTML    = r.pick;
+  document.getElementById("a-why").textContent   = r.why;
+  document.getElementById("a-chat").textContent  = r.chat;
+  document.getElementById("a-offline").textContent = r.offline;
+  box.hidden = false;
+}
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

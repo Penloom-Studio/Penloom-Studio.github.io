@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Check an AI Answer Before You Trust It</title>
+<link rel="canonical" href="https://penloomstudio.com/notes/how-to-check-an-ai-answer/">
+<meta name="description" content="Six checks that catch a wrong chatbot answer before you act on it, plus the three kinds of question where you should simply assume it is wrong.">
+<meta property="og:title" content="How to Check an AI Answer Before You Trust It">
+<meta property="og:description" content="Confidence is not accuracy. Six checks that catch a wrong AI answer before you act on it — and the kinds of questions where you should assume it is wrong.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/notes/how-to-check-an-ai-answer/">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #16181c; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 1rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+  a { color: #2563eb; } @media (prefers-color-scheme: dark) { a { color: #7aa2ff; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #94a3b8; font-style: italic; }
+  pre { background: #f4f4f5; padding: .9rem 1rem; border-radius: 8px; overflow-x: auto; font-size: .9rem; white-space: pre-wrap; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { pre { background: #23262d; } }
+  ul, ol { padding-left: 1.15rem; } li { margin: .45rem 0; }
+  .cta { margin: 2.5rem 0 0; padding: 1.1rem 1.25rem; border: 1px solid #94a3b8; border-radius: 10px; }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Article",
+   "headline": "How to Check an AI Answer Before You Trust It",
+   "name": "How to Check an AI Answer Before You Trust It",
+   "description": "Six checks that catch a wrong AI answer before you act on it, and the three question types where you should assume the answer is wrong.",
+   "url": "https://penloomstudio.com/notes/how-to-check-an-ai-answer/",
+   "inLanguage": "en-US",
+   "publisher": { "@type": "Organization", "name": "Cogloom" }
+  },
+  {
+   "@type": "HowTo",
+   "name": "How to Check an AI Answer Before You Trust It",
+   "step": [
+    { "@type": "HowToStep", "name": "Make it show the reasoning, not just the answer" },
+    { "@type": "HowToStep", "name": "Ask for sources, then check the sources exist" },
+    { "@type": "HowToStep", "name": "Ask again in a brand-new chat" },
+    { "@type": "HowToStep", "name": "Invert the question" },
+    { "@type": "HowToStep", "name": "Do the arithmetic and the units yourself" },
+    { "@type": "HowToStep", "name": "Ask it what would make this answer wrong" }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<p class="kicker">Cogloom · Notes</p>
+<h1>How to Check an AI Answer Before You Trust It</h1>
+<p>The dangerous thing about a chatbot is not that it is sometimes wrong. Every source is sometimes wrong. The dangerous thing is that it is <em>wrong in exactly the same tone it uses when it is right</em>. A search engine that does not know shows you fewer results. A model that does not know writes you a confident paragraph.</p>
+<p>So the skill worth having is not "prompting." It is a fast, boring verification habit you run before you act on anything that matters. Here is the one I use. The whole thing takes about a minute, and the last step is the one most people have never tried.</p>
+
+<h2>1. Make it show the reasoning, not just the answer</h2>
+<p>An answer you cannot inspect is an answer you cannot check. Ask for the working:</p>
+<pre><code>Before you answer, list the steps you'll use and the facts each step depends on.
+Then answer. Keep the steps visible.</code></pre>
+<p>Two things happen. First, you can see where a wrong answer went wrong — usually one bad assumption three steps in, not the whole chain. Second, models are measurably more accurate on numerical and logical questions when they reason out loud instead of jumping to a conclusion, which is why "show your work" appears in essentially every serious prompting guide.</p>
+<p>Read the steps for one thing in particular: <strong>a fact it asserted without being given it.</strong> That is where the error usually lives.</p>
+
+<h2>2. Ask for sources — then actually check the sources exist</h2>
+<p>Asking for citations is half the move. The other half is opening them. A model can produce a citation that is perfectly formatted, plausibly titled, attributed to a real author in a real journal, and completely invented. This is the single most embarrassing failure mode in practice, because a fake citation looks more credible than a real one — real references are messy.</p>
+<p>The check is mechanical: copy the title, search for it, confirm it exists and says what the model said it says. If a chatbot has live web access, ask it to give you links and then click them. A link that 404s or lands somewhere unrelated is your answer about the whole response.</p>
+
+<h2>3. Ask again in a brand-new chat</h2>
+<p>This one costs ten seconds and catches a surprising amount. Open a fresh conversation and ask the same question, worded differently, with no reference to the earlier discussion.</p>
+<p>Why it works: inside a long conversation the model is strongly influenced by everything already said — including its own earlier claims and any assumption you accidentally planted. It will defend a wrong answer it has already given far more readily than it will invent the same wrong answer twice from a cold start. If the cold answer matches, your confidence should go up. If it does not, you have found the soft spot, and it is worth asking the model directly why the two differ.</p>
+
+<h2>4. Invert the question</h2>
+<p>Models are agreeable. Ask "why is X true?" and you will usually get reasons X is true, whether or not it is. So ask the other one:</p>
+<pre><code>Make the strongest case that the answer you just gave is wrong.
+What evidence would I expect to see if it were wrong?</code></pre>
+<p>A solid answer survives this and the counter-case comes back thin. A shaky one collapses immediately, and you will often watch the model quietly abandon its original position. That reversal is the signal. Note that this cuts both ways — a model that flips under mild pressure is not proving the new answer is right either; it is proving it was never anchored to anything.</p>
+
+<h2>5. Do the arithmetic and the units yourself</h2>
+<p>If there are numbers, check them by hand or in a spreadsheet. Not because the model cannot calculate — it often can, especially when it writes and runs code — but because the failure is rarely the arithmetic. It is the setup: a percentage applied to the wrong base, an annual figure treated as monthly, a rate compounded when it should be simple, a unit conversion done once too often.</p>
+<p>Rules of thumb that catch most of it:</p>
+<ul>
+<li><strong>Sanity-check the magnitude first.</strong> Should this answer be in the hundreds or the millions? Order-of-magnitude errors are the easiest to spot and the most damaging to miss.</li>
+<li><strong>Check the units on every line, not just the last one.</strong></li>
+<li><strong>Re-derive one number independently.</strong> If one checks out and the method is visible, the rest usually follows.</li>
+</ul>
+
+<h2>6. Ask what would make the answer wrong</h2>
+<p>The closing question, and the one almost nobody asks:</p>
+<pre><code>What are you least confident about in that answer, and why?
+What would I need to verify myself before relying on it?</code></pre>
+<p>Given explicit permission to be uncertain, models will generally tell you where the soft ground is — and it is usually the exact spot you were about to build on. The reason this works is that the default behavior is to be helpful and complete, and hedging reads as unhelpful. Change what counts as helpful and the hedging appears.</p>
+
+<h2>The three question types where you should assume it is wrong</h2>
+<p>Verification is cheap but not free, so spend it where the failure rate is highest:</p>
+<ul>
+<li><strong>Anything very recent.</strong> A model's knowledge has an end date, and without live search it will answer a question about last month using the world as it was earlier. Worse, it may not flag the gap. Ask directly: "what is your information cutoff, and could this have changed since?"</li>
+<li><strong>Anything very specific and numeric.</strong> Exact prices, exact statistics, exact dates, exact quotes, exact section numbers. Recall of a specific figure is precisely where a generative model is weakest and most confident.</li>
+<li><strong>Anything very local.</strong> A small business's hours, a municipal rule, a niche product's specifications. Thin coverage in training data produces fluent, plausible, invented detail.</li>
+</ul>
+<blockquote>Broad, conceptual, explain-it-to-me questions are where these tools are genuinely excellent. Narrow, factual, look-it-up questions are where they are at their worst — and that is the opposite of how most people use them.</blockquote>
+
+<h2>The sixty-second version</h2>
+<ol>
+<li>Ask for the steps, and read them for an unsupported assumption.</li>
+<li>Ask for sources, and open one.</li>
+<li>Re-ask cold in a new chat.</li>
+<li>Ask it to argue the opposite.</li>
+<li>Re-derive one number yourself.</li>
+<li>Ask what it is least sure about.</li>
+</ol>
+<p>None of this requires knowing anything technical about how the models work. It requires treating a chatbot the way you would treat a fast, well-read, extremely confident colleague who has never once said "I don't know" out loud: useful, worth listening to, and never the last word on anything that costs you money.</p>
+
+<div class="cta">
+<p>New to all of this and want the patient version — what the buttons do, how to set it up, and ten everyday tasks it is genuinely good at? Start with <a href="https://penloomstudio.com/ai-basics-chatgpt.html"><strong>AI Basics: ChatGPT for Total Beginners</strong></a>, written for people who find AI intimidating. The first lesson is free, no signup.</p>
+<p>Related: <a href="https://penloomstudio.com/notes/chatgpt-five-tricks-beginners-miss">5 ChatGPT tricks beginners miss</a> · browse the classes and developer toolkits at <a href="https://penloomstudio.com/landing-cogloom-motion.html">Cogloom</a>.</p>
+</div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Penloom Patriot — American Pride, No Politics</title>
+<meta name="description" content="Penloom Patriot: pride in the flag, service, and ordinary Americans — no candidates, no parties, ever. Apparel line in production.">
+
+<link rel="canonical" href="https://penloomstudio.com/landing-penloom-patriot-motion.html">
+<meta property="og:title" content="Penloom Patriot — American Pride, No Politics">
+<meta property="og:description" content="Pride in the flag, the service, and ordinary Americans — never an argument. No candidates, no parties, ever.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://penloomstudio.com/landing-penloom-patriot-motion.html">
+<meta property="og:image" content="https://penloomstudio.com/og/penloom-patriot.jpg">
+<meta name="twitter:image" content="https://penloomstudio.com/og/penloom-patriot.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Brand",
+  "name": "Penloom Patriot",
+  "url": "https://penloomstudio.com/landing-penloom-patriot-motion.html",
+  "slogan": "Pride in the flag. Never a fight over a candidate.",
+  "description": "Penloom Patriot supports the country and its people — the flag, service, and ordinary Americans — with no candidates, no parties, and no political commentary, ever."
+}
+</script>
+<style>
+  :root{
+    --navy:#0A3161; --red:#B31942; --cream:#FBF8F1; --card:#FFFFFF;
+    --ink:#1A2233; --muted:#5A6478; --line:#E5DFD2; --gold:#B8892F;
+    --sans:"Segoe UI",system-ui,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --navy:#DCE6F5; --red:#E2647F; --cream:#101725; --card:#182136;
+           --ink:#E8EAF1; --muted:#9AA4B8; --line:#26324B; --gold:#D4A94E; }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:17px}
+  a{color:var(--navy)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px}
+  section{padding:60px 0}
+
+  .stripes{height:8px;background:linear-gradient(90deg,#B31942 0 33%,#F1F1F1 33% 66%,#0A3161 66% 100%);border-bottom:1px solid var(--line)}
+
+  nav{position:sticky;top:0;z-index:20;background:var(--cream);border-bottom:1px solid var(--line)}
+  .navrow{display:flex;align-items:center;gap:18px;padding:14px 22px;max-width:920px;margin:0 auto}
+  .logo{font-weight:700;font-size:18px;letter-spacing:.5px;color:var(--navy);text-decoration:none}
+  .logo .star{color:var(--red)}
+  .navrow .sp{flex:1}
+  .navrow a.link{color:var(--muted);font-size:14px;text-decoration:none}
+  .navrow a.link:hover{color:var(--ink)}
+
+  .btn{display:inline-block;padding:14px 26px;border-radius:10px;font-size:15.5px;font-weight:600;text-decoration:none}
+  .btn.primary{background:var(--red);color:#fff}
+  .btn.primary:hover{background:#9A1533}
+  .btn.ghost{border:2px solid var(--navy);color:var(--navy)}
+  .btn.ghost:hover{background:var(--navy);color:var(--cream)}
+
+  header.hero{padding:74px 0 60px;text-align:center}
+  .kick{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:18px}
+  h1{font-size:clamp(32px,5.6vw,54px);font-weight:700;letter-spacing:-1px;line-height:1.14;color:var(--navy);margin-bottom:20px}
+  .hero .sub{color:var(--muted);font-size:clamp(16px,2vw,19px);max-width:620px;margin:0 auto 30px}
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  h2{font-size:clamp(24px,3.8vw,36px);font-weight:700;letter-spacing:-.5px;color:var(--navy);margin-bottom:12px}
+  .lead{color:var(--muted);max-width:600px;font-size:16.5px;margin-bottom:32px}
+
+  .cols{display:grid;grid-template-columns:1fr;gap:22px}
+  @media(min-width:700px){ .cols{grid-template-columns:1fr 1fr} }
+  .col{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px}
+  .col h3{color:var(--navy);font-size:19px;margin-bottom:12px}
+  .col ul{list-style:none}
+  .col li{padding:6px 0 6px 22px;position:relative;color:var(--muted);font-size:15px}
+  .col.yes li::before{content:"\2713";color:var(--red);position:absolute;left:0;font-weight:700}
+  .col.no li::before{content:"\2715";color:var(--muted);position:absolute;left:0;font-weight:700}
+
+  .soon{background:var(--card);border:1px dashed var(--gold);border-radius:14px;padding:30px 32px}
+  .soon .tag{display:inline-block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px}
+  .soon h3{color:var(--navy);font-size:21px;margin-bottom:10px}
+  .soon p{color:var(--muted);font-size:15.5px}
+
+  .promise{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--red);border-radius:12px;padding:28px 30px}
+  .promise blockquote{font-size:clamp(18px,2.4vw,23px);font-weight:600;color:var(--navy);letter-spacing:-.3px;margin-bottom:10px}
+  .promise p{color:var(--muted);font-size:15px}
+
+  .home{text-align:center;background:var(--navy);border-radius:16px;padding:50px 30px;color:#F1F1F1}
+  @media (prefers-color-scheme: dark){ .home{background:#0A3161} }
+  .home h2{color:#fff}
+  .home p{color:#C7D2E4;max-width:500px;margin:8px auto 24px}
+  .home .btn.primary{background:var(--red)}
+
+  footer{padding:36px 0;text-align:center;color:var(--muted);font-size:13.5px;border-top:1px solid var(--line)}
+  footer a{color:var(--muted)}
+
+  .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){ .js .reveal{opacity:1;transform:none;transition:none} }
+</style>
+</head>
+<body>
+
+<div class="stripes"></div>
+<nav><div class="navrow">
+  <a class="logo" href="#top"><span class="star">&#9733;</span> PENLOOM PATRIOT</a>
+  <span class="sp"></span>
+  <a class="link" href="#stand">What we stand for</a>
+  <a class="link" href="#collection">The collection</a>
+  <a class="btn ghost" href="https://penloomstudio.com/" rel="noopener">Penloom Studio</a>
+</div></nav>
+
+<header class="hero wrap" id="top">
+  <p class="kick">American pride, plain and simple</p>
+  <h1>Pride in the flag.<br>Never a fight over a candidate.</h1>
+  <p class="sub">Penloom Patriot exists for one reason: to show real pride and support for this country — the flag, the people who served it, and the everyday Americans who make it up. Not a party. Not a candidate. Not an argument.</p>
+  <div class="cta-row">
+    <a class="btn primary" href="#stand">What we stand for</a>
+    <a class="btn ghost" href="#collection">See what's coming</a>
+  </div>
+</header>
+
+<section class="wrap" id="stand">
+  <h2 class="reveal">Pride, not politics</h2>
+  <p class="lead reveal">There's a real line between loving your country and fighting about it. We stay on one side of it, on purpose, every time.</p>
+  <div class="cols">
+    <div class="col yes reveal">
+      <h3>What we're here for</h3>
+      <ul>
+        <li>The flag, and what it means to fly it</li>
+        <li>Service — military, first responders, and the people behind them</li>
+        <li>Ordinary Americans and the towns, teams, and traditions they built</li>
+        <li>National milestones and the history behind them</li>
+      </ul>
+    </div>
+    <div class="col no reveal">
+      <h3>What we'll never touch</h3>
+      <ul>
+        <li>Any candidate, at any level</li>
+        <li>Any political party or party slogan</li>
+        <li>Culture-war commentary or "us vs. them" framing</li>
+        <li>Fear-based or anger-based messaging of any kind</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="collection">
+  <h2 class="reveal">The first collection</h2>
+  <div class="soon reveal">
+    <span class="tag">In production</span>
+    <h3>Apparel that says something true about this country</h3>
+    <p>Our first designs are being built and reviewed now — original artwork, real stories, and honest tributes, not borrowed slogans. Nothing is listed for sale yet, and every design clears a quality and tone review before it does. Check back, or visit Penloom Studio below for what's already live across the rest of Penloom.</p>
+  </div>
+  <p class="lead reveal" style="margin-top:22px"><a href="https://penloomstudio.com/notes/what-the-flag-folds-mean">Read: what each fold of the flag actually means →</a></p>
+</section>
+
+<section class="wrap">
+  <div class="promise reveal">
+    <blockquote>&ldquo;Pro-something converts. Anti-someone doesn't belong here.&rdquo;</blockquote>
+    <p>That's the whole editorial rule. If a design or a post ever reads as an attack rather than a tribute, it doesn't ship — no exceptions, no matter how it might perform.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="home reveal">
+    <h2>More from Penloom</h2>
+    <p>Penloom Patriot is one of several independent Penloom brands. See what else is live at penloomstudio.com.</p>
+    <a class="btn primary" href="https://penloomstudio.com/" rel="noopener">Visit Penloom Studio</a>
+  </div>
+</section>
+
+<footer class="wrap">
+  &copy; 2026 Penloom Patriot &middot; American pride, no politics &middot;
+  <a href="https://penloomstudio.com/">penloomstudio.com</a>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+(function(){
+  if (!('IntersectionObserver' in window)) { document.documentElement.classList.remove('js'); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+})();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

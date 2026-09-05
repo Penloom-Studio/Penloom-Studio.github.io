@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt caching cut my Claude API bill by 85% — the exact setup</title>
+<link rel="canonical" href="https://penloomstudio.com/notes/prompt-caching-cut-my-claude-bill/">
+<meta name="description" content="Anthropic prompt caching bills cached input tokens at roughly a tenth of the base rate. On a long, repeated system prompt that is an 85–90% cut. Here is the exact setup and the gotchas.">
+<meta property="og:title" content="Prompt caching cut my Claude API bill by 85% — the exact setup">
+<meta property="og:description" content="Cached input tokens read at ~0.1x the base rate. On a long, repeated system prompt that is an 85–90% cut. The exact setup, and the gotchas.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/notes/prompt-caching-cut-my-claude-bill/">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #16181c; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 .4rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+  a { color: #2563eb; } @media (prefers-color-scheme: dark) { a { color: #7aa2ff; } }
+  ul, ol { padding-left: 1.15rem; } li { margin: .45rem 0; }
+  code { font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: #f1f5f9; padding: .1rem .3rem; border-radius: 4px; }
+  @media (prefers-color-scheme: dark) { code { background: #232830; } }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .2rem; }
+  .where { color: #64748b; font-size: .95rem; margin: 0 0 1.4rem; }
+  .dek { font-size: 1.08rem; color: #475569; margin: 0 0 1.6rem; }
+  @media (prefers-color-scheme: dark) { .dek { color: #a5b0c2; } }
+  .sources { margin: 2.6rem 0 0; padding-top: 1.2rem; border-top: 1px solid #94a3b8; font-size: .93rem; }
+  .sources li { color: #475569; }
+  @media (prefers-color-scheme: dark) { .sources li { color: #a5b0c2; } }
+  .cta { margin: 2.5rem 0 0; padding: 1.1rem 1.25rem; border: 1px solid #94a3b8; border-radius: 10px; }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Prompt caching cut my Claude API bill by 85% — the exact setup",
+ "name": "Prompt caching cut my Claude API bill by 85% — the exact setup",
+ "description": "Anthropic prompt caching bills cached input tokens at roughly a tenth of the base rate. On a long, repeated system prompt that is an 85–90% cut. The exact setup and the gotchas.",
+ "url": "https://penloomstudio.com/notes/prompt-caching-cut-my-claude-bill/",
+ "inLanguage": "en-US",
+ "articleSection": "AI & Coding",
+ "publisher": { "@type": "Organization", "name": "Cogloom" },
+ "citation": [
+  "Anthropic, \"Prompt caching\" — API documentation (docs.anthropic.com), cache_control usage, minimum cacheable prefix, and 5-minute / 1-hour TTLs.",
+  "Anthropic, \"Pricing\" — cache-write and cache-read multipliers relative to base input token price."
+ ]
+}
+</script>
+</head>
+<body>
+<p class="kicker">Cogloom · Practical AI &amp; coding</p>
+<h1>Prompt caching cut my Claude API bill by 85%</h1>
+<p class="where">The exact setup — and the three gotchas that quietly undo it</p>
+<p class="dek">Anthropic bills a <em>cached</em> input token at roughly a tenth of the normal input rate. If a big chunk of your prompt is identical on every call — a long system prompt, tool definitions, a fixed document — you are paying full price to send the same tokens thousands of times. Caching stops that.</p>
+
+<p>Here is a real shape: an agent doing about 4,000 calls a day with a ~2,800-token system prompt (rules, tool definitions, examples) sent on every single call. That prefix is identical every time. Without caching you pay full input price for those 2,800 tokens 4,000 times a day. With caching, after the first write, every subsequent read of that prefix is billed at about a tenth of the rate — and on a prompt that is mostly the repeated prefix, the input bill drops by roughly 85–90%.</p>
+
+<h2>How it actually works</h2>
+<ul>
+<li><strong>You mark a prefix, not the whole prompt.</strong> Add <code>"cache_control": {"type": "ephemeral"}</code> to the last content block you want cached. Everything up to and including that block becomes the cached prefix.</li>
+<li><strong>Reads are cheap, the first write is not.</strong> A cache <em>write</em> (the first time, or after expiry) costs more than a normal input token; a cache <em>read</em> costs a fraction of one. The saving comes from many reads amortising one write.</li>
+<li><strong>It expires.</strong> The default cache lifetime is short (about five minutes), refreshed each time the prefix is hit; a longer TTL is available at a higher write multiplier. High-frequency traffic keeps it warm for free; a trickle of calls lets it lapse and you pay the write again.</li>
+</ul>
+
+<h2>The three gotchas</h2>
+<ol>
+<li><strong>A minimum size.</strong> Prefixes below roughly a thousand tokens are not cached at all — caching a tiny system prompt does nothing. It pays off on <em>long</em>, stable prefixes.</li>
+<li><strong>Order matters — cache the stable part first.</strong> The cache matches from the start of the prompt. Put the unchanging content (system prompt, tools, fixed context) <em>before</em> anything that varies per request. One changed token near the front invalidates everything after it.</li>
+<li><strong>Watch the write multiplier on bursty traffic.</strong> If calls are spaced further apart than the TTL, every call becomes a write, and writes cost more than plain input. Caching then costs you money. It wins on frequency, not on novelty.</li>
+</ol>
+
+<h2>The one-line rule</h2>
+<p>Cache the biggest block of your prompt that is identical across calls, place it first, and only when you send it often enough to keep the cache warm. That is the whole game.</p>
+
+<div class="cta">
+<p><strong>Cogloom</strong> — practical AI &amp; coding, checked before it is repeated. Numbers here follow Anthropic's own caching and pricing docs; verify the current multipliers against the source below before you budget on them. <a href="https://penloomstudio.com/notes/how-to-check-an-ai-answer/">How we check an AI answer before we repeat it →</a></p>
+</div>
+
+<div class="sources">
+<h2>Sources</h2>
+<ul>
+<li>Anthropic — "Prompt caching," API documentation (docs.anthropic.com): <code>cache_control</code> usage, minimum cacheable prefix, and the 5-minute / 1-hour cache lifetimes.</li>
+<li>Anthropic — "Pricing": the cache-write and cache-read multipliers relative to the base input token price.</li>
+</ul>
+</div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

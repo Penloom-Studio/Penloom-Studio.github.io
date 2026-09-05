@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your call-to-action can be present and still dead-end — Penloom Studio</title>
+<link rel="canonical" href="https://penloomstudio.com/notes/clickable-cta-audit">
+<meta name="description" content="A description can name your offer in plain prose and still convert nobody — because the platform never turned the URL into a link. Here's the one-line guard that catches it.">
+<meta property="og:title" content="Your call-to-action can be present and still dead-end">
+<meta property="og:description" content="Audit for a clickable link, not just the URL string. The one-line guard that catches dead-end CTAs.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/notes/clickable-cta-audit">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #16181c; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 1rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+  a { color: #2563eb; } @media (prefers-color-scheme: dark) { a { color: #7aa2ff; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #94a3b8; font-style: italic; }
+  pre { background: #f4f4f5; padding: .9rem 1rem; border-radius: 8px; overflow-x: auto; font-size: .9rem; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { pre { background: #23262d; } }
+  .cta { margin: 2.5rem 0 0; padding: 1.1rem 1.25rem; border: 1px solid #94a3b8; border-radius: 10px; }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<p class="kicker">Penloom Studio · Notes</p>
+<h1>Your call-to-action can be present and still dead-end</h1>
+<p>I run an automated content pipeline. It checks, among other things, that every published video description contains a call-to-action — a link to the offer. For weeks that check was green. Conversions were still zero.</p>
+<p>The check was lying to me, and the reason is worth thirty seconds of your attention if you automate <em>any</em> content.</p>
+
+<h2>The bug</h2>
+<p>My audit did roughly this:</p>
+<pre><code>// ❌ looks reasonable, is wrong
+const hasCTA = description.includes("penloomstudio.com");</code></pre>
+<p>Every description that <em>mentioned</em> the store passed. But a few of them said things like:</p>
+<pre><code>Get the pack → penloomstudio.com/fix</code></pre>
+<p>That is a bare domain in prose. YouTube — like most platforms — <strong>does not linkify a bare URL</strong> in a description. No <code>http://</code>, no auto-link. So the viewer sees grey, unclickable text. The CTA was <em>present</em> and <em>useless</em> at the same time. My audit only knew how to check the first thing.</p>
+
+<h2>The fix</h2>
+<p>Audit for a <strong>clickable</strong> link, not for the domain string:</p>
+<pre><code>// ✅ requires a real scheme so the platform will linkify it
+const hasClickableCTA = /https?:\/\/\S*penloomstudio\.com/i.test(description);</code></pre>
+<p>One character of intent — the <code>https?://</code> — is the entire difference between "we mentioned the offer" and "a human can reach the offer."</p>
+
+<h2>The part that actually generalizes</h2>
+<p>The same failure showed up in a <em>second</em> channel weeks later: cross-posting articles where I'd written <code>penloomstudio.com/x</code> in the body. Same dead-end, same cause. So the durable fix wasn't a smarter audit — it was a single chokepoint every outbound post flows through, that upgrades bare domains to real links before anything ships:</p>
+<pre><code>// idempotent: leaves existing markdown links and full URLs untouched,
+// only promotes a bare domain to a clickable one
+// (swap example.com for your own domain)
+function linkify(body) {
+  return body.replace(
+    /\[[^\]]*\]\([^)]*\)|https?:\/\/\S+|(?&lt;![\w@/.])(example\.com\/[^\s)*`\]]+)/g,
+    (m, bare) =&gt; (bare ? `[${bare}](https://${bare})` : m)
+  );
+}</code></pre>
+<p>The alternation matters: it consumes any <em>already-linked</em> URL whole first, so the bare-domain branch can never partial-match text that's already inside a link. (That was the second bug — the naive version nested and truncated links that were already fine.)</p>
+
+<h2>The lesson, one line</h2>
+<blockquote>An automated check that tests for the <em>presence</em> of a thing, when what you needed was the <em>usability</em> of that thing, is worse than no check — because it's green.</blockquote>
+<p>"Is the link there?" and "can a human click it?" are different questions. If your funnel is quietly converting nobody, go look at whether your own tooling is answering the easier one.</p>
+
+<div class="cta">
+<p>I write these up as I hit them, building a small studio's content system in public. Notes and the tools live at <a href="https://penloomstudio.com">penloomstudio.com</a>.</p>
+</div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

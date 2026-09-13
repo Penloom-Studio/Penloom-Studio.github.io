@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge Fitness — Free Workout, Macro & Calorie Tools (No App, No Signup)</title>
+<meta name="description" content="Free fitness tools you can use in your browser: calorie & macro targets, a daily food log, a calorie-burn estimator, and a tailorable free-weight or machine workout builder. No app, no account, no paywall.">
+<link rel="canonical" href="https://penloomstudio.com/fitness/">
+<meta property="og:title" content="Forge Fitness — Free Workout, Macro & Calorie Tools">
+<meta property="og:description" content="Calorie & macro targets, a food log, a burn estimator, and a workout builder — all free, all in your browser. No app, no account, no paywall.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://penloomstudio.com/fitness/">
+<meta property="og:image" content="https://penloomstudio.com/penloom-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://penloomstudio.com/penloom-card.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Forge Fitness",
+  "url": "https://penloomstudio.com/fitness/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free browser-based fitness tools: calorie & macro targets, food log, calorie-burn estimator, and a free-weight or machine workout builder. By AI Forge."
+}
+</script>
+<style>
+  :root{
+    --bg:#080B12; --panel:#101623; --panel2:#0C111B; --line:#1E2839;
+    --cyan:#33D6F0; --cyan2:#1AA9C2; --text:#E8EDF4; --dim:#8D9AB0;
+    --good:#54D98C; --warn:#F0B33D; --over:#F06D6D;
+    --mono:ui-monospace,"JetBrains Mono","SF Mono",Consolas,"Courier New",monospace;
+    --sans:system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;font-size:16px;
+    background-image:radial-gradient(circle at 12% -5%,rgba(51,214,240,.12),transparent 45%);}
+  a{color:var(--cyan);text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  code,.mono{font-family:var(--mono)}
+
+  nav{position:sticky;top:0;z-index:20;background:rgba(8,11,18,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .navrow{display:flex;align-items:center;gap:16px;padding:12px 20px;max-width:1080px;margin:0 auto;flex-wrap:wrap}
+  .logo{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.5px;color:var(--text)}
+  .logo .an{color:var(--cyan)}
+  .navrow .sp{flex:1}
+  .navrow a.link{color:var(--dim);font-size:13.5px}
+  .navrow a.link:hover{color:var(--text)}
+
+  header.hero{padding:52px 0 30px}
+  .kick{font-family:var(--mono);font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+  h1{font-size:clamp(28px,5vw,46px);font-weight:700;letter-spacing:-1px;line-height:1.12;margin-bottom:16px}
+  .hero .sub{color:var(--dim);font-size:clamp(15px,2vw,18px);max-width:660px;margin-bottom:22px}
+  .pills{display:flex;gap:8px;flex-wrap:wrap}
+  .pill{font-family:var(--mono);font-size:12px;color:var(--cyan);border:1px solid var(--line);border-radius:99px;padding:5px 12px;background:var(--panel2)}
+
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:26px 0 4px}
+  .tab{cursor:pointer;font-weight:600;font-size:14.5px;padding:11px 16px;border-radius:9px 9px 0 0;border:1px solid var(--line);border-bottom:none;
+    background:var(--panel2);color:var(--dim)}
+  .tab[aria-selected="true"]{background:var(--panel);color:var(--text);box-shadow:inset 0 2px 0 var(--cyan)}
+  .tab:hover{color:var(--text)}
+
+  .tool{display:none;background:var(--panel);border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:26px}
+  .tool.active{display:block}
+  .tool h2{font-size:22px;margin-bottom:6px}
+  .tool .lede{color:var(--dim);font-size:14.5px;margin-bottom:22px;max-width:640px}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
+  input,select{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;
+    padding:11px 12px;font-size:15px;font-family:var(--sans)}
+  input:focus,select:focus{outline:none;border-color:var(--cyan)}
+  .field{margin-bottom:14px}
+  .segrow{display:flex;gap:8px;flex-wrap:wrap}
+  .seg{flex:1;min-width:70px;text-align:center;cursor:pointer;padding:9px 6px;border:1px solid var(--line);border-radius:8px;
+    background:var(--panel2);color:var(--dim);font-size:13.5px;font-weight:600}
+  .seg[aria-pressed="true"]{border-color:var(--cyan);color:var(--text);background:rgba(51,214,240,.08)}
+
+  .btn{display:inline-block;cursor:pointer;padding:12px 22px;border-radius:9px;font-size:15px;font-weight:600;
+    border:1px solid var(--cyan);background:var(--cyan);color:#04121A}
+  .btn:hover{background:var(--cyan2);border-color:var(--cyan2)}
+  .btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+  .btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn.sm{padding:8px 14px;font-size:13.5px}
+
+  .out{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}
+  .statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:15px}
+  .stat .n{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--cyan);line-height:1.1}
+  .stat .l{font-size:12px;color:var(--dim);margin-top:5px;text-transform:uppercase;letter-spacing:.5px}
+  .macrobar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:14px 0 6px;border:1px solid var(--line)}
+  .macrobar span{display:block;height:100%}
+  .mp{background:var(--cyan)} .mc{background:var(--warn)} .mf{background:#B78BF0}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--dim)}
+  .legend b{color:var(--text);font-weight:600}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  td.num,th.num{text-align:right;font-family:var(--mono)}
+  .del{cursor:pointer;color:var(--over);font-weight:700;border:none;background:none;font-size:16px}
+  .remain{font-family:var(--mono);font-weight:700}
+  .remain.ok{color:var(--good)} .remain.over{color:var(--over)}
+
+  .workout-day{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px}
+  .workout-day h3{font-size:16px;color:var(--cyan);margin-bottom:10px}
+  .workout-day ul{list-style:none}
+  .workout-day li{padding:7px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;font-size:14.5px}
+  .workout-day li:last-child{border-bottom:none}
+  .workout-day li .sets{font-family:var(--mono);color:var(--dim);white-space:nowrap}
+
+  .ad{margin:22px 0;border:1px dashed var(--line);border-radius:10px;padding:18px;text-align:center;color:#5A667C;
+    font-size:12px;font-family:var(--mono);background:var(--panel2)}
+  .note{font-size:12.5px;color:var(--dim);margin-top:16px;line-height:1.55}
+  footer{border-top:1px solid var(--line);margin-top:48px;padding:30px 0;color:var(--dim);font-size:13px}
+  footer a{color:var(--dim)} footer a:hover{color:var(--cyan)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="navrow">
+    <span class="logo"><span class="an">/</span>FORGE&nbsp;FITNESS</span>
+    <span class="sp"></span>
+    <a class="link" href="#tools">Tools</a>
+    <a class="link" href="https://penloomstudio.com/landing-ai-forge-motion.html">About AI Forge</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">By AI Forge · Free forever</div>
+    <h1>Fitness tools that just work in your browser.</h1>
+    <p class="sub">No app to install. No account to make. No paywall on the thing you came for.
+      Set your calorie and macro targets, log your day, estimate what you burned, and build a
+      workout around the equipment you actually have.</p>
+    <div class="pills">
+      <span class="pill">Calorie &amp; macro targets</span>
+      <span class="pill">Food log</span>
+      <span class="pill">Burn estimator</span>
+      <span class="pill">Workout builder</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="tools">
+  <div class="ad">ADVERTISEMENT · ad slot (leaderboard)</div>
+
+  <div class="tabs" role="tablist">
+    <div class="tab" role="tab" aria-selected="true" data-tab="targets">Targets</div>
+    <div class="tab" role="tab" aria-selected="false" data-tab="log">Food&nbsp;Log</div>
+    <div class="tab" role="tab" aria-selected="false" data-tab="burn">Burn</div>
+    <div class="tab" role="tab" aria-selected="false" data-tab="workout">Workout</div>
+  </div>
+
+  <!-- TARGETS -->
+  <section class="tool active" id="tool-targets">
+    <h2>Calorie &amp; macro targets</h2>
+    <p class="lede">Uses the Mifflin–St Jeor equation — the one most dietitians default to — for your
+      resting burn, then adjusts for how active you are and your goal.</p>
+    <div class="grid">
+      <div>
+        <div class="field"><label>Sex</label>
+          <div class="segrow" data-seg="sex">
+            <div class="seg" aria-pressed="true" data-v="male">Male</div>
+            <div class="seg" aria-pressed="false" data-v="female">Female</div>
+          </div>
+        </div>
+        <div class="field"><label>Units</label>
+          <div class="segrow" data-seg="units">
+            <div class="seg" aria-pressed="true" data-v="metric">Metric (kg/cm)</div>
+            <div class="seg" aria-pressed="false" data-v="imperial">Imperial (lb/in)</div>
+          </div>
+        </div>
+        <div class="field"><label>Age (years)</label><input id="t-age" type="number" value="30" min="14" max="100"></div>
+      </div>
+      <div>
+        <div class="field"><label id="t-w-label">Weight (kg)</label><input id="t-weight" type="number" value="75"></div>
+        <div class="field"><label id="t-h-label">Height (cm)</label><input id="t-height" type="number" value="175"></div>
+        <div class="field"><label>Activity</label>
+          <select id="t-activity">
+            <option value="1.2">Sedentary — desk job, little exercise</option>
+            <option value="1.375">Light — 1–3 workouts/week</option>
+            <option value="1.55" selected>Moderate — 3–5 workouts/week</option>
+            <option value="1.725">Very active — 6–7 workouts/week</option>
+            <option value="1.9">Athlete — hard training / physical job</option>
+          </select>
+        </div>
+        <div class="field"><label>Goal</label>
+          <select id="t-goal">
+            <option value="-0.2">Lose fat (−20%)</option>
+            <option value="-0.1">Lose slowly (−10%)</option>
+            <option value="0" selected>Maintain</option>
+            <option value="0.1">Lean gain (+10%)</option>
+            <option value="0.2">Bulk (+20%)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="btn" id="t-calc">Calculate my targets</button>
+
+    <div class="out" id="t-out" hidden>
+      <div class="statgrid">
+        <div class="stat"><div class="n" id="o-bmr">—</div><div class="l">BMR (resting)</div></div>
+        <div class="stat"><div class="n" id="o-tdee">—</div><div class="l">Maintenance</div></div>
+        <div class="stat"><div class="n" id="o-cal">—</div><div class="l">Daily target</div></div>
+      </div>
+      <div class="macrobar"><span class="mp" id="bar-p"></span><span class="mc" id="bar-c"></span><span class="mf" id="bar-f"></span></div>
+      <div class="legend">
+        <span><span class="dot mp"></span><b id="o-p">—</b> protein</span>
+        <span><span class="dot mc"></span><b id="o-c">—</b> carbs</span>
+        <span><span class="dot mf"></span><b id="o-f">—</b> fat</span>
+      </div>
+      <p class="note">Protein set at 1.8 g per kg of bodyweight (a common strength-training target), fat at
+        25% of calories, carbs fill the rest. Use <b>Send to food log</b> so the log tracks against this number.</p>
+      <button class="btn ghost sm" id="t-send" style="margin-top:12px">Send target to food log →</button>
+    </div>
+  </section>
+
+  <!-- FOOD LOG -->
+  <section class="tool" id="tool-log">
+    <h2>Today's food log</h2>
+    <p class="lede">Type in what you ate and its numbers (from the package or a quick search). It totals
+      as you go and tells you what's left. Saved in this browser only — nothing leaves your device.</p>
+    <div class="grid" style="grid-template-columns:2fr 1fr 1fr 1fr auto;align-items:end;gap:10px">
+      <div class="field" style="margin:0"><label>Food</label><input id="f-name" placeholder="e.g. Greek yogurt"></div>
+      <div class="field" style="margin:0"><label>Cals</label><input id="f-cal" type="number" placeholder="120"></div>
+      <div class="field" style="margin:0"><label>P (g)</label><input id="f-p" type="number" placeholder="17"></div>
+      <div class="field" style="margin:0"><label>C (g)</label><input id="f-c" type="number" placeholder="7"></div>
+      <div class="field" style="margin:0"><label>F (g)</label><input id="f-f" type="number" placeholder="0"></div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn sm" id="f-add">Add food</button>
+      <button class="btn ghost sm" id="f-clear">Clear day</button>
+    </div>
+    <table id="f-table">
+      <thead><tr><th>Food</th><th class="num">Cals</th><th class="num">P</th><th class="num">C</th><th class="num">F</th><th></th></tr></thead>
+      <tbody id="f-body"></tbody>
+      <tfoot>
+        <tr style="font-weight:700">
+          <td>Total</td>
+          <td class="num" id="f-tcal">0</td><td class="num" id="f-tp">0</td><td class="num" id="f-tc">0</td><td class="num" id="f-tf">0</td><td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <p class="note" id="f-remain">No target set yet. Set one on the <b>Targets</b> tab and tap "Send target to food log".</p>
+  </section>
+
+  <!-- BURN -->
+  <section class="tool" id="tool-burn">
+    <h2>Calorie-burn estimator</h2>
+    <p class="lede">Rough calories burned for an activity, using standard MET values × your bodyweight × time.
+      It's an estimate, not a heart-rate reading — good enough to plan a day.</p>
+    <div class="grid">
+      <div>
+        <div class="field"><label>Activity</label><select id="b-act"></select></div>
+        <div class="field"><label>Minutes</label><input id="b-min" type="number" value="30" min="1"></div>
+      </div>
+      <div>
+        <div class="field"><label id="b-w-label">Bodyweight (kg)</label><input id="b-weight" type="number" value="75"></div>
+        <div class="field"><label>Units</label>
+          <div class="segrow" data-seg="bunits">
+            <div class="seg" aria-pressed="true" data-v="metric">kg</div>
+            <div class="seg" aria-pressed="false" data-v="imperial">lb</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn" id="b-calc">Estimate burn</button>
+    <div class="out" id="b-out" hidden>
+      <div class="statgrid">
+        <div class="stat"><div class="n" id="b-total">—</div><div class="l">Calories burned</div></div>
+        <div class="stat"><div class="n" id="b-permin">—</div><div class="l">Per minute</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKOUT -->
+  <section class="tool" id="tool-workout">
+    <h2>Workout builder</h2>
+    <p class="lede">Pick your goal, how many days you can train, and whether you're on free weights or
+      machines. It builds a balanced split you can tailor — swap any move for another that hits the same muscle.</p>
+    <div class="grid">
+      <div>
+        <div class="field"><label>Equipment</label>
+          <div class="segrow" data-seg="equip">
+            <div class="seg" aria-pressed="true" data-v="free">Free weights</div>
+            <div class="seg" aria-pressed="false" data-v="machine">Machines</div>
+            <div class="seg" aria-pressed="false" data-v="both">Both</div>
+          </div>
+        </div>
+        <div class="field"><label>Days per week</label>
+          <select id="w-days"><option>2</option><option selected>3</option><option>4</option></select>
+        </div>
+      </div>
+      <div>
+        <div class="field"><label>Goal</label>
+          <select id="w-goal">
+            <option value="strength">Strength (heavier, fewer reps)</option>
+            <option value="hypertrophy" selected>Build muscle</option>
+            <option value="endurance">Tone &amp; endurance</option>
+          </select>
+        </div>
+        <div class="field"><label>Experience</label>
+          <select id="w-exp"><option value="beg" selected>Beginner</option><option value="int">Intermediate</option></select>
+        </div>
+      </div>
+    </div>
+    <button class="btn" id="w-build">Build my workout</button>
+    <div class="out" id="w-out" hidden></div>
+    <p class="note">Warm up before working sets, rest 60–120s between sets (more for strength), and stop a set
+      2 reps before failure while you're learning a lift. This is general information, not medical or coaching advice.</p>
+  </section>
+
+  <div class="ad">ADVERTISEMENT · ad slot (in-content)</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:var(--text)">Forge Fitness</b> — a free tool by
+      <a href="https://penloomstudio.com/landing-ai-forge-motion.html">AI Forge</a>. Built because the app you were
+      using put the basics behind a paywall.</p>
+    <p class="note" style="margin-top:10px">General fitness information only — not medical advice, diagnosis, or a
+      treatment plan. Talk to a doctor before starting a new diet or exercise program. Calorie and macro figures are
+      estimates.</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- shared helpers ---------- */
+const $ = s => document.querySelector(s);
+const round = n => Math.round(n);
+const lbToKg = lb => lb / 2.20462, inToCm = i => i * 2.54;
+
+/* segmented buttons: click sets aria-pressed on siblings */
+document.querySelectorAll('[data-seg]').forEach(row=>{
+  row.addEventListener('click', e=>{
+    const seg = e.target.closest('.seg'); if(!seg) return;
+    row.querySelectorAll('.seg').forEach(s=>s.setAttribute('aria-pressed', s===seg));
+    row.dispatchEvent(new CustomEvent('segchange',{detail:seg.dataset.v}));
+  });
+});
+const segVal = name => document.querySelector(`[data-seg="${name}"] .seg[aria-pressed="true"]`).dataset.v;
+
+/* tabs */
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected', x===t));
+  document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));
+  $('#tool-'+t.dataset.tab).classList.add('active');
+}));
+
+/* unit label swap on Targets + Burn */
+function unitLabels(){
+  const imp = segVal('units')==='imperial';
+  $('#t-w-label').textContent = imp?'Weight (lb)':'Weight (kg)';
+  $('#t-h-label').textContent = imp?'Height (in)':'Height (cm)';
+}
+document.querySelector('[data-seg="units"]').addEventListener('segchange',unitLabels);
+document.querySelector('[data-seg="bunits"]').addEventListener('segchange',()=>{
+  $('#b-w-label').textContent = segVal('bunits')==='imperial'?'Bodyweight (lb)':'Bodyweight (kg)';
+});
+
+/* ---------- 1. targets: Mifflin–St Jeor ---------- */
+function calcTargets(){
+  let w = parseFloat($('#t-weight').value), h = parseFloat($('#t-height').value);
+  const age = parseFloat($('#t-age').value);
+  if(!(w>0)||!(h>0)||!(age>0)) return null;
+  if(segVal('units')==='imperial'){ w = lbToKg(w); h = inToCm(h); }
+  const s = segVal('sex')==='male' ? 5 : -161;
+  const bmr = 10*w + 6.25*h - 5*age + s;
+  const tdee = bmr * parseFloat($('#t-activity').value);
+  const cal = tdee * (1 + parseFloat($('#t-goal').value));
+  const protein = 1.8 * w;                 // g
+  const fat = (cal * 0.25) / 9;            // g
+  const carbs = Math.max(0,(cal - protein*4 - fat*9) / 4); // g
+  return {bmr, tdee, cal, protein, carbs, fat};
+}
+$('#t-calc').addEventListener('click',()=>{
+  const r = calcTargets();
+  if(!r){ alert('Enter your age, weight and height as positive numbers.'); return; }
+  $('#o-bmr').textContent = round(r.bmr);
+  $('#o-tdee').textContent = round(r.tdee);
+  $('#o-cal').textContent = round(r.cal);
+  $('#o-p').textContent = round(r.protein)+' g';
+  $('#o-c').textContent = round(r.carbs)+' g';
+  $('#o-f').textContent = round(r.fat)+' g';
+  const pc=r.protein*4, cc=r.carbs*4, fc=r.fat*9, tot=pc+cc+fc||1;
+  $('#bar-p').style.width=(pc/tot*100)+'%';
+  $('#bar-c').style.width=(cc/tot*100)+'%';
+  $('#bar-f').style.width=(fc/tot*100)+'%';
+  $('#t-out').hidden=false;
+  window.__target=r;
+});
+$('#t-send').addEventListener('click',()=>{
+  if(!window.__target) return;
+  localStorage.setItem('forgefit_target', JSON.stringify({
+    cal:round(window.__target.cal), p:round(window.__target.protein),
+    c:round(window.__target.carbs), f:round(window.__target.fat)}));
+  document.querySelector('.tab[data-tab="log"]').click();
+  renderLog();
+});
+
+/* ---------- 2. food log (localStorage) ---------- */
+const LOG_KEY='forgefit_log_'+new Date().toISOString().slice(0,10);
+const loadLog = () => JSON.parse(localStorage.getItem(LOG_KEY)||'[]');
+const saveLog = a => localStorage.setItem(LOG_KEY, JSON.stringify(a));
+function num(v){ const n=parseFloat(v); return isNaN(n)?0:n; }
+function renderLog(){
+  const rows=loadLog(), body=$('#f-body'); body.innerHTML='';
+  let tc=0,tp=0,tcarb=0,tf=0;
+  rows.forEach((r,i)=>{
+    tc+=r.cal; tp+=r.p; tcarb+=r.c; tf+=r.f;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.name.replace(/</g,'&lt;')}</td><td class="num">${round(r.cal)}</td>
+      <td class="num">${round(r.p)}</td><td class="num">${round(r.c)}</td><td class="num">${round(r.f)}</td>
+      <td><button class="del" data-i="${i}" aria-label="remove">×</button></td>`;
+    body.appendChild(tr);
+  });
+  $('#f-tcal').textContent=round(tc); $('#f-tp').textContent=round(tp);
+  $('#f-tc').textContent=round(tcarb); $('#f-tf').textContent=round(tf);
+  const t=JSON.parse(localStorage.getItem('forgefit_target')||'null');
+  const el=$('#f-remain');
+  if(t){
+    const left=t.cal-tc;
+    el.innerHTML = left>=0
+      ? `<span class="remain ok">${round(left)} cal left</span> of ${t.cal} · protein ${round(tp)}/${t.p} g`
+      : `<span class="remain over">${round(-left)} cal over</span> your ${t.cal} target · protein ${round(tp)}/${t.p} g`;
+  } else {
+    el.innerHTML='No target set yet. Set one on the <b>Targets</b> tab and tap "Send target to food log".';
+  }
+}
+$('#f-add').addEventListener('click',()=>{
+  const name=$('#f-name').value.trim(); if(!name) return;
+  const rows=loadLog();
+  rows.push({name, cal:num($('#f-cal').value), p:num($('#f-p').value), c:num($('#f-c').value), f:num($('#f-f').value)});
+  saveLog(rows);
+  ['#f-name','#f-cal','#f-p','#f-c','#f-f'].forEach(s=>$(s).value=''); $('#f-name').focus();
+  renderLog();
+});
+$('#f-body').addEventListener('click',e=>{
+  if(!e.target.classList.contains('del')) return;
+  const rows=loadLog(); rows.splice(+e.target.dataset.i,1); saveLog(rows); renderLog();
+});
+$('#f-clear').addEventListener('click',()=>{ if(confirm('Clear today\'s log?')){ saveLog([]); renderLog(); }});
+
+/* ---------- 3. burn estimator (MET table) ---------- */
+const METS=[
+  ['Walking, brisk (3.5 mph)',4.3],['Walking, casual',3.0],['Running (6 mph / 10 min mi)',9.8],
+  ['Running (8 mph)',11.8],['Cycling, moderate',7.5],['Cycling, vigorous',10.0],
+  ['Elliptical',5.0],['Rowing machine, moderate',7.0],['Swimming laps',7.0],
+  ['Weight training, general',3.5],['Weight training, vigorous',6.0],['HIIT / circuit',8.0],
+  ['Yoga',2.5],['Hiking',6.0],['Jump rope',12.3],['Stair climber',9.0],['Basketball',6.5],['Soccer',7.0]
+];
+const bsel=$('#b-act'); METS.forEach(([n],i)=>bsel.add(new Option(n,i)));
+$('#b-calc').addEventListener('click',()=>{
+  let w=parseFloat($('#b-weight').value); const min=parseFloat($('#b-min').value);
+  if(!(w>0)||!(min>0)){ alert('Enter a positive weight and minutes.'); return; }
+  if(segVal('bunits')==='imperial') w=lbToKg(w);
+  const met=METS[+bsel.value][1];
+  const total = met * w * (min/60);          // kcal ≈ MET·kg·hours
+  $('#b-total').textContent=round(total);
+  $('#b-permin').textContent=(total/min).toFixed(1);
+  $('#b-out').hidden=false;
+});
+
+/* ---------- 4. workout builder ---------- */
+// exercise pool: muscle -> {free:[...], machine:[...]}
+const EX={
+  chest:{free:['Barbell bench press','Dumbbell incline press','Dumbbell fly','Push-up'],
+         machine:['Chest press machine','Pec deck','Cable crossover','Smith machine press']},
+  back:{free:['Bent-over barbell row','One-arm dumbbell row','Pull-up','Dumbbell deadlift'],
+        machine:['Lat pulldown','Seated cable row','Machine row','Assisted pull-up machine']},
+  legs:{free:['Barbell back squat','Dumbbell lunge','Romanian deadlift','Goblet squat'],
+        machine:['Leg press','Leg extension','Leg curl','Hack squat machine']},
+  shoulders:{free:['Overhead barbell press','Dumbbell lateral raise','Arnold press','Rear-delt fly'],
+             machine:['Shoulder press machine','Cable lateral raise','Reverse pec deck','Cable front raise']},
+  arms:{free:['Barbell curl','Dumbbell hammer curl','Skullcrusher','Overhead dumbbell extension'],
+        machine:['Cable curl','Triceps pushdown','Preacher curl machine','Cable overhead extension']},
+  core:{free:['Plank','Hanging knee raise','Russian twist','Weighted sit-up'],
+        machine:['Cable crunch','Ab crunch machine','Captain\'s chair raise','Cable woodchop']}
+};
+const REP={strength:'4 × 4–6',hypertrophy:'3 × 8–12',endurance:'3 × 15–20'};
+const SPLITS={
+  2:[['Upper body',['chest','back','shoulders','arms']],['Lower body & core',['legs','core','legs']]],
+  3:[['Push',['chest','shoulders','arms']],['Pull',['back','arms','core']],['Legs',['legs','legs','core']]],
+  4:[['Chest & triceps',['chest','chest','arms']],['Back & biceps',['back','back','arms']],
+     ['Legs',['legs','legs','core']],['Shoulders & core',['shoulders','shoulders','core']]]
+};
+function pick(muscle,equip,used){
+  let pool = equip==='both' ? [...EX[muscle].free,...EX[muscle].machine]
+           : EX[muscle][equip];
+  const fresh = pool.filter(x=>!used.has(x));
+  const arr = fresh.length?fresh:pool;
+  const choice = arr[Math.floor(Math.random()*arr.length)];
+  used.add(choice); return choice;
+}
+$('#w-build').addEventListener('click',()=>{
+  const days=+$('#w-days').value, equip=segVal('equip'), goal=$('#w-goal').value, exp=$('#w-exp').value;
+  const perDay = exp==='beg'?4:5;
+  const split=SPLITS[days];
+  const out=$('#w-out'); out.innerHTML='';
+  split.forEach(([name,muscles],di)=>{
+    const used=new Set(); const items=[];
+    for(let i=0;i<perDay;i++){ const m=muscles[i%muscles.length]; items.push([pick(m,equip,used),m]); }
+    const day=document.createElement('div'); day.className='workout-day';
+    day.innerHTML=`<h3>Day ${di+1} — ${name}</h3><ul>${
+      items.map(([ex,m])=>`<li><span>${ex} <span style="color:var(--dim);font-size:12px">(${m})</span></span><span class="sets">${REP[goal]}</span></li>`).join('')
+    }</ul>`;
+    out.appendChild(day);
+  });
+  out.hidden=false;
+});
+
+/* init */
+unitLabels(); renderLog();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forge Trivia — history quiz with zero ads</title>
+<meta name="description" content="A history trivia game with no ads, no accounts, no tracking and no network calls. Built by AI Forge because 475 one-star reviews asked for it.">
+<meta name="color-scheme" content="dark">
+<style>
+  :root{--bg:#0a0e14;--panel:#121824;--line:#1f2a3a;--ink:#f2f6fb;--dim:#9fb0c6;--cy:#22d3ee;--ok:#34d399;--no:#fb7185}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.55 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  body{display:flex;justify-content:center;padding:24px 16px 56px}
+  main{width:100%;max-width:660px}
+  a{color:var(--cy)}
+  header{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:22px}
+  .mark{font:600 13px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--cy)}
+  h1{font-size:26px;margin:.35em 0 .15em;letter-spacing:-.01em}
+  .sub{color:var(--dim);font-size:14px;margin:0}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .bar{display:flex;gap:16px;align-items:baseline;font:12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px}
+  .bar b{color:var(--cy);font-weight:600}
+  .track{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:20px}
+  .track i{display:block;height:100%;background:var(--cy);width:0;transition:width .25s}
+  @media (prefers-reduced-motion:reduce){.track i{transition:none}}
+  .q{font-size:20px;font-weight:600;margin:0 0 18px;line-height:1.35}
+  .opts{display:grid;gap:10px}
+  button.opt{display:flex;gap:12px;align-items:center;text-align:left;width:100%;cursor:pointer;
+    background:#0e1420;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:14px 15px;
+    font:inherit;font-size:15px}
+  button.opt:hover:not(:disabled){border-color:var(--cy)}
+  button.opt:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+  button.opt:disabled{cursor:default;opacity:.85}
+  button.opt kbd{flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:5px;
+    background:var(--line);color:var(--dim);font:600 11px/1 ui-monospace,Menlo,Consolas,monospace}
+  button.opt.right{border-color:var(--ok);background:#0d2019}
+  button.opt.right kbd{background:var(--ok);color:#04150e}
+  button.opt.wrong{border-color:var(--no);background:#210f14}
+  button.opt.wrong kbd{background:var(--no);color:#2a0009}
+  .feed{margin-top:16px;min-height:24px;font-size:14px;color:var(--dim)}
+  .feed b{color:var(--ink)}
+  /* The teach-the-miss beat. Deliberately short: two or three sentences, then back to the game. */
+  .why{margin:12px 0 0;padding:12px 14px;border-left:2px solid var(--cy);background:#0e1420;
+    border-radius:0 9px 9px 0;font-size:14px;line-height:1.6;color:var(--dim)}
+  .why b{display:block;color:var(--cy);font:600 11px/1 ui-monospace,Menlo,Consolas,monospace;
+    letter-spacing:.14em;text-transform:uppercase;margin-bottom:7px}
+  .go{margin-top:18px;background:var(--cy);color:#04222a;border:0;border-radius:9px;padding:13px 22px;
+    font:inherit;font-weight:650;cursor:pointer}
+  .go:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .ghost{background:transparent;color:var(--cy);border:1px solid var(--line)}
+  ul.miss{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:10px}
+  ul.miss li{border-left:2px solid var(--no);padding:2px 0 2px 12px;font-size:14px;color:var(--dim)}
+  ul.miss b{display:block;color:var(--ink);font-weight:600}
+  ul.miss p{margin:6px 0 0;line-height:1.6}
+  .claims{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);
+    font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--dim)}
+  .claims span{color:var(--ok)}
+  footer{margin-top:14px;color:var(--dim);font-size:12px}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="mark">AI Forge</div>
+    <h1>Forge Trivia</h1>
+    <p class="sub">Forty questions of real history, ten a round, round after round &mdash; and a short explanation of every one you get wrong. No ads, no account, no network. Better software, built by AI &mdash; because you deserved it yesterday.</p>
+  </header>
+
+  <section class="panel" id="play">
+    <div class="bar">
+      <span>Round <b id="rnd">1</b></span>
+      <span>Q <b id="pos">1</b>/<b id="tot">10</b></span>
+      <span>Score <b id="score">0</b></span>
+      <span>Streak <b id="streak">0</b></span>
+      <span>Total <b id="total">0</b></span>
+      <span>Best <b id="best">0</b></span>
+    </div>
+    <div class="track"><i id="fill"></i></div>
+    <h2 class="q" id="q">Loading&hellip;</h2>
+    <div class="opts" id="opts"></div>
+    <p class="feed" id="feed" role="status" aria-live="polite"></p>
+    <p class="why hide" id="why" role="status" aria-live="polite"></p>
+    <button class="go hide" id="next">Next question</button>
+  </section>
+
+  <section class="panel hide" id="over" aria-live="polite">
+    <div class="bar">
+      <span>Round <b id="ornd">1</b> complete</span>
+      <span>Rounds played <b id="orounds">1</b></span>
+      <span>Total <b id="ototal">0</b></span>
+    </div>
+    <h2 class="q" id="verdict"></h2>
+    <p class="sub" id="tally"></p>
+    <ul class="miss" id="missed"></ul>
+    <button class="go" id="again">Next round</button>
+    <button class="go ghost" id="drill">Drill what I missed</button>
+    <button class="go ghost" id="wipe">Start over from zero</button>
+  </section>
+
+  <p class="claims">
+    <span>&#10003;</span> zero ad slots &mdash; grep this file for an ad network, there is none<br>
+    <span>&#10003;</span> unlimited rounds &mdash; no question repeats until you have seen all forty<br>
+    <span>&#10003;</span> every wrong answer gets an explanation, not an interstitial<br>
+    <span>&#10003;</span> zero network requests &mdash; works with the wi-fi off, forever<br>
+    <span>&#10003;</span> zero accounts &mdash; your score lives in this browser and nowhere else<br>
+    <span>&#10003;</span> nothing behind a paywall &mdash; there is no paywall to be behind
+  </p>
+  <footer>Built from 475 one-star reviews of ad-funded history quiz apps. Open the source: it is this one file.</footer>
+</main>
+
+<script>
+// ---- CORE (self-checked by selfcheck.mjs — keep these markers) ----
+// Pure logic only. No DOM, no storage. Everything below the marker is wiring.
+
+// Deterministic PRNG (LCG). A seed makes a round reproducible, which is what makes it testable.
+function rng(seed) {
+  let s = (seed >>> 0) || 0x2545f491;
+  return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296;
+}
+
+// Fisher-Yates. ponytail: the correct shuffle, not the sort(()=>Math.random()-.5) one that biases.
+function shuffle(arr, rand) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Build a round: pick n questions, shuffle each question's options, and carry the answer's NEW index.
+// This is the bug class that ruins trivia games — options get shuffled, the answer index does not.
+function buildRound(bank, seed, n) {
+  const rand = rng(seed);
+  return shuffle(bank, rand).slice(0, Math.min(n, bank.length)).map((item) => {
+    const options = shuffle(item.options, rand);
+    return { id: item.id, q: item.q, options, answer: item.answer, why: item.why, answerIndex: options.indexOf(item.answer) };
+  });
+}
+
+// Score: 100 a question, +25 for each consecutive correct answer before it, bonus capped at +200.
+// Capped so a long streak cannot make the last question worth more than the first ten.
+function scoreAnswer(state, correct) {
+  if (!correct) return { score: state.score, streak: 0, gained: 0 };
+  const gained = 100 + Math.min(state.streak * 25, 200);
+  return { score: state.score + gained, streak: state.streak + 1, gained };
+}
+
+// Missed questions come back. Named in the reviews as the thing the ad-funded apps do not do —
+// they re-serve an ad instead of re-serving the question you got wrong.
+function drillDeck(bank, missedIds, seed) {
+  const set = new Set(missedIds);
+  const deck = bank.filter((x) => set.has(x.id));
+  return buildRound(deck, seed, deck.length);
+}
+
+// Rounds keep going. Every question is served once before ANY question repeats: a round is drawn
+// from what you have not seen, and only when the bank runs dry does the seen-list reset.
+// Returns the new seen-list too, because the caller must not have to reconstruct it.
+function nextRound(bank, seenIds, seed, n) {
+  const size = Math.min(n, bank.length);
+  const seen = new Set(seenIds);
+  const rand = rng(seed);
+  let pick = shuffle(bank.filter((c) => !seen.has(c.id)), rand).slice(0, size);
+  const wrapped = pick.length < size;
+  if (wrapped) {                       // bank exhausted mid-round: top up from the ones already seen
+    const taken = new Set(pick.map((c) => c.id));
+    pick = pick.concat(shuffle(bank.filter((c) => !taken.has(c.id)), rand).slice(0, size - pick.length));
+  }
+  const ids = pick.map((c) => c.id);
+  return { cards: buildRound(pick, seed, size), seen: wrapped ? ids : [...new Set([...seenIds, ...ids])], wrapped };
+}
+// ---- /CORE ----
+
+// [id, question, answer, wrong options, WHY] — the fifth field is the teach-the-miss paragraph.
+// Rule for this bank: 2–3 sentences, plainly true, and it must explain the real answer rather than
+// just restate it. A history app that teaches something false is worse than one that teaches nothing.
+const BANK = [
+  ["berlin-wall", "In which year did the Berlin Wall fall?", "1989", ["1987", "1991", "1993"],
+    "The crossings were thrown open on the night of 9 November 1989, after an East German spokesman garbled a new travel rule live on television and crowds simply went to the gates. The Wall opening and reunification are different events: Germany was not formally reunified until 3 October 1990."],
+  ["machu-picchu", "Which empire built Machu Picchu?", "The Inca", ["The Maya", "The Aztec", "The Olmec"],
+    "Machu Picchu was built in the Peruvian Andes around 1450, most likely as a royal estate for the Inca ruler Pachacuti. The Maya, Aztec and Olmec were all Mesoamerican peoples, thousands of miles to the north."],
+  ["first-emperor", "Who was the first Roman emperor?", "Augustus", ["Julius Caesar", "Nero", "Tiberius"],
+    "Julius Caesar was a dictator, never an emperor, and was assassinated in 44 BC. His adopted heir Octavian took the name Augustus in 27 BC and is counted as the first emperor. Tiberius and Nero both came after him."],
+  ["magna-carta", "In which year was Magna Carta sealed?", "1215", ["1066", "1348", "1415"],
+    "King John sealed Magna Carta at Runnymede in June 1215 under pressure from rebel barons. He persuaded the pope to annul it within months, but later reissues turned it into lasting English law."],
+  ["mayflower", "Which ship carried the Pilgrims to Plymouth in 1620?", "The Mayflower", ["The Santa Maria", "The Golden Hind", "The Beagle"],
+    "The Mayflower sailed from England in 1620 with about 102 passengers, made landfall at Cape Cod, and the settlers founded Plymouth Colony. The Santa María was Columbus's flagship in 1492 and the Beagle carried Darwin in the 1830s."],
+  ["rosetta", "The Rosetta Stone was the key to deciphering which writing system?", "Egyptian hieroglyphs", ["Linear B", "Cuneiform", "Mayan glyphs"],
+    "The stone carries the same decree in hieroglyphs, demotic Egyptian and Greek, and the readable Greek gave scholars their way in. Jean-François Champollion announced his decipherment of the hieroglyphs in 1822. Linear B was cracked separately, by Michael Ventris in 1952."],
+  ["hannibal", "Who led an army with war elephants across the Alps in 218 BC?", "Hannibal", ["Scipio Africanus", "Pyrrhus", "Attila"],
+    "Hannibal, a Carthaginian general, marched an army and its war elephants over the Alps into Italy in 218 BC, opening the Second Punic War. Scipio Africanus is the Roman who eventually beat him, at Zama in 202 BC."],
+  ["versailles", "The Treaty of Versailles in 1919 formally ended which war?", "The First World War", ["The Franco-Prussian War", "The Crimean War", "The Thirty Years' War"],
+    "The Treaty of Versailles was signed on 28 June 1919 and settled terms between the Allies and Germany. The shooting had already stopped months earlier, with the armistice of 11 November 1918 — the treaty is what formally closed the war."],
+  ["longest-reign", "Who is the longest-reigning British monarch?", "Elizabeth II", ["Victoria", "George III", "Henry VIII"],
+    "Elizabeth II reigned 70 years and 214 days, from 1952 until her death in 2022. She passed Victoria's record of 63 years and 216 days on 9 September 2015."],
+  ["black-death", "The Black Death swept Europe during which century?", "The 14th", ["The 12th", "The 16th", "The 17th"],
+    "The Black Death reached Europe in 1347 and within about five years had killed something on the order of a third to a half of the population. Plague kept returning for centuries afterwards, but the great mortality belongs to the 14th century."],
+  ["pompeii", "Which Roman city was buried by Vesuvius in AD 79?", "Pompeii", ["Ostia", "Ravenna", "Carthage"],
+    "Vesuvius erupted in AD 79 and buried Pompeii, along with nearby Herculaneum, under ash and pumice. That ash is why Pompeii survives as the most complete picture we have of an ordinary Roman town."],
+  ["the-prince", "Who wrote The Prince, published in 1532?", "Niccolò Machiavelli", ["Thomas More", "Dante Alighieri", "Erasmus"],
+    "Machiavelli wrote The Prince in 1513 while exiled from Florence, and it circulated in manuscript for years. It was not printed until 1532, five years after he died — so the man never saw his most famous book published."],
+  ["titanic", "In which year did the Titanic sink?", "1912", ["1905", "1915", "1921"],
+    "Titanic struck an iceberg late on 14 April 1912 and sank in the early hours of the 15th, on her maiden voyage. More than 1,500 people died, in large part because the ship carried lifeboat places for barely half of those aboard."],
+  ["hastings", "The Battle of Hastings was fought in which year?", "1066", ["1014", "1120", "1215"],
+    "William of Normandy defeated King Harold II near Hastings on 14 October 1066 and was crowned that Christmas Day. 1066 is the Norman Conquest; 1215 is the other famous English date, Magna Carta."],
+  ["tokugawa", "The Tokugawa shogunate ruled which country?", "Japan", ["Korea", "China", "Vietnam"],
+    "The Tokugawa shoguns ruled Japan from 1603 to 1868, governing from Edo, the city now called Tokyo. Their long internal peace came with tight restrictions on foreign contact, and it ended with the Meiji Restoration."],
+  ["moon", "Who was the first person to walk on the Moon?", "Neil Armstrong", ["Buzz Aldrin", "Yuri Gagarin", "Michael Collins"],
+    "Neil Armstrong stepped onto the surface on 20 July 1969; Buzz Aldrin followed about twenty minutes later while Michael Collins stayed in lunar orbit. Yuri Gagarin was the first human in space, in 1961, but he never travelled to the Moon."],
+  ["louisiana", "The United States made the Louisiana Purchase from which country?", "France", ["Spain", "Britain", "Mexico"],
+    "Jefferson's government bought the Louisiana Territory from Napoleonic France in 1803 for about 15 million dollars, roughly doubling the size of the United States. Spain had held the territory earlier and handed it back to France only a few years before the sale, which is why Spain is the tempting wrong answer."],
+  ["pharos", "Which ancient wonder stood in the harbour of Alexandria?", "The Lighthouse (Pharos)", ["The Colossus", "The Hanging Gardens", "The Mausoleum"],
+    "The Lighthouse stood on the island of Pharos at Alexandria and guided shipping for well over a thousand years before earthquakes finally brought it down. The Colossus stood at Rhodes and the Mausoleum at Halicarnassus — different wonders, different harbours."],
+  ["genghis", "Genghis Khan founded which empire?", "The Mongol Empire", ["The Ottoman Empire", "The Timurid Empire", "The Khazar Khaganate"],
+    "Temüjin was proclaimed Genghis Khan in 1206 after uniting the Mongol tribes, and the empire he founded grew into the largest contiguous land empire in history. The Timurid empire is a later, separate thing, founded by Timur, who claimed descent from the Mongols."],
+  ["civil-war", "In which year did the American Civil War begin?", "1861", ["1848", "1857", "1865"],
+    "The war began in April 1861 when Confederate artillery opened fire on Fort Sumter in Charleston harbour. 1865 is the year it ended, which is why that answer feels so nearly right."],
+  ["we-the-people", "Which document opens with the words “We the People”?", "The US Constitution", ["The Declaration of Independence", "The Bill of Rights", "The Articles of Confederation"],
+    "The Constitution's Preamble begins “We the People of the United States, in Order to form a more perfect Union...”. The Declaration of Independence opens quite differently, with “When in the Course of human events”."],
+  ["sarajevo", "Whose assassination in Sarajevo in 1914 helped trigger a world war?", "Archduke Franz Ferdinand", ["Tsar Nicholas II", "Kaiser Wilhelm II", "Otto von Bismarck"],
+    "Archduke Franz Ferdinand, heir to the Austro-Hungarian throne, was shot in Sarajevo on 28 June 1914 by Gavrilo Princip. The killing itself was a regional crisis; it was the chain of alliances set off by Austria-Hungary's response that turned it into a world war."],
+  ["hundred-years", "The Hundred Years' War was fought mainly between which two kingdoms?", "England and France", ["Spain and Portugal", "Sweden and Poland", "Austria and Prussia"],
+    "The Hundred Years' War ran from 1337 to 1453 — 116 years of on-and-off fighting between the English and French crowns over the French throne and French territory. Joan of Arc belongs to its final phase, in the 1420s and 1430s."],
+  ["carter", "Whose tomb did Howard Carter open in 1922?", "Tutankhamun", ["Ramesses II", "Cleopatra", "Khufu"],
+    "Howard Carter found the tomb of Tutankhamun in the Valley of the Kings in November 1922. It caused a sensation because it was very nearly intact — almost every other royal tomb had been stripped by robbers in antiquity."],
+  ["byzantium", "What was the capital of the Byzantine Empire?", "Constantinople", ["Athens", "Antioch", "Thessalonica"],
+    "Constantine refounded the old Greek town of Byzantium as Constantinople in 330, and it served as capital of the Eastern Roman — Byzantine — Empire for over a thousand years. The same city is Istanbul today."],
+  ["bastille", "The storming of the Bastille in 1789 began which revolution?", "The French Revolution", ["The Russian Revolution", "The July Revolution", "The Haitian Revolution"],
+    "A Paris crowd stormed the Bastille, a royal fortress and prison, on 14 July 1789, hunting gunpowder as much as prisoners. The date became the symbolic start of the French Revolution and is still France's national day."],
+  ["gutenberg", "Who introduced movable-type printing to Europe around 1440?", "Johannes Gutenberg", ["William Caxton", "Aldus Manutius", "Nicolas Jenson"],
+    "Johannes Gutenberg developed printing with movable metal type at Mainz around 1440 and printed his famous Bible in the 1450s. Movable type already existed in East Asia; what Gutenberg built was the metal-type and press system that let European printing scale. William Caxton set up England's first press later, in 1476."],
+  ["great-fire", "The Great Fire of London broke out in which year?", "1666", ["1605", "1649", "1720"],
+    "The fire started in a bakery on Pudding Lane on 2 September 1666 and burned for four days, destroying most of the medieval City including old St Paul's Cathedral. The Great Plague of London hit the year before, in 1665, and the two are often muddled together."],
+  ["emancipation", "Which US president issued the Emancipation Proclamation?", "Abraham Lincoln", ["Andrew Johnson", "Ulysses S. Grant", "James Buchanan"],
+    "Lincoln issued a preliminary proclamation in September 1862 and the final one on 1 January 1863, declaring enslaved people in the rebelling states to be free. It did not by itself end slavery nationally — that took the Thirteenth Amendment in 1865."],
+  ["apartheid", "Apartheid was the official state policy of which country?", "South Africa", ["Rhodesia", "Namibia", "Kenya"],
+    "Apartheid was South Africa's legal system of enforced racial segregation, introduced by the National Party government after it won power in 1948. It was dismantled in the early 1990s and ended with the first fully democratic election, in 1994."],
+  ["silk-road", "Which trade network linked China to the Mediterranean?", "The Silk Road", ["The Amber Road", "The Incense Route", "The Hanseatic League"],
+    "The Silk Road was not one road but a web of overland and connected sea routes tying China, Central Asia, Persia and the Mediterranean together for centuries. Goods usually changed hands many times along the way; hardly any trader travelled the whole distance."],
+  ["india-1947", "In which year did India gain independence from Britain?", "1947", ["1930", "1950", "1962"],
+    "India became independent on 15 August 1947, at the same moment as the partition that created Pakistan. It became a republic under its own constitution in 1950, which is where the other tempting date comes from."],
+  ["waterloo", "Which 1815 battle ended Napoleon's rule for good?", "Waterloo", ["Austerlitz", "Trafalgar", "Borodino"],
+    "Napoleon was beaten at Waterloo, in what is now Belgium, on 18 June 1815 by Wellington's allied army and Blücher's Prussians, ending the Hundred Days after his return from exile. Austerlitz in 1805 was one of his greatest victories, not his defeat, and Trafalgar was a naval battle."],
+  ["terracotta", "The Terracotta Army was buried with which emperor?", "Qin Shi Huang", ["Kublai Khan", "Emperor Wu of Han", "Taizong of Tang"],
+    "Thousands of life-size clay soldiers were buried near the tomb complex of Qin Shi Huang, the first emperor to unify China, who died in 210 BC. Farmers digging a well near Xi'an stumbled onto them in 1974."],
+  ["1945-cities", "Which two cities were struck by atomic bombs in 1945?", "Hiroshima and Nagasaki", ["Tokyo and Osaka", "Kyoto and Kobe", "Nagoya and Sendai"],
+    "The United States dropped an atomic bomb on Hiroshima on 6 August 1945 and a second on Nagasaki on 9 August. Japan announced its surrender days later, on 15 August."],
+  ["thatcher", "Who was the first female Prime Minister of the United Kingdom?", "Margaret Thatcher", ["Theresa May", "Barbara Castle", "Nancy Astor"],
+    "Margaret Thatcher became Britain's first female Prime Minister in 1979 and held the office until 1990, the longest continuous run of the 20th century. Theresa May was the second woman in the job, in 2016."],
+  ["1453", "In which year did the Ottomans capture Constantinople?", "1453", ["1204", "1389", "1492"],
+    "Ottoman forces under Mehmed II took Constantinople in May 1453, ending the Byzantine Empire after eleven centuries. 1204 is the other fall of the city — the sack by the Fourth Crusade — which is why that date looks plausible."],
+  ["magellan", "Whose expedition first circumnavigated the globe, 1519–1522?", "Ferdinand Magellan's", ["Vasco da Gama's", "Christopher Columbus's", "Francis Drake's"],
+    "Magellan led the expedition out of Spain in 1519 but was killed at Mactan in the Philippines in 1521, so he never completed the circuit himself. Juan Sebastián Elcano brought the ship Victoria home in September 1522 with a handful of survivors, finishing the first recorded circumnavigation."],
+  ["ussr", "In which year was the Soviet Union dissolved?", "1991", ["1985", "1989", "1993"],
+    "The Soviet Union was formally dissolved in December 1991, when the republics went their own way and Mikhail Gorbachev resigned as its last leader. 1989 is the year the Eastern Bloc broke apart, but the USSR itself lasted two more years."],
+  ["chichen", "Which civilisation built Chichén Itzá?", "The Maya", ["The Inca", "The Toltec alone", "The Zapotec"],
+    "Chichén Itzá is a Maya city in the Yucatán, at its height roughly between 800 and 1100. Some of its architecture echoes central Mexican styles, which once led scholars to credit a Toltec conquest, but the modern view is a Maya city absorbing outside influence through trade and contact."],
+].map(([id, q, answer, wrong, why]) => ({ id, q, answer, why, options: [answer, ...wrong] }));
+
+const ROUND = 10;
+const $ = (id) => document.getElementById(id);
+const KEYS = ["A", "B", "C", "D"];
+// localStorage can throw (private mode, disabled cookies). A trivia game must not die for a high score.
+// One key holds the whole cross-round record: best round, rounds played, cumulative points, and which
+// questions have already been served — that last one is what stops round 2 repeating round 1.
+const KEY = "forge-trivia-v2";
+const BLANK = { best: 0, rounds: 0, total: 0, seen: [] };
+const save = {
+  get() {
+    try {
+      const p = { ...BLANK, ...JSON.parse(localStorage.getItem(KEY) || "{}") };
+      if (!Array.isArray(p.seen)) p.seen = [];          // a hand-edited or corrupt value must not crash the game
+      return p;
+    } catch { return { ...BLANK }; }
+  },
+  set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch {} },
+};
+
+let progress = save.get();
+let deck = [], i = 0, state = { score: 0, streak: 0 }, missed = [], locked = false, isDrill = false, wrapped = false;
+
+function start(cards, drill) {
+  deck = cards; i = 0; state = { score: 0, streak: 0 }; missed = []; isDrill = !!drill;
+  $("over").classList.add("hide"); $("play").classList.remove("hide");
+  $("best").textContent = progress.best; $("tot").textContent = deck.length;
+  render();
+}
+
+// One tap = the next round, drawn from questions you have not been asked yet.
+function newRound() {
+  const r = nextRound(BANK, progress.seen, Date.now(), ROUND);
+  progress.seen = r.seen;
+  wrapped = r.wrapped;
+  save.set(progress);
+  start(r.cards, false);
+}
+
+function render() {
+  locked = false;
+  const card = deck[i];
+  $("rnd").textContent = isDrill ? "drill" : String(progress.rounds + 1);
+  $("pos").textContent = i + 1;
+  $("score").textContent = state.score;
+  $("streak").textContent = state.streak;
+  $("total").textContent = progress.total + (isDrill ? 0 : state.score);
+  $("fill").style.width = (i / deck.length) * 100 + "%";
+  $("q").textContent = card.q;
+  $("feed").textContent = "";
+  $("why").classList.add("hide");
+  $("why").textContent = "";
+  $("next").classList.add("hide");
+  const box = $("opts");
+  box.textContent = "";
+  card.options.forEach((opt, n) => {
+    const b = document.createElement("button");
+    b.className = "opt"; b.type = "button";
+    const k = document.createElement("kbd"); k.textContent = KEYS[n];
+    const s = document.createElement("span"); s.textContent = opt;
+    b.append(k, s);
+    b.addEventListener("click", () => answer(n));
+    box.append(b);
+  });
+  box.firstChild?.focus();
+}
+
+function answer(n) {
+  if (locked) return;
+  locked = true;
+  const card = deck[i];
+  const right = n === card.answerIndex;
+  const next = scoreAnswer(state, right);
+  const gained = next.gained;
+  state = { score: next.score, streak: next.streak };
+  if (!right) missed.push(card.id);
+
+  [...$("opts").children].forEach((b, k) => {
+    b.disabled = true;
+    if (k === card.answerIndex) b.classList.add("right");
+    else if (k === n) b.classList.add("wrong");
+  });
+  $("score").textContent = state.score;
+  $("streak").textContent = state.streak;
+  $("total").textContent = progress.total + (isDrill ? 0 : state.score);
+  $("feed").textContent = right
+    ? `Correct. +${gained} points${state.streak > 1 ? ` (streak ×${state.streak})` : ""}.`
+    : `Not quite — the answer is ${card.answer}.`;
+  // Teach the miss, right here, at the moment they see they were wrong — not buried on a results page.
+  if (!right && card.why) {
+    const w = $("why");
+    w.textContent = "";
+    const h = document.createElement("b"); h.textContent = "Why";
+    w.append(h, document.createTextNode(card.why));
+    w.classList.remove("hide");
+  }
+  $("next").classList.remove("hide");
+  $("next").textContent = i + 1 < deck.length ? "Next question" : "See results";
+  $("next").focus();
+}
+
+function advance() {
+  if (++i < deck.length) return render();
+  $("fill").style.width = "100%";
+  const right = deck.length - missed.length;
+  if (state.score > progress.best) progress.best = state.score;
+  if (!isDrill) { progress.rounds += 1; progress.total += state.score; }   // a drill is practice, not a round
+  save.set(progress);
+
+  $("play").classList.add("hide"); $("over").classList.remove("hide");
+  $("ornd").textContent = isDrill ? "Drill" : String(progress.rounds);
+  $("orounds").textContent = String(progress.rounds);
+  $("ototal").textContent = String(progress.total);
+  $("verdict").textContent = `${right} of ${deck.length} correct — ${state.score} points.`;
+
+  const seenLeft = BANK.length - progress.seen.length;
+  const tally = [
+    `${progress.rounds} round(s) played, ${progress.total} points in total. Best round: ${progress.best}.`,
+    wrapped && !isDrill
+      ? `That round ran past the end of the bank — you have now been asked all ${BANK.length} questions.`
+      : isDrill ? "" : `${seenLeft} question(s) you have not been asked yet.`,
+    missed.length ? "What you missed, and why, is below." : "A clean round. Nothing missed.",
+  ].filter(Boolean).join(" ");
+  $("tally").textContent = tally;
+
+  const list = $("missed");
+  list.textContent = "";
+  for (const id of missed) {
+    const card = BANK.find((c) => c.id === id);
+    const li = document.createElement("li");
+    const b = document.createElement("b"); b.textContent = card.q;
+    const p = document.createElement("p"); p.textContent = card.why;
+    li.append(b, document.createTextNode(`Answer: ${card.answer}`), p);
+    list.append(li);
+  }
+  $("drill").classList.toggle("hide", missed.length === 0);
+  $("again").focus();
+}
+
+$("next").addEventListener("click", advance);
+$("again").addEventListener("click", newRound);
+$("drill").addEventListener("click", () => start(drillDeck(BANK, missed, Date.now()), true));
+$("wipe").addEventListener("click", () => {
+  progress = { ...BLANK };
+  save.set(progress);
+  newRound();
+});
+addEventListener("keydown", (e) => {
+  const n = KEYS.indexOf(e.key.toUpperCase());
+  if (n >= 0 && !locked && !$("play").classList.contains("hide")) return answer(n);
+  if (e.key === "Enter" && locked) advance();
+});
+
+newRound();
+</script>
+<footer style="max-width:46rem;margin:2.5rem auto 1.5rem;padding:1rem 1.15rem;border-top:1px solid #94a3b8;font:15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;opacity:.85">Not sure this is the tool you need? <a href="/which-ai-tool-for-which-task/">Route your actual task in 60 seconds</a> &mdash; one task in, one answer out, no listicle.</footer>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

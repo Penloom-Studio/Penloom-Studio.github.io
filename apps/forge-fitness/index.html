@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free Workout Builder, Macro Tracker &amp; Calorie Burn Calculator — Forge Fitness</title>
+<meta name="description" content="Three free fitness tools in one page: a tailorable workout builder for free weights, machines or bodyweight; a macro tracker with a built-in food table; and a MET-based calorie burn calculator. No account, no subscription, no paywalled scanner.">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://penloomstudio.com/apps/forge-fitness/">
+<style>
+  :root{--bg:#0a0e14;--panel:#121824;--line:#1f2a3a;--ink:#f2f6fb;--dim:#9fb0c6;--cy:#22d3ee;--ok:#34d399;--no:#fb7185}
+  *{box-sizing:border-box}
+  /* Inter is named first and used by anyone who has it; everyone else gets the system sans, which
+     brand.md explicitly allows ("Inter, SF Pro, or similar"). Do NOT add a Google Fonts <link> to
+     "fix" this — the page's zero-network-calls promise is a bigger brand asset than the typeface,
+     and selfcheck.mjs fails the build if a remote request appears. */
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.55 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  /* Three columns: ad rail, tools, ad rail. The rails collapse out below 1180px, so nothing shifts. */
+  .shell{display:grid;grid-template-columns:1fr;justify-content:center;gap:28px;padding:24px 16px 56px}
+  @media (min-width:1180px){.shell{grid-template-columns:160px minmax(0,780px) 160px}}
+  main{width:100%;max-width:780px;margin:0 auto}
+  .rail{display:none}
+  @media (min-width:1180px){.rail{display:block}}
+  /* Reserved space, so when a network fills the slot the page does not jump. */
+  .ad{position:sticky;top:24px;width:160px;min-height:600px;border:1px dashed var(--line);border-radius:10px;
+    background:#0d1219;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px}
+  .ad span{font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.14em;
+    text-transform:uppercase;color:#4a5a70}
+  header{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:22px}
+  .mark{font:600 13px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--cy)}
+  h1{font-size:26px;margin:.35em 0 .15em;letter-spacing:-.01em}
+  .sub{color:var(--dim);font-size:14px;margin:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:20px}
+  .card h2{font-size:18px;margin:0 0 4px}
+  .card h2 .n{font:12px/1 ui-monospace,Menlo,Consolas,monospace;color:var(--cy);letter-spacing:.1em;
+    vertical-align:middle;margin-right:8px}
+  .grid{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:16px 0 4px}
+  label.f{display:grid;gap:5px;font-size:13px;color:var(--dim);flex:1 1 150px}
+  input,select{background:#0e1420;color:var(--ink);border:1px solid var(--line);border-radius:9px;
+    padding:11px 12px;font:inherit;font-size:15px;width:100%}
+  input[type=number]{-moz-appearance:textfield}
+  input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+  button{font:inherit;cursor:pointer;border-radius:9px}
+  .primary{background:var(--cy);color:#04222a;border:0;padding:12px 20px;font-weight:650}
+  .ghost{background:transparent;color:var(--cy);border:1px solid var(--line);padding:10px 16px;font-size:14px}
+  .tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
+  th{text-align:left;font:11px/1.4 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line);padding:0 8px 8px 0;font-weight:600}
+  td{padding:9px 8px 9px 0;border-bottom:1px solid #171f2c;vertical-align:middle}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;padding-right:0}
+  tfoot td{border-bottom:0;font-weight:650;color:var(--cy);padding-top:12px}
+  .ex{font-weight:600}
+  .setrep{display:flex;gap:6px;align-items:center}
+  .setrep input{width:58px;padding:7px 8px;font-size:14px;text-align:center}
+  .setrep input.r{width:86px}
+  .mini{background:transparent;border:1px solid var(--line);color:var(--dim);padding:6px 10px;font-size:13px}
+  .mini:hover{border-color:var(--cy);color:var(--cy)}
+  .mini.x:hover{border-color:var(--no);color:var(--no)}
+  .totals{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .tot{flex:1 1 110px;background:#0e1420;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .tot b{display:block;font-size:22px;color:var(--cy);font-variant-numeric:tabular-nums;line-height:1.2}
+  .tot span{font:11px/1.4 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+  .tot.net b{color:var(--ok)}
+  .tot.over b{color:var(--no)}
+  .empty{color:var(--dim);font-size:14px;padding:14px 0 2px}
+  .est{margin-top:18px;padding:14px 15px;border:1px dashed var(--line);border-radius:10px}
+  .est h3{font-size:15px;margin:0 0 4px}
+  .note{margin:14px 0 0;font-size:13px;line-height:1.65;color:var(--dim);
+    border-top:1px dashed var(--line);padding-top:12px}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .say{color:var(--dim);font-size:13px;margin:10px 0 0;min-height:18px}
+  .claims{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);
+    font:12px/1.8 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--dim)}
+  .claims span{color:var(--ok)}
+  footer{margin-top:16px;color:var(--dim);font-size:12px;line-height:1.7}
+  .disclaimer{border:1px solid var(--line);border-left:3px solid var(--no);background:#12101a;
+    border-radius:10px;padding:12px 14px;margin:0 0 22px;font-size:13px;line-height:1.6;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ================= AD SLOT (left rail) =================================================
+       Reserved 160x600. The ad network's <script> tag goes INSIDE this div and nowhere else.
+       Left empty on purpose: opening an AdSense/Ezoic/Mediavine account is a spend + account
+       decision that belongs to the owner (CLAUDE.md §3), not to a build agent. Nothing here
+       loads a third-party script today, so the page makes zero network calls.
+  ====================================================================================== -->
+  <aside class="rail" aria-label="Advertisement"><div class="ad"><span>Ad slot<br>160 &times; 600</span></div></aside>
+
+  <main>
+  <header>
+    <div class="mark">AI Forge</div>
+    <h1>Forge Fitness &mdash; three free tools, one page</h1>
+    <p class="sub">A tailorable workout builder, a macro tracker and a calorie-burn calculator. No account,
+      no subscription, no feature that quietly moves behind a paywall next year. Everything you type stays
+      in this browser. Better software, built by AI &mdash; because you deserved it yesterday.</p>
+  </header>
+
+  <p class="disclaimer"><strong>Not medical advice.</strong> These are general-purpose calculators, not a
+    diagnosis, a prescription or a treatment plan. Calorie and macro figures are estimates from published
+    reference tables and will differ from your body. Talk to a doctor or a qualified professional before
+    starting a new exercise or eating plan, especially if you are pregnant, injured, or managing a
+    medical condition.</p>
+
+  <!-- ============================ TOOL 1: WORKOUT BUILDER ============================ -->
+  <section class="card" aria-labelledby="h-workout">
+    <h2 id="h-workout"><span class="n">01</span>Workout builder</h2>
+    <p class="sub">Pick what you have and what you want to train. Every line is editable &mdash; change the
+      sets and reps, swap an exercise you dislike, or drop it entirely.</p>
+    <div class="grid">
+      <label class="f" for="eq">Equipment
+        <select id="eq">
+          <option value="free">Free weights (barbell / dumbbell / kettlebell)</option>
+          <option value="machine">Machines &amp; cables</option>
+          <option value="body">Bodyweight only</option>
+        </select>
+      </label>
+      <label class="f" for="mu">Target
+        <select id="mu">
+          <option value="full">Full body</option>
+          <option value="chest">Chest</option>
+          <option value="back">Back</option>
+          <option value="legs">Legs</option>
+          <option value="shoulders">Shoulders</option>
+          <option value="arms">Arms</option>
+          <option value="core">Core</option>
+        </select>
+      </label>
+      <label class="f" for="go">Goal
+        <select id="go">
+          <option value="muscle">Muscle size</option>
+          <option value="strength">Strength</option>
+          <option value="endurance">Endurance</option>
+        </select>
+      </label>
+      <label class="f" for="cnt" style="flex:0 1 120px">Exercises
+        <input type="number" id="cnt" value="4" min="1" max="8" step="1">
+      </label>
+    </div>
+    <div class="tools">
+      <button class="primary" id="build" type="button">Build my workout</button>
+      <button class="ghost" id="shuffle" type="button">Show me different exercises</button>
+    </div>
+    <div id="routine"></div>
+    <p class="note">Rest between sets is the number under the goal you picked, not a rule. Free-weight and
+      machine loads are yours to choose &mdash; we do not know what you can lift, and an app that guesses a
+      barbell weight for a stranger is how people get hurt.</p>
+  </section>
+
+  <!-- ============================ TOOL 2: MACRO TRACKER ============================ -->
+  <section class="card" aria-labelledby="h-macro">
+    <h2 id="h-macro"><span class="n">02</span>Macro tracker</h2>
+    <p class="sub">Log what you ate in grams. Pick from the built-in table of common foods, or type the
+      macros off a label yourself. Saved in this browser, per day.</p>
+
+    <div class="grid">
+      <label class="f" for="day" style="flex:0 1 170px">Day
+        <input type="date" id="day">
+      </label>
+      <label class="f" for="food">Food
+        <select id="food"></select>
+      </label>
+      <label class="f" for="grams" style="flex:0 1 120px">Grams
+        <input type="number" id="grams" value="100" min="0" max="5000" step="1">
+      </label>
+    </div>
+    <div class="grid" id="manual" hidden>
+      <label class="f" for="mname">Name
+        <input type="text" id="mname" maxlength="60" placeholder="Chicken tikka, supermarket" autocomplete="off">
+      </label>
+      <label class="f" for="mkcal" style="flex:0 1 100px">Calories
+        <input type="number" id="mkcal" min="0" max="10000" step="1" placeholder="0">
+      </label>
+      <label class="f" for="mp" style="flex:0 1 90px">Protein g
+        <input type="number" id="mp" min="0" max="1000" step="0.1" placeholder="0">
+      </label>
+      <label class="f" for="mc" style="flex:0 1 90px">Carbs g
+        <input type="number" id="mc" min="0" max="1000" step="0.1" placeholder="0">
+      </label>
+      <label class="f" for="mf" style="flex:0 1 90px">Fat g
+        <input type="number" id="mf" min="0" max="1000" step="0.1" placeholder="0">
+      </label>
+    </div>
+    <div class="tools">
+      <button class="primary" id="addFood" type="button">Log this food</button>
+    </div>
+    <p class="say" id="sayFood" role="status" aria-live="polite"></p>
+
+    <table id="foodTable">
+      <caption class="sr">Foods logged today, with calories and macros</caption>
+      <thead><tr><th scope="col">Food</th><th scope="col" class="num">g</th><th scope="col" class="num">kcal</th>
+        <th scope="col" class="num">P</th><th scope="col" class="num">C</th><th scope="col" class="num">F</th>
+        <th scope="col"><span class="sr">Remove</span></th></tr></thead>
+      <tbody id="foodRows"></tbody>
+      <tfoot id="foodFoot"></tfoot>
+    </table>
+    <p class="empty" id="foodEmpty">Nothing logged for this day yet.</p>
+    <p class="note">Per-100&nbsp;g values come from published composition tables and are rounded. A real
+      chicken breast is not a reference chicken breast &mdash; treat every number here as an estimate,
+      and prefer the label on the packet when you have one.</p>
+  </section>
+
+  <!-- ============================ TOOL 3: CALORIE / BURN ============================ -->
+  <section class="card" aria-labelledby="h-burn">
+    <h2 id="h-burn"><span class="n">03</span>Calorie tracker &amp; burn estimator</h2>
+    <p class="sub">Log an activity and how long you did it. Burn is estimated from the MET value of the
+      activity and your bodyweight.</p>
+
+    <div class="grid">
+      <label class="f" for="wt" style="flex:0 1 130px">Your weight
+        <input type="number" id="wt" value="180" min="20" max="1000" step="1">
+      </label>
+      <label class="f" for="unit" style="flex:0 1 90px">Unit
+        <select id="unit"><option value="lb">lb</option><option value="kg">kg</option></select>
+      </label>
+      <label class="f" for="act">Activity
+        <select id="act"></select>
+      </label>
+      <label class="f" for="mins" style="flex:0 1 110px">Minutes
+        <input type="number" id="mins" value="30" min="0" max="1440" step="1">
+      </label>
+    </div>
+    <div class="tools">
+      <button class="primary" id="addAct" type="button">Log this activity</button>
+    </div>
+    <p class="say" id="sayAct" role="status" aria-live="polite"></p>
+
+    <table id="actTable">
+      <caption class="sr">Activities logged today, with estimated calories burned</caption>
+      <thead><tr><th scope="col">Activity</th><th scope="col" class="num">MET</th><th scope="col" class="num">min</th>
+        <th scope="col" class="num">kcal</th><th scope="col"><span class="sr">Remove</span></th></tr></thead>
+      <tbody id="actRows"></tbody>
+      <tfoot id="actFoot"></tfoot>
+    </table>
+    <p class="empty" id="actEmpty">No activity logged for this day yet.</p>
+
+    <div class="totals" id="net"></div>
+
+    <!-- Optional calorie target. Your weight and unit come from the boxes above — entered once. -->
+    <div class="est">
+      <h3>Work out a daily calorie goal (optional)</h3>
+      <p class="sub">Estimated with the Mifflin-St Jeor equation, the one dietitians use. It needs a
+        few more numbers about you, and none of them leave this browser.</p>
+      <div class="grid">
+        <label class="f" for="sex" style="flex:0 1 120px">Sex
+          <select id="sex"><option value="male">Male</option><option value="female">Female</option></select>
+        </label>
+        <label class="f" for="age" style="flex:0 1 100px">Age
+          <input type="number" id="age" min="14" max="120" step="1" placeholder="30">
+        </label>
+        <label class="f" for="ht" style="flex:0 1 110px">Height
+          <input type="number" id="ht" min="0" max="300" step="0.5" placeholder="70">
+        </label>
+        <label class="f" for="htUnit" style="flex:0 1 90px">Height unit
+          <select id="htUnit"><option value="in">in</option><option value="cm">cm</option></select>
+        </label>
+        <label class="f" for="pal">Everyday activity <em>outside</em> the workouts you log above
+          <select id="pal"></select>
+        </label>
+      </div>
+      <div class="totals" id="energy"></div>
+      <div class="tools">
+        <button class="ghost" id="useTdee" type="button">Use this estimate as my daily goal</button>
+      </div>
+      <p class="say" id="sayTdee" role="status" aria-live="polite"></p>
+      <p class="note">Pick the activity level for your life <em>minus</em> the workouts you log in this
+        tracker &mdash; those are already counted as burn above. Choosing &ldquo;very active&rdquo;
+        <em>and</em> logging your run counts that run twice, which is the most common way one of these
+        numbers ends up several hundred calories too high.</p>
+    </div>
+
+    <div class="grid" style="margin-top:16px">
+      <label class="f" for="goal" style="flex:0 1 220px">Your own daily calorie goal (optional)
+        <input type="number" id="goal" min="0" max="20000" step="10" placeholder="leave blank for none">
+      </label>
+    </div>
+    <p class="note">MET burn is <em>gross</em> expenditure: it includes the calories you would have burned
+      sitting still for those minutes, which is why it reads higher than a treadmill&rsquo;s &ldquo;net&rdquo;
+      number. It is an average for an average body, and it does not know your fitness, your terrain or your
+      heart rate. The calorie goal above is an <em>estimate from a published equation</em>, not a
+      prescription: it is right to within about 10% for roughly 7 people in 10, and it cannot see your
+      medical history. Treat it as a starting number to adjust against what the scale actually does over
+      a few weeks, and take any real decision to a professional.</p>
+  </section>
+
+  <div class="tools">
+    <button class="ghost" id="csv" type="button">Export this day as CSV</button>
+    <button class="ghost" id="wipe" type="button">Delete this day</button>
+  </div>
+  <p class="say" id="say" role="status" aria-live="polite"></p>
+
+  <p class="claims">
+    <span>&#10003;</span> free &mdash; no account, no trial, no card, nothing to cancel<br>
+    <span>&#10003;</span> your food log never leaves this browser and is never uploaded<br>
+    <span>&#10003;</span> no feature here will move behind a paywall later &mdash; there is no paywall to move it behind<br>
+    <span>&#10003;</span> real exercises, real published food values, one honest MET formula<br>
+    <span>&#10003;</span> the maths is checked by a test that ships with the page
+  </p>
+  <footer>
+    Built by AI Forge from what people actually complain about in fitness apps: a barcode scanner that went
+    Premium after ten free years, history you cannot reach without paying, and a recap that used to be free.
+    <br><br>
+    This page makes no network requests and sets no cookies. Clearing your browser data clears your log,
+    so export the CSV if you want to keep it.
+  </footer>
+  </main>
+
+  <!-- ================= AD SLOT (right rail) — see the note on the left rail ================= -->
+  <aside class="rail" aria-label="Advertisement"><div class="ad"><span>Ad slot<br>160 &times; 600</span></div></aside>
+</div>
+
+<script>
+// ---- CORE (self-checked by selfcheck.mjs — keep these markers) ----
+// Pure data + maths. No DOM, no storage. Everything below the closing marker is wiring.
+
+// ---- Exercises -------------------------------------------------------------------------------
+// Real, named movements only. e = equipment (free | machine | body), m = muscle group,
+// hold = an isometric, prescribed in seconds rather than reps.
+const EX = [
+  // free weights
+  {n:"Barbell bench press",e:"free",m:"chest"},{n:"Dumbbell bench press",e:"free",m:"chest"},
+  {n:"Incline dumbbell press",e:"free",m:"chest"},{n:"Dumbbell chest fly",e:"free",m:"chest"},
+  {n:"Barbell floor press",e:"free",m:"chest"},
+  {n:"Barbell bent-over row",e:"free",m:"back"},{n:"One-arm dumbbell row",e:"free",m:"back"},
+  {n:"Barbell deadlift",e:"free",m:"back"},{n:"Dumbbell shrug",e:"free",m:"back"},
+  {n:"Barbell pendlay row",e:"free",m:"back"},
+  {n:"Barbell back squat",e:"free",m:"legs"},{n:"Dumbbell goblet squat",e:"free",m:"legs"},
+  {n:"Barbell Romanian deadlift",e:"free",m:"legs"},{n:"Dumbbell walking lunge",e:"free",m:"legs"},
+  {n:"Barbell front squat",e:"free",m:"legs"},{n:"Kettlebell swing",e:"free",m:"legs"},
+  {n:"Barbell overhead press",e:"free",m:"shoulders"},{n:"Dumbbell lateral raise",e:"free",m:"shoulders"},
+  {n:"Dumbbell rear-delt fly",e:"free",m:"shoulders"},{n:"Dumbbell Arnold press",e:"free",m:"shoulders"},
+  {n:"Dumbbell upright row",e:"free",m:"shoulders"},
+  {n:"Barbell curl",e:"free",m:"arms"},{n:"Dumbbell hammer curl",e:"free",m:"arms"},
+  {n:"Close-grip bench press",e:"free",m:"arms"},{n:"Dumbbell overhead triceps extension",e:"free",m:"arms"},
+  {n:"Dumbbell incline curl",e:"free",m:"arms"},
+  {n:"Barbell rollout",e:"free",m:"core"},{n:"Weighted decline sit-up",e:"free",m:"core"},
+  {n:"Dumbbell side bend",e:"free",m:"core"},{n:"Kettlebell farmer carry",e:"free",m:"core",hold:1},
+  // machines and cables
+  {n:"Chest press machine",e:"machine",m:"chest"},{n:"Pec deck",e:"machine",m:"chest"},
+  {n:"Cable crossover",e:"machine",m:"chest"},{n:"Smith machine bench press",e:"machine",m:"chest"},
+  {n:"Lat pulldown",e:"machine",m:"back"},{n:"Seated cable row",e:"machine",m:"back"},
+  {n:"Assisted pull-up machine",e:"machine",m:"back"},{n:"Straight-arm cable pulldown",e:"machine",m:"back"},
+  {n:"Leg press",e:"machine",m:"legs"},{n:"Leg extension",e:"machine",m:"legs"},
+  {n:"Lying leg curl",e:"machine",m:"legs"},{n:"Hack squat machine",e:"machine",m:"legs"},
+  {n:"Standing calf raise machine",e:"machine",m:"legs"},
+  {n:"Shoulder press machine",e:"machine",m:"shoulders"},{n:"Cable lateral raise",e:"machine",m:"shoulders"},
+  {n:"Reverse pec deck",e:"machine",m:"shoulders"},{n:"Cable face pull",e:"machine",m:"shoulders"},
+  {n:"Cable biceps curl",e:"machine",m:"arms"},{n:"Cable triceps pushdown",e:"machine",m:"arms"},
+  {n:"Preacher curl machine",e:"machine",m:"arms"},{n:"Overhead cable triceps extension",e:"machine",m:"arms"},
+  {n:"Cable crunch",e:"machine",m:"core"},{n:"Torso rotation machine",e:"machine",m:"core"},
+  {n:"Captain's chair knee raise",e:"machine",m:"core"},{n:"Cable woodchop",e:"machine",m:"core"},
+  // bodyweight
+  {n:"Push-up",e:"body",m:"chest"},{n:"Feet-elevated push-up",e:"body",m:"chest"},
+  {n:"Hands-elevated push-up",e:"body",m:"chest"},{n:"Bench dip",e:"body",m:"chest"},
+  {n:"Pull-up",e:"body",m:"back"},{n:"Chin-up",e:"body",m:"back"},
+  {n:"Inverted row",e:"body",m:"back"},{n:"Superman hold",e:"body",m:"back",hold:1},
+  {n:"Bodyweight squat",e:"body",m:"legs"},{n:"Walking lunge",e:"body",m:"legs"},
+  {n:"Bulgarian split squat",e:"body",m:"legs"},{n:"Glute bridge",e:"body",m:"legs"},
+  {n:"Single-leg calf raise",e:"body",m:"legs"},{n:"Jump squat",e:"body",m:"legs"},
+  {n:"Pike push-up",e:"body",m:"shoulders"},{n:"Wall handstand hold",e:"body",m:"shoulders",hold:1},
+  {n:"Bear crawl",e:"body",m:"shoulders",hold:1},{n:"Wall slide",e:"body",m:"shoulders"},
+  {n:"Diamond push-up",e:"body",m:"arms"},{n:"Close-grip chin-up",e:"body",m:"arms"},
+  {n:"Bench dip (arms)",e:"body",m:"arms"},{n:"Towel curl (isometric)",e:"body",m:"arms",hold:1},
+  {n:"Front plank",e:"body",m:"core",hold:1},{n:"Side plank",e:"body",m:"core",hold:1},
+  {n:"Dead bug",e:"body",m:"core"},{n:"Hollow hold",e:"body",m:"core",hold:1},
+  {n:"Hanging knee raise",e:"body",m:"core"},{n:"Mountain climber",e:"body",m:"core"},
+];
+
+const GOALS = {
+  muscle:    {label:"Muscle size", sets:4, reps:"8-12",  hold:"30-45 sec", rest:"90 sec"},
+  strength:  {label:"Strength",    sets:5, reps:"5",     hold:"20-30 sec", rest:"3 min"},
+  endurance: {label:"Endurance",   sets:3, reps:"15-20", hold:"45-60 sec", rest:"45 sec"},
+};
+
+const MUSCLES = ["chest","back","legs","shoulders","arms","core"];
+const FULL_ORDER = ["legs","chest","back","shoulders","core"];   // the order a full-body day runs in
+
+const poolFor = (equipment, muscle) => EX.filter((x) => x.e === equipment && x.m === muscle);
+
+// Deterministic, not random: `offset` is the "show me different exercises" dial. Same inputs always
+// give the same routine, which is what makes the whole thing testable.
+function buildRoutine(equipment, muscle, goal, count = 4, offset = 0) {
+  const g = GOALS[goal];
+  if (!g) return [];
+  const n = Math.max(1, Math.min(8, Math.round(Number(count) || 0) || 1));
+  const off = Math.abs(Math.round(Number(offset) || 0));
+  const picks = [];
+  if (muscle === "full") {
+    for (let i = 0; picks.length < n && i < FULL_ORDER.length * 8; i++) {
+      const p = poolFor(equipment, FULL_ORDER[i % FULL_ORDER.length]);
+      if (!p.length) continue;
+      const cand = p[(off + Math.floor(i / FULL_ORDER.length)) % p.length];
+      if (!picks.includes(cand)) picks.push(cand);
+    }
+  } else {
+    const p = poolFor(equipment, muscle);
+    for (let i = 0; i < Math.min(n, p.length); i++) picks.push(p[(off + i) % p.length]);
+  }
+  return picks.map((x) => ({
+    name: x.n, sets: g.sets, reps: x.hold ? g.hold : g.reps, rest: g.rest, hold: !!x.hold,
+  }));
+}
+
+// ---- Food ------------------------------------------------------------------------------------
+// Per 100 g, as eaten. Rounded values from published food-composition tables. Deliberately small:
+// a short table you can trust beats a huge one full of user-submitted guesses.
+const FOODS = [
+  {n:"Chicken breast, cooked, skinless", kcal:165, p:31,   c:0,    f:3.6},
+  {n:"Chicken thigh, cooked, skinless",  kcal:209, p:26,   c:0,    f:10.9},
+  {n:"Ground beef 85/15, cooked",        kcal:250, p:26,   c:0,    f:15},
+  {n:"Salmon, cooked",                   kcal:208, p:20,   c:0,    f:13},
+  {n:"Tuna, canned in water, drained",   kcal:116, p:26,   c:0,    f:0.8},
+  {n:"Egg, whole",                       kcal:143, p:12.6, c:0.7,  f:9.5},
+  {n:"Egg white",                        kcal:52,  p:10.9, c:0.7,  f:0.2},
+  {n:"Tofu, firm",                       kcal:144, p:17,   c:2.8,  f:8.7},
+  {n:"Whey protein powder",              kcal:375, p:77,   c:8,    f:3.5},
+  {n:"Milk, whole",                      kcal:61,  p:3.2,  c:4.8,  f:3.3},
+  {n:"Greek yogurt, plain, nonfat",      kcal:59,  p:10.3, c:3.6,  f:0.4},
+  {n:"Cottage cheese, 2%",               kcal:84,  p:11,   c:4.3,  f:2.3},
+  {n:"Cheddar cheese",                   kcal:403, p:23,   c:3.1,  f:33},
+  {n:"White rice, cooked",               kcal:130, p:2.7,  c:28,   f:0.3},
+  {n:"Brown rice, cooked",               kcal:123, p:2.7,  c:26,   f:1},
+  {n:"Pasta, cooked",                    kcal:158, p:5.8,  c:31,   f:0.9},
+  {n:"Bread, white",                     kcal:265, p:9,    c:49,   f:3.2},
+  {n:"Bread, whole wheat",               kcal:247, p:13,   c:41,   f:3.4},
+  {n:"Oats, dry",                        kcal:389, p:16.9, c:66.3, f:6.9},
+  {n:"Potato, baked with skin",          kcal:93,  p:2.5,  c:21,   f:0.1},
+  {n:"Sweet potato, baked",              kcal:90,  p:2,    c:20.7, f:0.15},
+  {n:"Black beans, cooked",              kcal:132, p:8.9,  c:23.7, f:0.5},
+  {n:"Lentils, cooked",                  kcal:116, p:9,    c:20,   f:0.4},
+  {n:"Banana",                           kcal:89,  p:1.1,  c:22.8, f:0.3},
+  {n:"Apple",                            kcal:52,  p:0.3,  c:13.8, f:0.2},
+  {n:"Blueberries",                      kcal:57,  p:0.7,  c:14.5, f:0.3},
+  {n:"Broccoli, raw",                    kcal:34,  p:2.8,  c:6.6,  f:0.4},
+  {n:"Spinach, raw",                     kcal:23,  p:2.9,  c:3.6,  f:0.4},
+  {n:"Avocado",                          kcal:160, p:2,    c:8.5,  f:14.7},
+  {n:"Almonds",                          kcal:579, p:21.2, c:21.6, f:49.9},
+  {n:"Peanut butter",                    kcal:588, p:25,   c:20,   f:50},
+  {n:"Olive oil",                        kcal:884, p:0,    c:0,    f:100},
+  {n:"Butter",                           kcal:717, p:0.85, c:0.06, f:81},
+  {n:"Honey",                            kcal:304, p:0.3,  c:82,   f:0},
+];
+
+const num = (v) => { const x = Number(v); return Number.isFinite(x) && x > 0 ? x : 0; };
+
+// Grams -> absolute macros. Everything downstream stores absolute numbers, so a hand-typed entry
+// off a packet label and a table entry are the same kind of thing from here on.
+function macrosFor(per100, grams) {
+  const k = num(grams) / 100;
+  return { kcal: num(per100.kcal) * k, p: num(per100.p) * k, c: num(per100.c) * k, f: num(per100.f) * k };
+}
+
+function totalMacros(entries) {
+  const t = { kcal: 0, p: 0, c: 0, f: 0 };
+  for (const e of entries || []) { t.kcal += num(e.kcal); t.p += num(e.p); t.c += num(e.c); t.f += num(e.f); }
+  return t;
+}
+
+// ---- Activity / burn --------------------------------------------------------------------------
+// MET values as published in the Compendium of Physical Activities. Gross expenditure.
+const ACTS = [
+  {n:"Walking, 3.0 mph, level",            met:3.5},
+  {n:"Walking, 4.0 mph, brisk",            met:5.0},
+  {n:"Hiking, general",                    met:5.3},
+  {n:"Running, 5 mph (12 min/mile)",       met:8.3},
+  {n:"Running, 6 mph (10 min/mile)",       met:9.8},
+  {n:"Running, 7.5 mph (8 min/mile)",      met:11.8},
+  {n:"Cycling, under 10 mph, leisure",     met:4.0},
+  {n:"Cycling, 12-14 mph",                 met:8.0},
+  {n:"Stationary bike, moderate",          met:7.0},
+  {n:"Elliptical trainer, moderate",       met:5.0},
+  {n:"Rowing machine, moderate",           met:7.0},
+  {n:"Stair-climbing machine",             met:9.0},
+  {n:"Swimming laps, freestyle, moderate", met:5.8},
+  {n:"Weight training, moderate effort",   met:3.5},
+  {n:"Weight training, vigorous effort",   met:6.0},
+  {n:"Jump rope, moderate",                met:11.8},
+  {n:"Basketball, general",                met:6.5},
+  {n:"Yoga, hatha",                        met:2.5},
+];
+
+const LB_TO_KG = 0.45359237;
+const toKg = (weight, unit) => (unit === "kg" ? num(weight) : num(weight) * LB_TO_KG);
+
+// kcal/min = MET x 3.5 x kg / 200 — the standard ACSM form. Zero weight or zero MET burns nothing,
+// rather than producing a confident NaN in the totals row.
+function burnKcal(met, minutes, kg) {
+  const m = num(met), t = num(minutes), w = num(kg);
+  if (!m || !w || !t) return 0;
+  return (m * 3.5 * w / 200) * t;
+}
+
+const totalBurn = (acts) => (acts || []).reduce((s, a) => s + num(a.kcal), 0);
+
+// Net = what you ate minus what you burned. That is the whole arithmetic, stated plainly.
+const netCalories = (foods, acts) => totalMacros(foods).kcal - totalBurn(acts);
+
+// ---- Energy needs: BMR and TDEE ---------------------------------------------------------------
+// Mifflin-St Jeor, the equation dietitians prefer over the older Harris-Benedict:
+//   M.D. Mifflin, S.T. St Jeor, L.A. Hill, B.J. Scott, S.A. Daugherty, Y.O. Koh, "A new predictive
+//   equation for resting energy expenditure in healthy individuals",
+//   Am J Clin Nutr 1990;51(2):241-247.
+//     men:   BMR = 10*kg + 6.25*cm - 5*age + 5
+//     women: BMR = 10*kg + 6.25*cm - 5*age - 161
+// It is a population average — roughly +/-10% for about 70% of people. The page says exactly that
+// rather than presenting the output as a fact about the person reading it.
+const IN_TO_CM = 2.54;
+const toCm = (height, unit) => (unit === "cm" ? num(height) : num(height) * IN_TO_CM);
+
+function bmr(sex, kg, cm, age) {
+  const w = num(kg), h = num(cm), a = num(age);
+  if (!w || !h || !a) return 0;   // an unfinished form gets no estimate rather than a confident guess
+  const r = 10 * w + 6.25 * h - 5 * a + (sex === "female" ? -161 : 5);
+  return r > 0 ? r : 0;           // absurd inputs decline to answer instead of printing a negative
+}
+
+// The standard physical-activity-level factors carried by Mifflin-St Jeor and Harris-Benedict alike.
+// THE DOUBLE-COUNT TRAP, and the reason the default here is the lowest one: these factors already
+// contain your exercise. Someone who logs a run in the tracker above AND picks "very active" here has
+// counted that run twice, which is how a calorie goal quietly drifts several hundred kcal high.
+const PAL = [
+  { k:"sedentary", f:1.2,   n:"Sedentary — desk job, and I log my workouts above" },
+  { k:"light",     f:1.375, n:"Lightly active — on my feet for part of the day" },
+  { k:"moderate",  f:1.55,  n:"Moderately active — physical job, or a daily walk I do not log" },
+  { k:"very",      f:1.725, n:"Very active — heavy physical work I do not log" },
+  { k:"extra",     f:1.9,   n:"Extremely active — heavy labour, or an athlete in season" },
+];
+
+const tdee = (basal, factor) => {
+  const b = num(basal), f = num(factor);
+  return b && f ? b * f : 0;
+};
+
+// ---- Day + storage shape ----------------------------------------------------------------------
+// Local-calendar day. NOT toISOString(): that is UTC and would file a 9pm dinner in Florida under
+// tomorrow, which is exactly how a day's log appears to vanish overnight.
+function isoDay(d) {
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+// Trust boundary: localStorage is editable by anything else running in this browser, and a corrupt
+// blob must degrade to "empty log", never to NaN totals or a thrown page.
+function sanitize(raw) {
+  const isDay = (s) => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
+  const str = (s, max) => (typeof s === "string" ? s.trim().slice(0, max) : "");
+  const o = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const foods = (Array.isArray(o.foods) ? o.foods : []).filter((e) => e && isDay(e.day) && str(e.name, 60))
+    .map((e) => ({ id: str(e.id, 24) || `f${Math.random().toString(36).slice(2, 10)}`, day: e.day,
+      name: str(e.name, 60), grams: num(e.grams), kcal: num(e.kcal), p: num(e.p), c: num(e.c), f: num(e.f) }));
+  const acts = (Array.isArray(o.acts) ? o.acts : []).filter((a) => a && isDay(a.day) && str(a.name, 60))
+    .map((a) => ({ id: str(a.id, 24) || `a${Math.random().toString(36).slice(2, 10)}`, day: a.day,
+      name: str(a.name, 60), met: num(a.met), minutes: num(a.minutes), kcal: num(a.kcal) }));
+  return {
+    foods, acts,
+    weight: Math.min(1000, num(o.weight)) || 180,
+    unit: o.unit === "kg" ? "kg" : "lb",
+    goal: Math.min(20000, num(o.goal)) || 0,
+    // The BMR inputs. 0 means "not told us yet", which is why bmr() returns 0 rather than guessing.
+    sex: o.sex === "female" ? "female" : "male",
+    age: Math.min(120, num(o.age)) || 0,
+    height: Math.min(300, num(o.height)) || 0,
+    htUnit: o.htUnit === "cm" ? "cm" : "in",
+    pal: PAL.some((p) => p.f === num(o.pal)) ? num(o.pal) : 1.2,
+  };
+}
+
+function toCSV(foods, acts) {
+  // Neutralise spreadsheet formula injection: a food typed as "=1+1" is a live formula to Excel.
+  const esc = (v) => `"${String(v).replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
+  const r1 = (x) => Math.round(num(x) * 10) / 10;
+  const rows = [["kind", "day", "name", "amount", "unit", "kcal", "protein_g", "carb_g", "fat_g"]];
+  for (const e of foods) rows.push(["food", e.day, e.name, r1(e.grams), "g", Math.round(e.kcal), r1(e.p), r1(e.c), r1(e.f)]);
+  for (const a of acts) rows.push(["activity", a.day, a.name, r1(a.minutes), "min", Math.round(a.kcal), "", "", ""]);
+  return rows.map((r) => r.map(esc).join(",")).join("\r\n");
+}
+// ---- /CORE ----
+
+const $ = (id) => document.getElementById(id);
+const KEY = "forge-fitness-v1";
+const load = () => { try { return sanitize(JSON.parse(localStorage.getItem(KEY) || "{}")); } catch { return sanitize(null); } };
+let db = load();
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { $("say").textContent = "Could not save — this browser is blocking local storage."; } };
+
+let day = isoDay(new Date());
+let offset = 0;
+let routine = [];
+const r0 = (x) => Math.round(num(x));
+const r1 = (x) => Math.round(num(x) * 10) / 10;
+const todayFoods = () => db.foods.filter((e) => e.day === day);
+const todayActs = () => db.acts.filter((a) => a.day === day);
+const kg = () => toKg(db.weight, db.unit);
+
+// ---- populate the two <select>s from the CORE tables (never hand-maintained twice) ----
+$("food").append(...FOODS.map((f, i) => new Option(`${f.n} — ${f.kcal} kcal/100g`, String(i))),
+                 new Option("Something else — I'll type the macros", "manual"));
+$("act").append(...ACTS.map((a, i) => new Option(`${a.n} — ${a.met} MET`, String(i))));
+$("pal").append(...PAL.map((p) => new Option(p.n, String(p.f))));
+$("day").value = day;
+$("wt").value = db.weight; $("unit").value = db.unit;
+if (db.goal) $("goal").value = db.goal;
+$("sex").value = db.sex; $("htUnit").value = db.htUnit; $("pal").value = String(db.pal);
+if (db.age) $("age").value = db.age;
+if (db.height) $("ht").value = db.height;
+
+// ---- Tool 1 ----------------------------------------------------------------------------------
+function drawRoutine() {
+  const box = $("routine");
+  box.textContent = "";
+  if (!routine.length) return;
+  const table = document.createElement("table");
+  const cap = document.createElement("caption"); cap.className = "sr"; cap.textContent = "Your suggested workout";
+  const head = document.createElement("thead");
+  head.innerHTML = '<tr><th scope="col">Exercise</th><th scope="col">Sets &times; reps</th><th scope="col">Rest</th><th scope="col"><span class="sr">Actions</span></th></tr>';
+  const body = document.createElement("tbody");
+  routine.forEach((r, i) => {
+    const tr = document.createElement("tr");
+    const c1 = document.createElement("td"); c1.className = "ex"; c1.textContent = r.name;
+
+    const c2 = document.createElement("td");
+    const wrap = document.createElement("div"); wrap.className = "setrep";
+    const sets = document.createElement("input");
+    sets.type = "number"; sets.min = "1"; sets.max = "20"; sets.value = String(r.sets);
+    sets.setAttribute("aria-label", `Sets for ${r.name}`);
+    sets.addEventListener("input", () => { routine[i].sets = Math.max(1, Math.min(20, r0(sets.value) || 1)); });
+    const x = document.createElement("span"); x.textContent = "×";
+    const reps = document.createElement("input");
+    reps.type = "text"; reps.className = "r"; reps.value = r.reps; reps.maxLength = 12;
+    reps.setAttribute("aria-label", `${r.hold ? "Hold time" : "Reps"} for ${r.name}`);
+    reps.addEventListener("input", () => { routine[i].reps = reps.value.slice(0, 12); });
+    wrap.append(sets, x, reps);
+    c2.append(wrap);
+
+    const c3 = document.createElement("td"); c3.textContent = r.rest;
+
+    const c4 = document.createElement("td");
+    const swap = document.createElement("button");
+    swap.type = "button"; swap.className = "mini"; swap.textContent = "Swap";
+    swap.setAttribute("aria-label", `Swap ${r.name} for a different exercise`);
+    swap.addEventListener("click", () => {
+      const alt = buildRoutine($("eq").value, $("mu").value, $("go").value, routine.length + 3, offset + routine.length + i + 1)
+        .find((c) => !routine.some((cur) => cur.name === c.name));
+      if (alt) { routine[i] = alt; drawRoutine(); }
+    });
+    const del = document.createElement("button");
+    del.type = "button"; del.className = "mini x"; del.textContent = "Drop";
+    del.setAttribute("aria-label", `Remove ${r.name} from the workout`);
+    del.addEventListener("click", () => { routine.splice(i, 1); drawRoutine(); });
+    c4.append(swap, document.createTextNode(" "), del);
+
+    tr.append(c1, c2, c3, c4);
+    body.append(tr);
+  });
+  table.append(cap, head, body);
+  box.append(table);
+  // Honest shortfall: some pools are smaller than 8. We hand back everything we have and say so
+  // rather than padding the list with a movement we made up.
+  const asked = Math.max(1, Math.min(8, r0($("cnt").value) || 1));
+  if (routine.length < asked) {
+    const p = document.createElement("p");
+    p.className = "empty";
+    p.textContent = `That is every ${$("mu").value === "full" ? "full-body" : $("mu").options[$("mu").selectedIndex].text.toLowerCase()} movement we have for this equipment — ${routine.length}, not ${asked}. We would rather come up short than invent an exercise.`;
+    box.append(p);
+  }
+}
+const rebuild = () => { routine = buildRoutine($("eq").value, $("mu").value, $("go").value, $("cnt").value, offset); drawRoutine(); };
+$("build").addEventListener("click", () => { offset = 0; rebuild(); });
+$("shuffle").addEventListener("click", () => { offset++; rebuild(); });
+for (const id of ["eq", "mu", "go", "cnt"]) $(id).addEventListener("change", () => { if (routine.length) rebuild(); });
+
+// ---- Tool 2 ----------------------------------------------------------------------------------
+$("food").addEventListener("change", () => {
+  const manual = $("food").value === "manual";
+  $("manual").hidden = !manual;
+  $("grams").closest("label").hidden = manual;
+});
+
+$("addFood").addEventListener("click", () => {
+  const sel = $("food").value;
+  let entry;
+  if (sel === "manual") {
+    const name = $("mname").value.trim();
+    if (!name) return ($("sayFood").textContent = "Give the food a name first.");
+    entry = { name: name.slice(0, 60), grams: 0, kcal: num($("mkcal").value), p: num($("mp").value), c: num($("mc").value), f: num($("mf").value) };
+    if (!entry.kcal && !entry.p && !entry.c && !entry.f) return ($("sayFood").textContent = "Enter at least one number off the label.");
+    for (const id of ["mname", "mkcal", "mp", "mc", "mf"]) $(id).value = "";
+  } else {
+    const food = FOODS[Number(sel)];
+    const grams = num($("grams").value);
+    if (!food || !grams) return ($("sayFood").textContent = "Enter how many grams you ate.");
+    entry = { name: food.n, grams, ...macrosFor(food, grams) };
+  }
+  db.foods.push({ id: `f${Date.now().toString(36)}`, day, ...entry });
+  save();
+  $("sayFood").textContent = `Logged ${entry.name}.`;
+  draw();
+});
+
+// ---- Tool 3 ----------------------------------------------------------------------------------
+$("addAct").addEventListener("click", () => {
+  const a = ACTS[Number($("act").value)];
+  const minutes = num($("mins").value);
+  if (!a || !minutes) return ($("sayAct").textContent = "Enter how many minutes you did it for.");
+  if (!kg()) return ($("sayAct").textContent = "Enter your bodyweight — the burn estimate needs it.");
+  db.acts.push({ id: `a${Date.now().toString(36)}`, day, name: a.n, met: a.met, minutes, kcal: burnKcal(a.met, minutes, kg()) });
+  save();
+  $("sayAct").textContent = `Logged ${minutes} min of ${a.n}.`;
+  draw();
+});
+
+// A weight change re-costs every activity already logged — otherwise the totals silently keep
+// yesterday's bodyweight and the net number quietly lies.
+function reprice() {
+  for (const a of db.acts) a.kcal = burnKcal(a.met, a.minutes, kg());
+}
+$("wt").addEventListener("change", () => { db.weight = Math.min(1000, num($("wt").value)) || db.weight; $("wt").value = db.weight; reprice(); save(); draw(); });
+$("unit").addEventListener("change", () => { db.unit = $("unit").value; reprice(); save(); draw(); });
+$("goal").addEventListener("change", () => { db.goal = Math.min(20000, num($("goal").value)); save(); draw(); });
+
+// ---- The calorie-goal estimator ---------------------------------------------------------------
+// Weight and unit are deliberately NOT re-asked here: they are the same two boxes that drive burn.
+const currentBmr = () => bmr(db.sex, kg(), toCm(db.height, db.htUnit), db.age);
+for (const [id, key, clamp] of [["sex","sex",null], ["age","age",120], ["ht","height",300], ["htUnit","htUnit",null], ["pal","pal",null]]) {
+  $(id).addEventListener("change", () => {
+    const v = $(id).value;
+    db[key] = clamp ? Math.min(clamp, num(v)) || 0 : (key === "pal" ? num(v) : v);
+    save(); drawEnergy();
+  });
+}
+$("useTdee").addEventListener("click", () => {
+  const t = Math.round(tdee(currentBmr(), db.pal));
+  if (!t) { $("sayTdee").textContent = "Fill in age, height and weight first — we would only be guessing otherwise."; return; }
+  db.goal = t; $("goal").value = t; save(); draw();
+  $("sayTdee").textContent = `Daily goal set to ${t} kcal. Change it in the box below whenever you like.`;
+});
+function drawEnergy() {
+  const b = Math.round(currentBmr()), t = Math.round(tdee(currentBmr(), db.pal));
+  $("energy").textContent = "";
+  if (!b) return;   // nothing to show until the form is answered — no placeholder numbers
+  for (const [label, value] of [["BMR — at rest", b], ["Maintenance estimate", t]]) {
+    const d = document.createElement("div"); d.className = "tot";
+    const n = document.createElement("b"); n.textContent = String(value);
+    const s = document.createElement("span"); s.textContent = label;
+    d.append(n, s); $("energy").append(d);
+  }
+}
+$("day").addEventListener("change", () => { day = $("day").value || isoDay(new Date()); draw(); });
+
+// ---- Render ----------------------------------------------------------------------------------
+function row(cells, onRemove, label) {
+  const tr = document.createElement("tr");
+  cells.forEach((v, i) => { const td = document.createElement("td"); if (i) td.className = "num"; td.textContent = v; tr.append(td); });
+  const td = document.createElement("td");
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "mini x"; b.textContent = "Remove";
+  b.setAttribute("aria-label", `Remove ${label}`);
+  b.addEventListener("click", onRemove);
+  td.append(b); tr.append(td);
+  return tr;
+}
+function footRow(cells) {
+  const tr = document.createElement("tr");
+  cells.forEach((v, i) => { const td = document.createElement("td"); if (i) td.className = "num"; td.textContent = v; tr.append(td); });
+  tr.append(document.createElement("td"));
+  return tr;
+}
+
+function draw() {
+  const foods = todayFoods(), acts = todayActs();
+
+  $("foodRows").textContent = ""; $("foodFoot").textContent = "";
+  $("foodEmpty").hidden = foods.length > 0;
+  $("foodTable").hidden = foods.length === 0;
+  for (const e of foods) {
+    $("foodRows").append(row([e.name, e.grams ? r0(e.grams) : "—", r0(e.kcal), r1(e.p), r1(e.c), r1(e.f)],
+      () => { db.foods = db.foods.filter((x) => x.id !== e.id); save(); draw(); }, e.name));
+  }
+  if (foods.length) {
+    const t = totalMacros(foods);
+    $("foodFoot").append(footRow(["Total", "", r0(t.kcal), r1(t.p), r1(t.c), r1(t.f)]));
+  }
+
+  $("actRows").textContent = ""; $("actFoot").textContent = "";
+  $("actEmpty").hidden = acts.length > 0;
+  $("actTable").hidden = acts.length === 0;
+  for (const a of acts) {
+    $("actRows").append(row([a.name, a.met, r0(a.minutes), r0(a.kcal)],
+      () => { db.acts = db.acts.filter((x) => x.id !== a.id); save(); draw(); }, a.name));
+  }
+  if (acts.length) $("actFoot").append(footRow(["Total burned", "", "", r0(totalBurn(acts))]));
+
+  drawEnergy();   // bodyweight feeds BMR too, so it re-renders with everything else
+
+  const inK = r0(totalMacros(foods).kcal), burn = r0(totalBurn(acts)), net = r0(netCalories(foods, acts));
+  const tiles = [["Eaten", inK], ["Burned", burn], ["Net", net, "net"]];
+  if (db.goal) tiles.push(["Left of your goal", db.goal - net, db.goal - net < 0 ? "over" : "net"]);
+  $("net").textContent = "";
+  for (const [label, value, cls] of tiles) {
+    const d = document.createElement("div");
+    d.className = "tot" + (cls ? " " + cls : "");
+    const b = document.createElement("b"); b.textContent = String(value);
+    const s = document.createElement("span"); s.textContent = label;
+    d.append(b, s);
+    $("net").append(d);
+  }
+}
+
+$("csv").addEventListener("click", () => {
+  const url = URL.createObjectURL(new Blob([toCSV(todayFoods(), todayActs())], { type: "text/csv" }));
+  const a = document.createElement("a"); a.href = url; a.download = `forge-fitness-${day}.csv`; a.click();
+  URL.revokeObjectURL(url);
+  $("say").textContent = "Exported.";
+});
+$("wipe").addEventListener("click", () => {
+  if (!confirm(`Delete everything logged on ${day}? Export first if you want a copy.`)) return;
+  db.foods = db.foods.filter((e) => e.day !== day);
+  db.acts = db.acts.filter((a) => a.day !== day);
+  save(); draw();
+  $("say").textContent = "That day is gone.";
+});
+
+draw();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

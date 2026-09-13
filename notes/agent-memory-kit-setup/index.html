@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Agent Memory Kit: CLAUDE.md, AGENTS.md, SESSION-NOTES.md Templates</title>
+<link rel="canonical" href="https://penloomstudio.com/notes/agent-memory-kit-setup">
+<meta name="description" content="Three copy-paste templates that stop your coding agent from forgetting your project between sessions: CLAUDE.md, AGENTS.md, SESSION-NOTES.md, plus five prompts that make it actually read them.">
+<meta property="og:title" content="The Agent Memory Kit: CLAUDE.md, AGENTS.md, SESSION-NOTES.md Templates">
+<meta property="og:description" content="Twenty minutes to three files that make every future coding-agent session start knowing your build command, your file map, and what it's not allowed to touch.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/notes/agent-memory-kit-setup">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #16181c; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 1rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+  h3 { font-size: 1.05rem; margin: 1.5rem 0 .4rem; }
+  a { color: #2563eb; } @media (prefers-color-scheme: dark) { a { color: #7aa2ff; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #94a3b8; font-style: italic; }
+  pre { background: #f4f4f5; padding: .9rem 1rem; border-radius: 8px; overflow-x: auto; font-size: .87rem; white-space: pre-wrap; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { pre { background: #23262d; } }
+  .fname { display: block; color: #64748b; font-size: .8rem; font-family: "SF Mono", Menlo, Consolas, monospace; margin: 1.2rem 0 -.6rem; }
+  .cta { margin: 2.5rem 0 0; padding: 1.1rem 1.25rem; border: 1px solid #94a3b8; border-radius: 10px; }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+  ul, ol { padding-left: 1.3rem; }
+  li { margin: .3rem 0; }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "The Agent Memory Kit: CLAUDE.md, AGENTS.md, SESSION-NOTES.md Templates",
+ "name": "The Agent Memory Kit: CLAUDE.md, AGENTS.md, SESSION-NOTES.md Templates",
+ "description": "Three copy-paste templates that stop your coding agent forgetting your project between sessions, plus five prompts that make it actually read them.",
+ "url": "https://penloomstudio.com/notes/agent-memory-kit-setup",
+ "inLanguage": "en-US",
+ "publisher": { "@type": "Organization", "name": "Cogloom" }
+}
+</script>
+</head>
+<body>
+<p class="kicker">Penloom Studio &middot; Notes</p>
+<h1>The Agent Memory Kit: stop re-explaining your project to your coding agent</h1>
+<p>Pull the low-star reviews of any AI assistant app and one complaint outnumbers almost everything that isn't billing: the thing forgets what you just told it. Point that same failure at a coding agent &mdash; Claude Code, Cursor, Copilot, Windsurf, Codex &mdash; and it costs more than an annoying re-ask. It costs you a session that doesn't know your build command, doesn't know which files are off-limits, and confidently invents an API your codebase never had, because nothing told it otherwise.</p>
+<p><strong>The fix isn't a smarter model. It's a file.</strong> A model with no memory of your project isn't a bug to route around &mdash; it's the starting condition, every time, for every tool. The only lever you have is what's sitting in the repo when the session starts. Twenty minutes from now, the templates below give you three files that close that gap. Copy them straight into your repo &mdash; everything on this page is real and ready to use as written.</p>
+
+<h2>1. CLAUDE.md at your repo root</h2>
+<p>Most agentic coding tools read a root-level <code>CLAUDE.md</code> automatically, without being told to. That's the entire point of putting it there instead of in a chat message that scrolls away.</p>
+<span class="fname">CLAUDE.md</span>
+<pre><code># CLAUDE.md &mdash; (project name)
+
+## What this is
+One paragraph: what the project does, who it's for, and the one constraint
+that matters most (e.g. "this is a payment system &mdash; correctness over speed").
+
+## Tech stack
+- Language/runtime: (e.g. Node 20, Python 3.12)
+- Framework: (e.g. Express, Django, Next.js)
+- Database: (e.g. Postgres via Prisma)
+- Tests: (exact command, e.g. `npm test`, `pytest -x`)
+- Lint/format: (exact command, e.g. `npm run lint`, `ruff check .`)
+- Build: (exact command)
+
+## How to run it locally
+(the exact commands, in order, that take a clean checkout to a running app)
+
+## Where things live
+- `/src/api/` &mdash; (what's here)
+- `/src/lib/` &mdash; (what's here)
+- `/tests/` &mdash; (what's here)
+- (add every top-level directory a new session would otherwise have to
+  discover by exploring &mdash; this section is the single highest-value part
+  of the whole file)
+
+## Conventions
+- (naming, error handling pattern, how you structure commits &mdash; whatever is
+  true of this codebase specifically and not obvious from reading one file)
+
+## Do not touch
+- (files/directories that are generated, vendored, or otherwise off-limits
+  &mdash; an agent that doesn't know this WILL eventually "helpfully" edit one)
+
+## Known issues / in-progress work
+- (anything a fresh session needs to know is already broken or intentional,
+  so it doesn't "fix" something you're mid-way through changing)
+
+## Verification
+- Before calling anything done: (the actual commands that must pass &mdash;
+  e.g. `npm test && npm run build`)</code></pre>
+
+<p><strong>The two sections that do the most work:</strong> "Where things live" and "Verification." Everything else is context an experienced contributor would eventually infer. Those two are the ones a fresh session cannot infer at all &mdash; it either knows the file map and the pass/fail bar, or it's guessing. Fill those two in first; the rest can wait until the next time you notice something missing.</p>
+
+<h2>2. AGENTS.md, if you use more than one tool</h2>
+<p><code>AGENTS.md</code> is the same idea under a tool-agnostic name &mdash; useful when your team uses more than one coding agent, or a tool that doesn't look for <code>CLAUDE.md</code> specifically. Keep one line at the top so nobody deletes one thinking it's a duplicate.</p>
+<span class="fname">AGENTS.md</span>
+<pre><code># AGENTS.md
+
+&gt; This project also keeps `CLAUDE.md` for Claude Code specifically.
+&gt; If you're editing project context, update both &mdash; or make this file
+&gt; the single source and have CLAUDE.md point here in one line:
+&gt; "See AGENTS.md &mdash; same content, read by every agent we use here."
+
+(same sections as CLAUDE.md)</code></pre>
+<p>That one-line pointer solves the actual failure this causes in practice: two context files silently drifting apart because someone updated one and forgot the other existed.</p>
+
+<h2>3. SESSION-NOTES.md, the file people skip</h2>
+<p>CLAUDE.md answers "what is this project." SESSION-NOTES.md answers "what was I just doing" &mdash; and it's the one people skip, which is exactly why it's the highest-leverage one to add. CLAUDE.md gets written once and mostly holds steady. SESSION-NOTES.md changes every session, and it's what makes session #2 pick up in seconds instead of minutes of re-discovery.</p>
+<span class="fname">SESSION-NOTES.md</span>
+<pre><code># SESSION-NOTES.md
+(Update this at the END of every session, before you stop. Overwrite the
+previous entry &mdash; this is a handoff note, not a changelog. Git history is
+the changelog.)
+
+## As of (date/time)
+**Working on:** (the specific task, one line)
+**State:** (what's done, what's half-done, what's untouched)
+**Next step:** (the literal next action &mdash; not "keep working", the actual
+  next command or file to open)
+**Watch out for:** (anything you'd tell a coworker taking over right now &mdash;
+  a flaky test, an unfinalised decision, a file mid-refactor)
+**Verified:** (what you actually ran and confirmed passed, with the command)</code></pre>
+
+<p>Filled in, a real entry looks like this. Copy the shape, not the specifics:</p>
+<pre><code>## As of 2026-08-07 16:40
+**Working on:** migrating the invoice total calc from float to integer cents
+**State:** `src/billing/total.ts` converted and tests updated; `src/billing/
+  refund.ts` still uses float &mdash; NOT yet converted, will double-round if
+  touched before this finishes.
+**Next step:** convert `refund.ts`, then run `npm test -- billing`
+**Watch out for:** don't "fix" the float math in `refund.ts` as a
+  side-effect of an unrelated task &mdash; it's mid-migration, not broken
+**Verified:** `npm test -- billing/total` passes (12/12), 2026-08-07 16:38</code></pre>
+<p>That single entry does what a chat transcript can't: it's the first thing the next session reads, it's five lines instead of a scroll-back search, and it names the exact trap &mdash; <em>don't fix refund.ts</em> &mdash; that a context-blind agent would otherwise walk straight into.</p>
+
+<h2>4. Five prompts that make an agent actually read them</h2>
+<p>A context file that exists but isn't read is a placebo. "Read CLAUDE.md" is not, on its own, reliably enough &mdash; some sessions skim, some start mid-conversation without a fresh read. Each of these forces a checkable action rather than a promise.</p>
+
+<h3>Force a read, and proof of it, before any work starts</h3>
+<pre><code>Before doing anything else: read CLAUDE.md and SESSION-NOTES.md in full.
+Then summarize back to me, in 3 bullet points, what you now know about
+this project that you didn't know before reading them. Do not start the
+actual task until you've done this.</code></pre>
+
+<h3>Make it check the file map instead of guessing</h3>
+<pre><code>Before creating any new file, check "Where things live" in CLAUDE.md for
+where this kind of file already belongs. If it's not covered, ask me
+where it should go instead of picking a location yourself.</code></pre>
+
+<h3>Catch a session about to violate "Do not touch"</h3>
+<pre><code>Before editing any file, check it against the "Do not touch" list in
+CLAUDE.md. If the file you're about to change is on that list, or looks
+generated/vendored even if it isn't explicitly listed, stop and ask me
+first.</code></pre>
+
+<h3>Force an honest handoff instead of "done!"</h3>
+<pre><code>Before ending this session, update SESSION-NOTES.md with what's actually
+done vs. half-done, the literal next step, and the exact command you ran
+to verify your work &mdash; not what you intended to run, what you actually
+ran and what it printed.</code></pre>
+
+<h3>The one to use when an answer feels off</h3>
+<pre><code>Quote the exact line in CLAUDE.md or SESSION-NOTES.md that supports what
+you just told me. If there isn't one, tell me you're inferring, not
+reading &mdash; and tell me what you're inferring it from instead.</code></pre>
+<blockquote>Prompt 5 is the most useful one here. An agent that has to cite its source stops silently blending "what the file said" with "what seemed plausible" &mdash; which is the exact mechanism behind an invented API or a made-up config value. Not malice. Just an unmarked guess, presented with the same confidence as a fact.</blockquote>
+
+<h2>5. The task packet</h2>
+<p>The other half of the memory problem isn't what the agent forgot &mdash; it's what you never told it precisely enough to remember. "Clean up the billing code" gives a context-blind agent nothing to verify itself against, so it verifies against nothing and calls it done. A task packet makes the request itself the memory.</p>
+<pre><code>Purpose:       (why this needs to happen &mdash; one line)
+Task:          (the concrete, checkable deliverable)
+Context:       (only what's needed for THIS task; link to CLAUDE.md
+                sections rather than re-pasting them)
+Boundaries:    (explicit do-not list &mdash; files not to touch, patterns not
+                to introduce, scope not to expand into)
+Verification:  (the exact command that proves success, and what "pass"
+                looks like)</code></pre>
+<p>Worked example:</p>
+<pre><code>Purpose:       refund.ts still uses float cents; a rounding bug there
+                caused a real $0.01 discrepancy last week.
+Task:          convert src/billing/refund.ts from float to integer cents,
+                matching the pattern already used in src/billing/total.ts.
+Context:       see CLAUDE.md "Conventions" for the integer-cents rule;
+                total.ts is the reference implementation, already converted.
+Boundaries:    do not touch total.ts (already correct); do not change the
+                public function signature of processRefund() &mdash; three
+                other files call it.
+Verification:  `npm test -- billing` must pass, and add one new test that
+                asserts a $19.99 refund on a $0.01-fee order nets exactly
+                $19.98, not $19.979999999999998.</code></pre>
+<p>This isn't process for its own sake. It's the same five lines whether you type them or the agent drafts them from your one-sentence request and shows them back before starting. Either way the task now has a definition of done that doesn't live only in your head &mdash; which means the <em>next</em> session can pick up an unfinished packet and know exactly what "unfinished" means.</p>
+
+<h2>Setting it up per tool</h2>
+<ul>
+  <li><strong>Claude Code</strong> &mdash; reads <code>CLAUDE.md</code> at the project root automatically. Put <code>SESSION-NOTES.md</code> at the root too, and reference it from CLAUDE.md's Verification section or a new "Session handoff" line so it isn't missed.</li>
+  <li><strong>Cursor / Windsurf</strong> &mdash; check the current docs for the tool's own context-file name; some read <code>.cursorrules</code> or a <code>.windsurf/</code> config in addition to a root markdown file. Keep CLAUDE.md/AGENTS.md canonical and point tool-specific config at it in one line, rather than duplicating content that will drift.</li>
+  <li><strong>Copilot / Codex-style agents</strong> &mdash; these lean more on the active chat and open files than an auto-read root file, so prompt 1 matters more here than it does for tools with automatic ingestion.</li>
+  <li><strong>Any tool you're unsure about</strong> &mdash; run prompt 1 once. If the summary doesn't match the file, that's your answer.</li>
+</ul>
+
+<h2>What this actually prevents</h2>
+<p>Three failure modes, all the same root cause &mdash; nothing persisted between the last session and this one.</p>
+<ul>
+  <li><strong>The invented dependency.</strong> A fresh session doesn't know you already solve date parsing with a specific library, so it reaches for a different one it knows well. Now two libraries do the same job. CLAUDE.md's "Tech stack" line is the one-sentence fix.</li>
+  <li><strong>The re-broken fix.</strong> You fixed a bug two sessions ago. A new session "cleans up" the code around it and reverts the exact change that fixed it &mdash; because the fix looked like an inconsistency with nothing explaining why it was deliberate. That's what SESSION-NOTES.md's "Watch out for" line exists for: naming the trap before someone walks into it.</li>
+  <li><strong>The scope-blind edit.</strong> Asked to fix a display bug, an agent with no file map touches five files it assumes are related, three of which weren't. A packet's "Boundaries" line turns that assumption into a constraint it has to violate on purpose, not by accident.</li>
+</ul>
+<p>None of these are the model reasoning badly. They're the model reasoning correctly from an incomplete picture, because nothing gave it a complete one. That distinction is the whole reason this is three files instead of a plea to be more careful.</p>
+
+<h2>Keeping it from rotting</h2>
+<p>A context file that's wrong is worse than none &mdash; because it's wrong with confidence. Two habits keep it honest:</p>
+<ul>
+  <li><strong>Update CLAUDE.md in the same session you change something it describes</strong> &mdash; a renamed build command, a new top-level directory, a convention you dropped. Thirty seconds attached to the change that made it stale; considerably longer to reconstruct later.</li>
+  <li><strong>Treat SESSION-NOTES.md as disposable and CLAUDE.md as durable.</strong> If you're editing CLAUDE.md every session, something that belongs in SESSION-NOTES.md has drifted into the wrong file.</li>
+</ul>
+
+<h2>The 60-second checklist</h2>
+<ul>
+  <li>CLAUDE.md at repo root &mdash; "Where things live" and "Verification" filled in first</li>
+  <li>AGENTS.md if you use more than one agent, pointing at CLAUDE.md rather than duplicating it</li>
+  <li>SESSION-NOTES.md with one real entry for your current task</li>
+  <li>Prompt 1 run once, to confirm your tool actually reads what you just wrote</li>
+  <li>Next session: prompt 1 again, before anything else, until it's a habit and not a reminder</li>
+</ul>
+
+<div class="cta">
+<p>That's the kit &mdash; three files and five prompts, all above, free to copy. If you want the interactive version with a progress tracker and one-click copy buttons, it's also up at <a href="https://penloomstudio.com"><strong>Penloom Studio</strong></a>. Nothing to download either way &mdash; a PDF of copy-paste templates is a worse version of the same thing.</p>
+</div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

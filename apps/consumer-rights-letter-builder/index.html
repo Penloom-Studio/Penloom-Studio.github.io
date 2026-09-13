@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Consumer Rights Letter Builder — free, on the page · The Docket</title>
+<meta name="description" content="Pick your situation, fill in a few facts, get a ready-to-send letter with the real statute cited — right on the page, free, no download. By The Docket.">
+<style>
+  :root{--bg:#f7f7f4;--card:#fff;--ink:#1d2330;--muted:#5b6472;--line:#e2e2db;--accent:#b5433a;
+    --accent-ink:#fff;--ok:#157347;--okbg:#e7fbef;--okline:#b9e9cd}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  body{display:flex;justify-content:center;padding:0 16px 60px}
+  main{width:100%;max-width:740px}
+  a{color:var(--accent)}
+  .home{font-size:13px;padding:18px 0 0}
+  header{padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+  .mark{font:800 13px/1 -apple-system,Segoe UI,Roboto,sans-serif;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);margin-top:14px}
+  h1{font-size:27px;line-height:1.25;margin:.4em 0 .2em;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:15.5px;margin:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:18px}
+  .card h2{font-size:18px;margin:0 0 8px}
+  .card h3{font-size:15.5px;margin:0 0 8px}
+  .disc{background:#fbf6f5;border:1px solid #f0dedb;color:var(--muted);font-size:14px;line-height:1.65}
+  .disc b{color:var(--ink)}
+  label{display:block;font-size:13px;font-weight:650;color:var(--muted);margin-bottom:6px}
+  select,input,textarea{font:inherit;font-size:15px;width:100%;padding:10px 12px;border:1px solid var(--line);
+    border-radius:8px;background:#fff;color:var(--ink)}
+  textarea{min-height:64px;resize:vertical}
+  select:focus-visible,input:focus-visible,textarea:focus-visible,button:focus-visible,[contenteditable]:focus-visible{
+    outline:2px solid var(--accent);outline-offset:2px}
+  .picker select{font-size:16px;padding:12px}
+  .when{color:var(--muted);font-size:14.5px;margin:12px 0 0}
+  .lawnote{color:var(--muted);font-size:13.5px;margin:8px 0 0;padding-top:10px;border-top:1px dashed var(--line)}
+  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 16px;margin-top:4px}
+  .field.wide{grid-column:1/-1}
+  .chkgrp{display:flex;flex-wrap:wrap;gap:10px 18px;padding-top:4px}
+  .chk{display:flex;align-items:center;gap:6px;font-size:14.5px;font-weight:500;color:var(--ink)}
+  .chk input{width:auto}
+  .tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
+  button{font:inherit;cursor:pointer;border-radius:9px}
+  .primary{background:var(--accent);color:var(--accent-ink);border:0;padding:13px 22px;font-weight:650;font-size:15.5px}
+  .primary:hover{filter:brightness(1.06)}
+  .ghost{background:transparent;color:var(--accent);border:1px solid var(--line);padding:11px 18px;font-size:14.5px}
+  .ghost:hover{border-color:var(--accent)}
+  .msg{font-size:13.5px;color:var(--ok);min-height:18px}
+  .letter{white-space:pre-wrap;background:#fffefb;border:1px solid var(--line);border-radius:10px;
+    padding:22px 22px;font-size:15.5px;line-height:1.75;color:var(--ink)}
+  .hide{display:none}
+  .afterward{font-size:14.5px;color:var(--muted);line-height:1.65;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+  .afterward b{color:var(--ink)}
+  ul.proof{margin:10px 0 0;padding-left:20px;font-size:14.5px;color:var(--ink)}
+  ul.proof li{margin:6px 0}
+  ul.proof b{color:var(--accent)}
+  footer{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.7;padding-top:16px;border-top:1px solid var(--line)}
+  @media (max-width:480px){h1{font-size:23px}.card{padding:16px}.letter{padding:16px}}
+</style>
+</head>
+<body>
+<main>
+  <p class="home"><a href="/">&larr; Penloom storefront</a></p>
+  <header>
+    <div class="mark">The Docket</div>
+    <h1>Consumer Rights Letter Builder</h1>
+    <p class="sub">Pick what happened, fill in the facts, get a ready-to-send letter on this page — with the actual law cited, not a placeholder. Nothing to buy, nothing to download.</p>
+  </header>
+
+  <div class="card disc">
+    <b>This is news and education, not legal advice.</b> The letters and citations below were checked against the
+    statute or regulation itself on August 7, 2026. They don't know your facts, your state's own deadline, or whether
+    a legislature has changed the rule since. Using this tool creates no lawyer&ndash;client relationship with anyone.
+    Deadlines are real and often short &mdash; if money you can't afford to lose, your housing, or a court date is at
+    stake, talk to a licensed attorney in your state first. Many areas have free legal-aid clinics that will do a short
+    consult at no cost.
+  </div>
+
+  <section class="card picker">
+    <h2>What's going on?</h2>
+    <label for="scenario">Situation</label>
+    <select id="scenario"></select>
+    <p class="when" id="when"></p>
+    <p class="lawnote" id="lawnote"></p>
+  </section>
+
+  <section class="card">
+    <h3>Your details</h3>
+    <div class="fields" id="common"></div>
+  </section>
+
+  <section class="card">
+    <h3 id="scenTitle">The facts</h3>
+    <div class="fields" id="scenFields"></div>
+  </section>
+
+  <div class="tools">
+    <button class="primary" id="generate" type="button">Generate my letter</button>
+  </div>
+
+  <section class="card hide" id="result">
+    <h2>Your letter</h2>
+    <p class="when" style="margin-top:0 0 10px">Edit anything directly in the box below before you copy it.</p>
+    <div class="letter" id="letterOut" contenteditable="true" spellcheck="false"></div>
+    <div class="tools">
+      <button class="ghost" id="copyBtn" type="button">Copy to clipboard</button>
+      <span class="msg" id="copyMsg" role="status" aria-live="polite"></span>
+    </div>
+    <p class="afterward" id="afterward"></p>
+  </section>
+
+  <section class="card" id="proofCard">
+    <h3>Send it so you can prove you sent it</h3>
+    <p class="when" style="margin-top:0">A letter nobody can prove was sent is worth roughly nothing if the other side says "we never received that."</p>
+    <ul class="proof">
+      <li><b>Post:</b> certified mail with return receipt. Keep the green card and the receipt stapled to your copy.</li>
+      <li><b>Email:</b> send it to a named person and copy yourself. Save the sent message as a PDF, not a screenshot.</li>
+      <li><b>Web form:</b> paste the same text, then screenshot the confirmation page including the reference number and the date.</li>
+      <li><b>Always:</b> keep an unsigned copy of exactly what you sent, in a folder with every receipt, photo, and reply. Photograph anything physical the day you notice it, not the day you write.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Citations verified against the U.S. Code, the Code of Federal Regulations, and the named state statutes on
+    August 7, 2026, read from law.cornell.edu, ecfr.gov, and each state's own legislature site. Law changes and
+    legislatures sit every year &mdash; before you rely on a deadline here for something that matters, spend the
+    ninety seconds to open the citation yourself and confirm it still says what this page says it does. This tool
+    does not store, transmit, or see anything you type &mdash; it runs entirely in your browser.
+    <br><br>The Docket &middot; <a href="/landing-the-docket-motion.html">penloomstudio.com/the-docket</a>
+  </footer>
+</main>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+
+// ---- date helpers (self-checked below) ----
+function isoDay(d){ const p=(n)=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+function parseISO(iso){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso||""));
+  if (!m) return null;
+  const d = new Date(+m[1], +m[2]-1, +m[3]);
+  return isoDay(d) === iso ? d : null;   // reject invalid calendar dates like 2026-02-30
+}
+function today(){ return isoDay(new Date()); }
+function addDays(iso, n){ const d = parseISO(iso); if (!d) return ""; d.setDate(d.getDate()+n); return isoDay(d); }
+function fmtLong(iso, ph){
+  ph = ph || "[DATE]";
+  const d = parseISO(iso);
+  return d ? d.toLocaleDateString("en-US", {year:"numeric", month:"long", day:"numeric"}) : ph;
+}
+function v(val, ph){ return (val && String(val).trim()) ? String(val).trim() : ph; }
+
+// ---- fields shared by every letter ----
+const COMMON = [
+  {id:"yourName", label:"Your full name", type:"text", ph:"Jordan Rivera"},
+  {id:"yourAddress", label:"Your mailing address", type:"text", ph:"123 Main St, Apt 4, Naples, FL 34102", wide:true},
+  {id:"yourPhone", label:"Your phone (optional)", type:"text", ph:"(239) 555-0100"},
+  {id:"yourEmail", label:"Your email (optional)", type:"text", ph:"you@email.com"},
+  {id:"companyName", label:"Who you're writing to (company or person)", type:"text", ph:"Acme Property Management", wide:true},
+  {id:"todayDate", label:"Date of this letter", type:"date", default:() => today()},
+];
+
+// ---- the 8 scenarios, letter bodies drawn from The Docket's Consumer Rights Letter Kit (verified 2026-08-07) ----
+const DEPOSIT_STATES = {
+  "":     {name:"[STATE]", citation:"[CITATION — your state's security-deposit statute]", days:"[NUMBER]", note:""},
+  CA:     {name:"California", citation:"Cal. Civ. Code § 1950.5", days:21, note:""},
+  FL:     {name:"Florida", citation:"Fla. Stat. § 83.49", days:15, note:" (or a written notice of a claim within 30 days)"},
+  TX:     {name:"Texas", citation:"Tex. Prop. Code § 92.103", days:30, note:""},
+  NY:     {name:"New York", citation:"N.Y. Gen. Oblig. Law § 7-108", days:14, note:""},
+  IL:     {name:"Illinois", citation:"765 ILCS 710/1", days:30, note:" for an itemized statement (the balance itself is due within 45 days)"},
+  OTHER:  {name:"[STATE]", citation:"[CITATION — your state's security-deposit statute]", days:"[NUMBER]", note:""},
+};
+
+const SCENARIOS = {
+  deposit: {
+    name: "Security deposit not returned",
+    when: "You moved out, gave a forwarding address, and the deposit hasn't come back — or came back short with no itemized statement.",
+    lawnote: "Verified deadlines: California 21 days (Cal. Civ. Code § 1950.5), Florida 15 days (Fla. Stat. § 83.49), Texas 30 days (Tex. Prop. Code § 92.103), New York 14 days (N.Y. Gen. Oblig. Law § 7-108), Illinois 30/45 days (765 ILCS 710/1 — covers every landlord since 2024, no unit-count minimum). Any other state: look up your own statute before you rely on a deadline.",
+    fields: [
+      {id:"state", label:"State", type:"select", opts:[["","Select a state"],["CA","California"],["FL","Florida"],["TX","Texas"],["NY","New York"],["IL","Illinois"],["OTHER","Other state"]]},
+      {id:"propertyAddress", label:"Rental address", type:"text", ph:"456 Oak Ave, Unit 2", wide:true},
+      {id:"vacateDate", label:"Date you moved out", type:"date"},
+      {id:"forwardingDate", label:"Date you gave your forwarding address", type:"date"},
+      {id:"amount", label:"Deposit amount ($)", type:"money", ph:"1200"},
+    ],
+    build(f){
+      const st = DEPOSIT_STATES[f.state] || DEPOSIT_STATES.OTHER;
+      const deadline = addDays(f.todayDate || today(), 14);
+      return {
+        subject: `Security deposit, ${v(f.propertyAddress,"[ADDRESS]")}, tenancy ended ${fmtLong(f.vacateDate)}`,
+        body: [
+          `I vacated the above unit on ${fmtLong(f.vacateDate)} and provided my forwarding address on ${fmtLong(f.forwardingDate)}. My security deposit of $${v(f.amount,"[AMOUNT]")} has not been returned, and I have received no itemized statement of deductions.`,
+          `${st.name} law requires the deposit and an itemized statement within ${st.days} days of the end of the tenancy${st.note}. See ${st.citation}.`,
+          `Please send $${v(f.amount,"[AMOUNT]")}, or a full itemized statement with receipts, to ${v(f.yourAddress,"[ADDRESS]")} by ${fmtLong(deadline)}. If I have not received either by that date I intend to file in small claims court for the deposit and any additional amounts my state's statute allows.`,
+        ],
+      };
+    },
+    afterward: "Usually one of three things comes back. An itemized list — check every line against your move-out photos and lease; ordinary wear isn't damage in most states. Silence — often your strongest position, since many statutes penalize the failure to itemize, not just the withholding. A partial payment — cashing it rarely waives the rest, but say so in writing when you deposit it.",
+  },
+
+  repair: {
+    name: "Landlord won't fix something broken",
+    when: "Something affecting habitability is broken — heat, water, a leak, a lock, an infestation — and calls haven't fixed it.",
+    lawnote: "Habitability law varies by state. Texas: written notice under Tex. Prop. Code § 92.052, with § 92.056 presuming seven days reasonable to repair — a presumption, not a hard deadline. California's repair-and-deduct remedy (Cal. Civ. Code § 1942) is capped at one month's rent, usable twice a year. Confirm your own state's rule — and never simply stop paying rent without following your state's procedure exactly.",
+    fields: [
+      {id:"propertyAddress", label:"Rental address", type:"text", ph:"456 Oak Ave, Unit 2", wide:true},
+      {id:"condition", label:"What's broken", type:"text", ph:"no heat"},
+      {id:"category", label:"Category", type:"select", opts:[["","Select one"],["heat","Heat"],["water","Water"],["safety","Safety"],["sanitation","Sanitation"],["other","Other"]]},
+      {id:"brokenSince", label:"Broken since", type:"date"},
+      {id:"reportMethod", label:"How you first reported it", type:"select", opts:[["","Select one"],["phone","Phone"],["portal","Tenant portal"],["email","Email"],["text","Text"],["in writing","In writing"]]},
+      {id:"reportedDates", label:"Dates you reported it", type:"text", ph:"June 2 and June 14"},
+      {id:"availability", label:"When you're available for access", type:"text", ph:"weekdays after 4pm"},
+      {id:"citation", label:"Your state's habitability statute (if you know it)", type:"text", ph:"e.g. Tex. Prop. Code § 92.052 & § 92.056", wide:true},
+    ],
+    build(f){
+      const deadline = addDays(f.todayDate || today(), 7);
+      const CAT = {heat:"HEAT", water:"WATER", safety:"SAFETY", sanitation:"SANITATION", other:"HABITABILITY"};
+      return {
+        subject: `Request for repair, ${v(f.propertyAddress,"[ADDRESS]")} — written notice`,
+        body: [
+          `I am giving written notice that ${v(f.condition,"[CONDITION]")} has been broken since ${fmtLong(f.brokenSince)}. I reported it by ${v(f.reportMethod,"[PHONE/PORTAL]")} on ${v(f.reportedDates,"[DATES]")}. It has not been repaired.`,
+          `This condition affects ${v(CAT[f.category],"[HEAT / WATER / SAFETY / SANITATION]")} and I am treating this letter as the written notice required before further remedies are available to me under my state's law. See ${v(f.citation,"[CITATION — your state's habitability/repair statute]")}.`,
+          `Please repair it by ${fmtLong(deadline)}. I am available to give access on ${v(f.availability,"[DAYS/TIMES]")}. I have photographs dated ${fmtLong(f.brokenSince)} and will keep a record of the condition until it is fixed.`,
+        ],
+      };
+    },
+    afterward: "Often a scheduling call — take it, and confirm the appointment in writing the same day. If nothing happens, do not simply stop paying rent; in most states withholding without following the statute exactly is what turns a tenant's strong case into an eviction. Look up your state's procedure, or ask a lawyer, before you touch the rent.",
+  },
+
+  unordered: {
+    name: "Billed for something you never ordered",
+    when: "Something you never ordered showed up, and now you're being billed or sent to collections for it.",
+    lawnote: "39 U.S.C. § 3009 is federal and unusually clean: unordered merchandise may be treated as a gift, and billing or dunning you for it is itself an unfair trade practice.",
+    fields: [
+      {id:"itemDescription", label:"What arrived", type:"text", ph:"a set of kitchen knives", wide:true},
+      {id:"receivedDate", label:"Date it arrived", type:"date"},
+      {id:"invoiceNumber", label:"Invoice / account number", type:"text", ph:"INV-88213"},
+      {id:"billingWhat", label:"What they've sent you since", type:"select", opts:[["an invoice","An invoice"],["collection notices","Collection notices"],["an invoice and collection notices","An invoice and collection notices"]]},
+      {id:"billingDates", label:"Dates of those notices", type:"text", ph:"July 3 and July 20"},
+    ],
+    build(f){
+      return {
+        subject: `Unordered merchandise — ${v(f.itemDescription,"[DESCRIPTION]")}, invoice ${v(f.invoiceNumber,"[NUMBER]")}`,
+        body: [
+          `On ${fmtLong(f.receivedDate)} I received ${v(f.itemDescription,"[ITEM]")} from you. I did not order it and did not consent to receiving it. I have since received ${v(f.billingWhat,"an invoice / collection notices")} dated ${v(f.billingDates,"[DATES]")}.`,
+          `Under 39 U.S.C. § 3009, merchandise mailed without the recipient's prior express request may be treated as a gift. I owe nothing for this item, and the statute bars billing or dunning me for it.`,
+          `Please close invoice ${v(f.invoiceNumber,"[NUMBER]")}, confirm in writing that no balance is owed, and stop all further billing communications about it.`,
+        ],
+      };
+    },
+    afterward: "Usually a closure notice. If the billing continues anyway, that's a separate problem worth reporting — to your state's consumer-protection office and to the FTC at reportfraud.ftc.gov.",
+  },
+
+  shipment: {
+    name: "Order never shipped",
+    when: "You ordered online, by phone, or by mail, and it did not ship in the promised window.",
+    lawnote: "FTC Mail, Internet, or Telephone Order Merchandise Rule, 16 C.F.R. § 435.2: ship within the stated window, or 30 days if none was stated (50 days if you financed the order). A required refund is defined as seven working days, at § 435.1(b)(1) — even if the seller has to switch payment methods to get your money back to you.",
+    fields: [
+      {id:"orderNumber", label:"Order number", type:"text", ph:"ORD-4471"},
+      {id:"orderDate", label:"Date you ordered", type:"date"},
+      {id:"amount", label:"Amount paid ($)", type:"money", ph:"249.00"},
+      {id:"statedWindow", label:"Shipping window they promised (if any)", type:"text", ph:"5-7 business days"},
+      {id:"daysElapsed", label:"Days it's been late", type:"text", ph:"22"},
+    ],
+    build(f){
+      return {
+        subject: `Order ${v(f.orderNumber,"[NUMBER]")}, placed ${fmtLong(f.orderDate)} — cancellation and refund demand`,
+        body: [
+          `I placed order ${v(f.orderNumber,"[NUMBER]")} on ${fmtLong(f.orderDate)} for $${v(f.amount,"[AMOUNT]")}. Your site stated shipment ${v(f.statedWindow,"within a stated window, or gave no shipping date")}. As of today, ${v(f.daysElapsed,"[DAYS]")} days later, it has not shipped and I have received no option to consent to a delay or to cancel.`,
+          `Under the FTC Mail, Internet, or Telephone Order Merchandise Rule, 16 C.F.R. § 435.2, you were required to ship within ${v(f.statedWindow,"30 days, or the period you stated")} or offer me the choice to consent to a delay or cancel for a prompt refund.`,
+          `I am exercising the right to cancel. Please refund $${v(f.amount,"[AMOUNT]")} to the original payment method within seven working days, as 16 C.F.R. § 435.1(b)(1) requires, and confirm by email.`,
+        ],
+      };
+    },
+    afterward: "Very often the refund arrives, since this rule is well known to any competent retailer. If it doesn't, the FTC takes complaints at reportfraud.ftc.gov, and so does your state's consumer-protection office.",
+  },
+
+  warranty: {
+    name: "Defective product under warranty",
+    when: "A product under written warranty has failed, and repeated repairs haven't fixed it.",
+    lawnote: "Magnuson-Moss Warranty Act, 15 U.S.C. §§ 2301–2312. Section 2304 sets the repair standard (remedy within a reasonable time, without charge). Section 2310(e) requires you give the warrantor a real chance to cure before suing — this letter is that notice. Section 2310(d) lets a prevailing consumer recover attorney's fees, which is why a letter citing it tends to get read.",
+    fields: [
+      {id:"productName", label:"Product", type:"text", ph:"Model X280 washing machine"},
+      {id:"serialNumber", label:"Serial number", type:"text", ph:"SN-77213"},
+      {id:"purchaseDate", label:"Date purchased", type:"date"},
+      {id:"sellerName", label:"Bought from", type:"text", ph:"Acme Appliances"},
+      {id:"warrantyDate", label:"Date on the written warranty (if different)", type:"date"},
+      {id:"defectDescription", label:"The defect", type:"textarea", ph:"Drum won't spin; error code E4 on every cycle.", wide:true},
+      {id:"repairDates", label:"Dates presented for repair", type:"text", ph:"May 3, May 19, June 6", wide:true},
+      {id:"repairCount", label:"Number of repair attempts", type:"text", ph:"3"},
+      {id:"remedy", label:"What you want", type:"select", opts:[["Repair","Repair"],["Replace","Replacement"],["Refund","Refund"]]},
+    ],
+    build(f){
+      const deadline = addDays(f.todayDate || today(), 30);
+      return {
+        subject: `Warranty claim — ${v(f.productName,"[PRODUCT]")}, serial ${v(f.serialNumber,"[NUMBER]")}, purchased ${fmtLong(f.purchaseDate)}`,
+        body: [
+          `I purchased ${v(f.productName,"[PRODUCT]")} on ${fmtLong(f.purchaseDate)} from ${v(f.sellerName,"[SELLER]")}. It is covered by your written warranty dated ${fmtLong(f.warrantyDate || f.purchaseDate)}. The following defect has occurred: ${v(f.defectDescription,"[DESCRIPTION]")}.`,
+          `I have presented it for repair on ${v(f.repairDates,"[DATES]")} — ${v(f.repairCount,"[NUMBER]")} times. The defect persists.`,
+          `This letter is written notice of the defect and an opportunity to cure under 15 U.S.C. § 2310(e). Please ${f.remedy || "[REPAIR / REPLACE / REFUND]"} it by ${fmtLong(deadline)}. Copies of the receipt, the warranty, and each repair order are enclosed.`,
+        ],
+      };
+    },
+    afterward: "Often an offer of one more repair attempt. Accept it in writing, note the date, and keep the count — the number of documented attempts is usually the deciding fact.",
+  },
+
+  subscription: {
+    name: "Subscription that won't cancel",
+    when: "You cancelled, or tried to, and the charges kept coming — or the cancellation path is a maze.",
+    lawnote: "Restore Online Shoppers' Confidence Act, 15 U.S.C. § 8403. Note: the FTC's 2024 “click-to-cancel” rule was vacated in court in July 2025, and the older, narrower Negative Option Rule (16 C.F.R. Part 425) now covers only old-style prenotification book-club plans, not ordinary streaming or gym subscriptions — ROSCA is doing the work in this letter.",
+    fields: [
+      {id:"serviceName", label:"Service", type:"text", ph:"StreamPlus"},
+      {id:"accountNumber", label:"Account number", type:"text", ph:"AC-99120"},
+      {id:"firstCancelDate", label:"Date you first requested cancellation", type:"date"},
+      {id:"cancelMethod", label:"How you requested it", type:"select", opts:[["","Select one"],["the website","The website"],["the app","The app"],["phone","Phone"],["email","Email"],["chat","Chat"]]},
+      {id:"chargeDate", label:"Date you were charged again", type:"date"},
+      {id:"chargeAmount", label:"Amount charged ($)", type:"money", ph:"14.99"},
+    ],
+    build(f){
+      return {
+        subject: `Cancellation of subscription — account ${v(f.accountNumber,"[NUMBER]")}`,
+        body: [
+          `I am cancelling my subscription to ${v(f.serviceName,"[SERVICE]")}, account ${v(f.accountNumber,"[NUMBER]")}, effective immediately. I first requested cancellation on ${fmtLong(f.firstCancelDate)} by ${v(f.cancelMethod,"[METHOD]")} and was charged again on ${fmtLong(f.chargeDate)} in the amount of $${v(f.chargeAmount,"[AMOUNT]")}.`,
+          `Under 15 U.S.C. § 8403, a seller using a negative-option feature online must provide a simple mechanism to stop recurring charges. This letter is written notice revoking any authorization for further charges.`,
+          `Please confirm the cancellation in writing with an effective date, stop all further billing, and refund the $${v(f.chargeAmount,"[AMOUNT]")} charged after my ${fmtLong(f.firstCancelDate)} request.`,
+        ],
+      };
+    },
+    afterward: "Get a confirmation number in writing and keep it. Also revoke the charge authorization at your bank or card issuer, so a “cancelled” account can't quietly re-bill you.",
+  },
+
+  calls: {
+    name: "Unwanted calls & texts won't stop",
+    when: "The calls or texts won't stop after you've asked.",
+    lawnote: "TCPA, 47 U.S.C. § 227, and 47 C.F.R. § 64.1200: a revocation must be honored within 10 business days. One honest limit — a single revocation doesn't yet automatically silence every other campaign the same company runs (an FCC waiver on that “revoke-all” question runs to January 31, 2027), so name every campaign you know about.",
+    fields: [
+      {id:"phoneNumber", label:"Phone number being called/texted", type:"text", ph:"(239) 555-0177"},
+      {id:"priorAskDates", label:"Dates you already asked them to stop", type:"text", ph:"July 8 and July 22"},
+      {id:"dncSince", label:"Date your number joined the Do Not Call Registry (if known)", type:"date"},
+    ],
+    build(f){
+      return {
+        subject: `Revocation of consent — ${v(f.phoneNumber,"[PHONE NUMBER]")}`,
+        body: [
+          `I am revoking any and all consent to be contacted at ${v(f.phoneNumber,"[NUMBER]")} by call or text by ${v(f.companyName,"[COMPANY]")} and anyone calling on its behalf. I have asked previously on ${v(f.priorAskDates,"[DATES]")}. My number has been on the National Do Not Call Registry since ${fmtLong(f.dncSince,"[DATE, if applicable]")}.`,
+          `This revocation is made under 47 U.S.C. § 227 and 47 C.F.R. § 64.1200. I am asking that it apply to every campaign, brand, and vendor associated with you, and not only the matter above. Please place ${v(f.phoneNumber,"[NUMBER]")} on your internal do-not-call list and confirm in writing.`,
+          `Calls received after the period allowed for honoring this revocation will be logged with the date, time, and calling number.`,
+        ],
+      };
+    },
+    afterward: "Sometimes nothing changes right away — start a log the day you send this: date, time, number, what was said. Complaints go to donotcall.gov, and the log is what makes them worth filing.",
+  },
+
+  final: {
+    name: "Final demand before small claims",
+    when: "You've decided to file, and want the record to show you asked first.",
+    lawnote: "No single statute here — this is procedure. Many small-claims courts ask on their own forms whether you demanded payment before filing; a dated letter answers that with a document instead of a memory. Court limits, filing fees, and procedure vary by state and often by county — check your own court's page before you write a number into this letter.",
+    fields: [
+      {id:"matterTitle", label:"Short title for the matter", type:"text", ph:"Unpaid refund, order 4471", wide:true},
+      {id:"facts", label:"The facts (2–3 sentences, dates only)", type:"textarea", ph:"I ordered a chair on May 3 for $340. It arrived broken on May 10. I requested a refund on May 11, May 20 and June 2.", wide:true},
+      {id:"amount", label:"Amount in dispute ($)", type:"money", ph:"340"},
+      {id:"contactedDates", label:"Dates you already contacted them", type:"text", ph:"May 11, May 20, June 2"},
+      {id:"court", label:"Court you'll file in", type:"text", ph:"Collier County Small Claims Court"},
+      {id:"enclosures", label:"What you're enclosing", type:"checkboxgroup", opts:["Receipts","Contract","Photos","Prior correspondence"], wide:true},
+    ],
+    build(f){
+      const deadline = addDays(f.todayDate || today(), 14);
+      const enc = (f.enclosures && f.enclosures.length) ? f.enclosures.join(", ") : "[RECEIPTS / CONTRACT / PHOTOS / PRIOR CORRESPONDENCE]";
+      return {
+        subject: `Final demand before filing — ${v(f.matterTitle,"[MATTER]")}`,
+        body: [
+          `This is a final demand before I file suit.`,
+          `Facts: ${v(f.facts,"[2–3 sentences, dates only]")}. Amount in dispute: $${v(f.amount,"[AMOUNT]")}. I have contacted you on ${v(f.contactedDates,"[DATES]")} and the matter is unresolved.`,
+          `If $${v(f.amount,"[AMOUNT]")} is not received by ${fmtLong(deadline)}, I intend to file a claim in ${v(f.court,"[COURT]")} seeking that amount plus filing costs allowed by law. Enclosed: ${enc}.`,
+          `I would prefer to resolve this without a filing and remain willing to do so until that date.`,
+        ],
+      };
+    },
+    afterward: "More settlements happen than people expect — the cost of showing up in court usually exceeds the amount in dispute. If you do file, bring this letter, your certified-mail receipt, and the exhibits in the order you listed them.",
+  },
+};
+
+// ---- field rendering ----
+function renderFields(container, fields){
+  container.innerHTML = "";
+  for (const f of fields) {
+    const wrap = document.createElement("div");
+    wrap.className = "field" + (f.wide ? " wide" : "");
+    const label = document.createElement("label");
+    label.htmlFor = "f_" + f.id;
+    label.textContent = f.label;
+    wrap.append(label);
+
+    let el;
+    if (f.type === "select") {
+      el = document.createElement("select");
+      for (const [val, text] of f.opts) {
+        const o = document.createElement("option"); o.value = val; o.textContent = text; el.append(o);
+      }
+    } else if (f.type === "textarea") {
+      el = document.createElement("textarea");
+      if (f.ph) el.placeholder = f.ph;
+    } else if (f.type === "checkboxgroup") {
+      el = document.createElement("div");
+      el.className = "chkgrp";
+      el.id = "f_" + f.id;
+      for (const opt of f.opts) {
+        const cl = document.createElement("label"); cl.className = "chk";
+        const c = document.createElement("input"); c.type = "checkbox"; c.value = opt;
+        cl.append(c, document.createTextNode(" " + opt));
+        el.append(cl);
+      }
+    } else {
+      el = document.createElement("input");
+      el.type = f.type === "money" ? "text" : (f.type || "text");
+      if (f.type === "money") el.inputMode = "decimal";
+      if (f.ph) el.placeholder = f.ph;
+    }
+    if (f.type !== "checkboxgroup") el.id = "f_" + f.id;
+    if (f.default) el.value = typeof f.default === "function" ? f.default() : f.default;
+    wrap.append(el);
+    container.append(wrap);
+  }
+}
+
+function collectValues(fields){
+  const out = {};
+  for (const f of fields) {
+    if (f.type === "checkboxgroup") {
+      out[f.id] = [...document.querySelectorAll(`#f_${f.id} input:checked`)].map((c) => c.value);
+    } else {
+      const el = document.getElementById("f_" + f.id);
+      out[f.id] = el ? el.value : "";
+    }
+  }
+  return out;
+}
+
+function buildLetter(subject, bodyParas, f){
+  const lines = [];
+  lines.push(v(f.yourName, "[YOUR NAME]"));
+  if (f.yourAddress) lines.push(f.yourAddress);
+  const contact = [f.yourPhone, f.yourEmail].filter(Boolean).join(" · ");
+  if (contact) lines.push(contact);
+  lines.push("");
+  lines.push(fmtLong(f.todayDate || today()));
+  lines.push("");
+  if (f.companyName) { lines.push(f.companyName); lines.push(""); }
+  lines.push("Re: " + subject);
+  lines.push("");
+  lines.push(bodyParas.join("\n\n"));
+  lines.push("");
+  lines.push("Sincerely,");
+  lines.push(v(f.yourName, "[YOUR NAME]"));
+  return lines.join("\n");
+}
+
+// ---- wiring ----
+const scenarioSel = $("scenario");
+for (const [key, s] of Object.entries(SCENARIOS)) {
+  const o = document.createElement("option"); o.value = key; o.textContent = s.name; scenarioSel.append(o);
+}
+renderFields($("common"), COMMON);
+
+function drawScenario(){
+  const s = SCENARIOS[scenarioSel.value];
+  $("when").textContent = s.when;
+  $("lawnote").textContent = s.lawnote;
+  $("scenTitle").textContent = "The facts — " + s.name.toLowerCase();
+  renderFields($("scenFields"), s.fields);
+  $("result").classList.add("hide");
+  $("copyMsg").textContent = "";
+}
+scenarioSel.addEventListener("change", drawScenario);
+drawScenario();
+
+$("generate").addEventListener("click", () => {
+  const s = SCENARIOS[scenarioSel.value];
+  const f = { ...collectValues(COMMON), ...collectValues(s.fields) };
+  const { subject, body } = s.build(f);
+  $("letterOut").textContent = buildLetter(subject, body, f);
+  $("afterward").innerHTML = "<b>What comes back, and what you do:</b> " + s.afterward;
+  $("copyMsg").textContent = "";
+  const result = $("result");
+  result.classList.remove("hide");
+  result.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+$("copyBtn").addEventListener("click", async () => {
+  const text = $("letterOut").innerText;
+  try {
+    await navigator.clipboard.writeText(text);
+    $("copyMsg").textContent = "Copied.";
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.append(ta); ta.select();
+    try { document.execCommand("copy"); $("copyMsg").textContent = "Copied."; }
+    catch { $("copyMsg").textContent = "Could not copy automatically — select the text above and copy it manually."; }
+    ta.remove();
+  }
+});
+
+// ---- self-check (console only, never blocks the page) ----
+(function selfTest(){
+  console.assert(addDays("2026-01-31", 1) === "2026-02-01", "addDays month rollover failed");
+  console.assert(parseISO("2026-02-30") === null, "invalid calendar date should be rejected");
+  console.assert(v("", "[X]") === "[X]" && v("hi", "[X]") === "hi", "v() placeholder logic failed");
+  console.assert(fmtLong("") === "[DATE]", "fmtLong default placeholder failed");
+})();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

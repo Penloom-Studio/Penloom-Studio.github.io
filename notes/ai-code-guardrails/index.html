@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Code Guardrails: 9 Runnable Checks That Catch What the Model Got Wrong</title>
+<link rel="canonical" href="https://penloomstudio.com/notes/ai-code-guardrails/">
+<meta name="description" content="Nine commands that catch the six ways AI-generated code actually breaks — invented dependencies, swallowed errors, quiet deletions, tests that cannot fail, destructive scripts, scope creep — plus a pre-commit hook and a self-check that proves the hook is live.">
+<meta property="og:title" content="AI Code Guardrails: 9 Runnable Checks That Catch What the Model Got Wrong">
+<meta property="og:description" content="You cannot review every line the AI writes. Nine commands and one hook catch the six ways it actually breaks things. Under a minute per change.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/notes/ai-code-guardrails/">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #0d1117; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 .4rem; }
+  h2 { font-size: 1.25rem; margin: 2.2rem 0 .5rem; }
+  h3 { font-size: 1.05rem; margin: 1.5rem 0 .4rem; }
+  a { color: #4f46e5; } @media (prefers-color-scheme: dark) { a { color: #8b8ff5; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #6366F1; font-style: italic; }
+  pre { background: #f4f4f5; padding: .9rem 1rem; border-radius: 8px; overflow-x: auto;
+    font-size: .87rem; white-space: pre-wrap; }
+  code { font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { pre { background: #161b22; } }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .2rem; }
+  .where { color: #64748b; font-size: .95rem; margin: 0 0 1.4rem; }
+  .dek { font-size: 1.08rem; color: #475569; margin: 0 0 1.6rem; }
+  @media (prefers-color-scheme: dark) { .dek { color: #a5b0c2; } }
+  .cta { margin: 2.2rem 0; padding: 1.1rem 1.25rem; border: 1px solid #6366F1; border-radius: 10px; }
+  .cta p { margin: 0 0 .8rem; }
+  .btn { display: inline-block; background: #6366F1; color: #fff; text-decoration: none;
+    font-weight: 600; padding: .65rem 1.1rem; border-radius: 8px; }
+  .btn:hover { background: #4f46e5; }
+  .rule { border-left: 3px solid #34D399; padding: .1rem 1rem; margin: 1.4rem 0; }
+  ul, ol { padding-left: 1.3rem; } li { margin: .35rem 0; }
+  hr { border: 0; border-top: 1px solid #94a3b8; margin: 2.4rem 0; }
+  footer { margin-top: 2.6rem; padding-top: 1.2rem; border-top: 1px solid #94a3b8;
+    color: #64748b; font-size: .93rem; }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "AI Code Guardrails: 9 Runnable Checks That Catch What the Model Got Wrong",
+ "name": "AI Code Guardrails: 9 Runnable Checks That Catch What the Model Got Wrong",
+ "description": "Nine commands that catch the six ways AI-generated code actually breaks, plus a pre-commit hook and a self-check that proves the hook is live.",
+ "url": "https://penloomstudio.com/notes/ai-code-guardrails/",
+ "inLanguage": "en-US",
+ "articleSection": "AI & Coding",
+ "publisher": { "@type": "Organization", "name": "Cogloom" }
+}
+</script>
+</head>
+<body>
+<p class="kicker">Cogloom &middot; Practical AI &amp; coding</p>
+<h1>AI code guardrails: nine checks that catch what the model got wrong</h1>
+<p class="where">Nine runnable commands, one pre-commit hook, and the self-check that proves the hook is live</p>
+<p class="dek">AI writes plausible code fast. Plausible and correct diverge in specific, repeatable places, and they are the same places every time: invented dependencies, silently swallowed errors, deleted code you didn't notice, tests that can't fail, destructive commands in generated scripts, and scope creep into files you never mentioned.</p>
+
+<p>You do not need to read every line the model writes. You need nine checks aimed at those six failure modes. Total runtime: under a minute. Everything on this page is the whole thing &mdash; no gate, no download, no sign-up to see the rest.</p>
+
+<p><strong>Prerequisites:</strong> <code>git</code>, and <code>ripgrep</code> (<code>rg</code>) &mdash; install via <code>winget install BurntSushi.ripgrep.MSVC</code>, <code>brew install ripgrep</code>, or <code>apt install ripgrep</code>. Every <code>rg</code> command below has a PowerShell fallback noted where the syntax differs.</p>
+
+<div class="cta">
+<p><strong>Want the whole thing in your inbox?</strong> We'll email you this full guardrails pass &mdash; all nine commands, the hook, and the 60-second loop &mdash; as one plain-text message you can keep next to your terminal. No download, no account, no drip sequence.</p>
+<a class="btn" href="mailto:penloomstudio@gmail.com?subject=Email%20me%20the%20AI%20Code%20Guardrails&amp;body=Send%20me%20the%20full%20AI%20Code%20Guardrails%20content%20(nine%20checks%20%2B%20the%20pre-commit%20hook).">Email me the full guardrails &rarr;</a>
+</div>
+
+<hr>
+
+<h2>Check 1 &mdash; Review the diff, never the chat</h2>
+<p>The chat transcript is a summary written by the thing you are checking. The diff is what actually happened.</p>
+<pre><code>git add -A -N          # include new untracked files in the diff
+git diff --stat        # what changed, how much
+git diff               # the actual lines</code></pre>
+<p><code>-N</code> registers untracked files as intent-to-add so <code>git diff</code> shows them. Without it, an entire new file the model created is invisible to your review.</p>
+<p>If the <code>--stat</code> line count is wildly larger than the change you asked for, stop here and go to Check 9.</p>
+
+<h2>Check 2 &mdash; Verify every dependency it added</h2>
+<p>Models invent package names. The name looks right, it isn't real, and attackers register the plausible ones &mdash; a supply-chain attack that works precisely because the name was generated rather than chosen.</p>
+<pre><code>git diff -- package.json package-lock.json requirements.txt pyproject.toml go.mod</code></pre>
+<p>For each added package, confirm it exists and is what you think:</p>
+<pre><code>npm view &lt;package&gt; versions --json | tail -5   # last published versions
+npm view &lt;package&gt; repository.url              # does it point somewhere real?
+pip index versions &lt;package&gt;                   # Python equivalent</code></pre>
+<p><strong>Red flags:</strong> first published within the last few weeks, no repository URL, download counts near zero, or a name one character off a package you recognize.</p>
+<div class="rule"><p><strong>Rule:</strong> if the model added a dependency to do something the standard library already does, delete the dependency.</p></div>
+
+<h2>Check 3 &mdash; Secrets</h2>
+<pre><code>git diff --cached | rg -n "(?i)(api[_-]?key|secret|passwd|password|token|bearer |aws_(access|secret)|BEGIN (RSA|EC|OPENSSH|PRIVATE) )"</code></pre>
+<p>PowerShell:</p>
+<pre><code>git diff --cached | Select-String -Pattern 'api[_-]?key|secret|password|token|BEGIN .*PRIVATE'</code></pre>
+<p>Also check that a real key didn't get baked into an example:</p>
+<pre><code>rg -n "sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}" --hidden -g '!.git'</code></pre>
+<p><strong>If a real secret was ever committed, rotate it.</strong> Removing it from the file does not remove it from git history, and rewriting history does not un-publish anything already pushed.</p>
+
+<h2>Check 4 &mdash; Deletions</h2>
+<p>The dangerous edit is not the code added. It is the code quietly removed to make an error go away.</p>
+<pre><code>git diff --cached --numstat | awk '$2 &gt; 30 {print $2" lines removed from "$3}'
+git diff --diff-filter=D --name-only        # files deleted outright
+git diff -U0 | rg "^-" | rg -v "^---"       # every removed line, no context noise</code></pre>
+<p>Read the removed lines. Every one. This check catches more real bugs than the other eight combined.</p>
+
+<h2>Check 5 &mdash; Destructive commands in generated scripts</h2>
+<p>Anything the model wrote that will be <em>executed</em> &mdash; a shell script, a migration, a CI step, a cleanup task:</p>
+<pre><code>rg -n "rm -rf|DROP (TABLE|DATABASE)|TRUNCATE|DELETE FROM \w+\s*;|shutil\.rmtree|--force|-f\b|git push --force|chmod 777|curl [^|]*\| *(ba)?sh" \
+   --glob '!node_modules'</code></pre>
+<p>Two rules that cost nothing:</p>
+<ul>
+  <li>Run any generated migration or bulk script against a copy first, or with <code>--dry-run</code> if it has one.</li>
+  <li><code>DELETE FROM x;</code> with no <code>WHERE</code> is never what you meant.</li>
+</ul>
+
+<h2>Check 6 &mdash; Swallowed errors</h2>
+<pre><code>rg -n "except\s*:\s*$|except Exception:\s*pass|catch\s*\([^)]*\)\s*\{\s*\}|catch\s*\{\s*\}|\.catch\(\s*\(\s*\)\s*=&gt;\s*\{\s*\}\s*\)|_ = err|_,\s*_\s*=" \
+   --glob '!node_modules' --glob '!*.min.js'</code></pre>
+<p>An empty catch block is how a model makes a failing test pass. The bug is still there; you have only removed the alarm.</p>
+
+<h2>Check 7 &mdash; Prove the tests can fail</h2>
+<p>A test suite written by the same process that wrote the code is not independent evidence. Verify it can fail:</p>
+<pre><code>rg -n "expect\(true\)\.toBe\(true\)|assert True|assertTrue\(True\)|it\.skip|test\.skip|@pytest.mark.skip|xit\(" tests/ test/ spec/ 2&gt;/dev/null</code></pre>
+<p>Then the real check &mdash; break the code on purpose and confirm the suite notices:</p>
+<pre><code>git stash                 # set the new code aside
+&lt;run your test command&gt;   # should FAIL — the feature isn't there
+git stash pop             # bring it back
+&lt;run your test command&gt;   # should PASS</code></pre>
+<p>If step two passes without the implementation, the test is asserting nothing. Delete it; it is worse than no test because it reports safety.</p>
+
+<h2>Check 8 &mdash; Pin what it added</h2>
+<p>Generated setup instructions default to floating versions. Lock them.</p>
+<pre><code>npm ci                     # installs exactly the lockfile — never `npm install` in CI
+git diff -- package-lock.json | head -40    # confirm the lockfile actually changed
+pip install -r requirements.txt             # with pinned ==versions, or use uv/pip-tools</code></pre>
+<p>If the model edited <code>package.json</code> but not <code>package-lock.json</code>, the install it "tested" is not the install you will ship.</p>
+
+<h2>Check 9 &mdash; Scope</h2>
+<pre><code>git diff --name-only
+git diff --name-only | wc -l</code></pre>
+<p>Compare against the files you actually asked it to touch. Anything else is uninstructed change: a reformat, a "while I was here" refactor, a config tweak. Strip it:</p>
+<pre><code>git restore -p &lt;unrelated-file&gt;     # interactively drop hunks
+git checkout -- &lt;unrelated-file&gt;    # drop the file's changes entirely</code></pre>
+<p>Uninstructed changes are where regressions hide, because nobody reviews a file they didn't expect to see.</p>
+
+<hr>
+
+<h2>Install the hook (30 seconds)</h2>
+<p>Save as <code>.git/hooks/pre-commit</code> and <code>chmod +x .git/hooks/pre-commit</code>. It runs Checks 3, 5, and 6 on every commit and blocks on a hit.</p>
+<pre><code>#!/usr/bin/env bash
+# three greps beat a scanning service you have to configure.
+set -euo pipefail
+fail=0
+hit() { printf '\033[31mBLOCKED: %s\033[0m\n' "$1"; fail=1; }
+
+d=$(git diff --cached)
+
+echo "$d" | grep -Eqi '(api[_-]?key|aws_secret|BEGIN (RSA|EC|OPENSSH|PRIVATE) )' \
+  &amp;&amp; hit "possible secret in staged diff"
+echo "$d" | grep -Eq 'sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}' \
+  &amp;&amp; hit "live-looking credential in staged diff"
+echo "$d" | grep -Eq '^\+.*(rm -rf /|DROP (TABLE|DATABASE)|TRUNCATE |shutil\.rmtree)' \
+  &amp;&amp; hit "destructive command added"
+echo "$d" | grep -Eq '^\+.*(except Exception: *pass|except: *$|catch *\{ *\})' \
+  &amp;&amp; hit "empty exception handler added"
+
+[ "$fail" -eq 0 ] || { echo "Override with: git commit --no-verify"; exit 1; }</code></pre>
+
+<h3>Verify the hook works before trusting it</h3>
+<p>One runnable self-check. A guardrail you have never seen fire is a guardrail you are guessing about:</p>
+<pre><code>echo 'AWS_SECRET=AKIAIOSFODNN7EXAMPLE' &gt;&gt; /tmp/probe.txt &amp;&amp; cp /tmp/probe.txt ./probe.txt
+git add probe.txt &amp;&amp; git commit -m probe    # must be BLOCKED
+git reset HEAD probe.txt &amp;&amp; rm probe.txt</code></pre>
+<p>If that commit succeeds, the hook is not executable. <code>chmod +x .git/hooks/pre-commit</code> and retry.</p>
+
+<hr>
+
+<h2>The 60-second loop</h2>
+<p>Run this after every AI-generated change, before you commit:</p>
+<pre><code>1. git add -A -N &amp;&amp; git diff --stat      # scope sane?
+2. git diff -U0 | rg "^-" | rg -v "^---"  # what disappeared?
+3. deps added → npm view each one
+4. rg for secrets / rm -rf / empty catch
+5. git stash → tests fail? → stash pop → tests pass?
+6. run the thing yourself, once, by hand</code></pre>
+<p>Step 6 is not optional. Every check above is static; none of them prove the program does what you wanted.</p>
+
+<h2>When to throw it away</h2>
+<p>Hard rule, and it will save you more time than any of the checks: <strong>if the model has been wrong about the same thing twice, stop iterating.</strong> A third attempt from the same context inherits the same wrong assumption. Either restate the problem from scratch in a clean session with the constraint that was missing, or write the twelve lines yourself.</p>
+<p>The cost of AI-assisted code is not generation. It's review. Nine checks and a hook keep that cost bounded.</p>
+
+<div class="cta">
+<p><strong>That's all nine, free, above.</strong> If you'd rather have it as one message in your inbox &mdash; the commands, the hook, and the loop, in plain text you can paste from &mdash; ask and we'll send it.</p>
+<a class="btn" href="mailto:penloomstudio@gmail.com?subject=Email%20me%20the%20AI%20Code%20Guardrails&amp;body=Send%20me%20the%20full%20AI%20Code%20Guardrails%20content%20(nine%20checks%20%2B%20the%20pre-commit%20hook).">Email me the full guardrails &rarr;</a>
+</div>
+
+<footer>
+<p><strong>Cogloom</strong> &mdash; AI, explained like you're smart, not technical. No benchmark claims and no "catches 90% of bugs" statistics appear on this page on purpose: every command here is real, runs as written, and you can verify it in your own repo in under a minute &mdash; including the self-check that proves the shipped hook actually blocks a commit.</p>
+<p><a href="https://penloomstudio.com/notes/how-to-check-an-ai-answer/">How we check an AI answer before we repeat it &rarr;</a></p>
+</footer>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

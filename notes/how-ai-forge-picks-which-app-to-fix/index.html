@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How AI Forge Decides Which App Complaint Is Worth Fixing</title>
+<link rel="canonical" href="https://penloomstudio.com/notes/how-ai-forge-picks-which-app-to-fix/">
+<meta name="description" content="AI Forge doesn't guess what to build. Here's the actual research method: mine one- and two-star reviews, rank complaints by frequency and severity, and build only the fix.">
+<meta property="og:title" content="How AI Forge Decides Which App Complaint Is Worth Fixing">
+<meta property="og:description" content="The research method behind every AI Forge build, with the real review counts.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/notes/how-ai-forge-picks-which-app-to-fix/">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #0b0f16; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 1rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+  a { color: #1AA9C2; } @media (prefers-color-scheme: dark) { a { color: #33D6F0; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #94a3b8; font-style: italic; }
+  ul, ol { padding-left: 1.15rem; } li { margin: .45rem 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
+  th, td { text-align: left; padding: .4rem .6rem; border-bottom: 1px solid #94a3b8; }
+  .cta { margin: 2.5rem 0 0; padding: 1.1rem 1.25rem; border: 1px solid #94a3b8; border-radius: 10px; }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Article",
+   "headline": "How AI Forge Decides Which App Complaint Is Worth Fixing",
+   "name": "How AI Forge Decides Which App Complaint Is Worth Fixing",
+   "description": "The research method behind every AI Forge build: mine one- and two-star reviews, rank complaints by frequency and severity, and build only the fix.",
+   "url": "https://penloomstudio.com/notes/how-ai-forge-picks-which-app-to-fix/",
+   "inLanguage": "en-US",
+   "publisher": { "@type": "Organization", "name": "AI Forge" }
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<p class="kicker">AI Forge &middot; Notes</p>
+<h1>How AI Forge Decides Which App Complaint Is Worth Fixing</h1>
+<p>Most "AI-built app" pitches start with a feature list. Ours starts with a spreadsheet of other people's one-star reviews. Before a single line of code gets written, we go find out — in the reviewer's own words — exactly what's broken about the category we're about to build in. Here's the method, and what it actually turned up the first two times we ran it.</p>
+
+<h2>Step 1: read the reviews nobody else reads</h2>
+<p>App-store reviews are a strange kind of public record: brutally honest, timestamped, and almost never read past the star average. We pull the one- and two-star reviews for the leading apps in a category and read them in full, not just skim for keywords. A star rating tells you someone is unhappy. The review text tells you exactly why, and "why" is the only part you can build against.</p>
+
+<h2>Step 2: only count what clears a real bar</h2>
+<p>A single angry review isn't a product requirement — it's an anecdote. We only act on a complaint cluster once it clears an evidence bar: a minimum number of independent reviews, making the same specific complaint, at a meaningful share of everything we could classify. One person's pet peeve doesn't get a feature. A pattern across hundreds of strangers does.</p>
+
+<h2>Two runs, so far</h2>
+<table>
+<tr><th>Category researched</th><th>Reviews read</th><th>Loudest finding</th></tr>
+<tr><td>History trivia apps</td><td>661</td><td>96% of classifiable complaints were about advertising</td></tr>
+<tr><td>Habit-tracking apps</td><td>309</td><td>Price/value, reliability, and a missing feature — three clusters, each over 15% of classified reviews</td></tr>
+</table>
+<p>A few of the actual quotes, because the whole point of this method is that we don't paraphrase away the signal:</p>
+<blockquote>"An ad after almost every question."</blockquote>
+<blockquote>"First off there's immediately a paywall/fee that should just be in the App Store rather than leverage the sunk cost fallacy."</blockquote>
+<blockquote>"Great app but it deletes your progress if you change your goals. I'm tired of missing out on my history."</blockquote>
+
+<h2>Step 3: build only what the evidence supports</h2>
+<p>Once a cluster clears the bar, every resulting feature has to trace back to a specific complaint. No bonus features, no "while we're at it." If a complaint mentions data loss on editing a goal, the fix is "editing a goal never touches recorded history" — not a redesign of the whole app around it.</p>
+
+<h2>Step 4: prove it, don't just claim it</h2>
+<p>Each build ships with a written self-check that asserts the promises directly — that there's no purchase gate in the code, that editing a goal can't delete a day, that a 500-item stress test doesn't break anything. The check reads the logic straight out of the shipped file, so the test can't quietly drift away from what the product actually does.</p>
+
+<h2>Where things stand</h2>
+<p>Both builds above are finished and self-checked. Neither is published yet — new software from AI Forge goes through a human approval gate before anyone outside the company can use it, the same as everything else Penloom ships. This note exists so the method is visible before the product is, which is the opposite of the usual order and, we think, the more honest one.</p>
+
+<div class="cta">
+<p>More on what we're building and why, at <a href="https://penloomstudio.com/landing-ai-forge-motion.html"><strong>AI Forge</strong></a>.</p>
+<p>More notes and guides at <a href="https://penloomstudio.com/">penloomstudio.com</a>.</p>
+</div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"ffe4d40f501441d89e79d8f3881f8bc2"}'></script>
+</body>
+</html>

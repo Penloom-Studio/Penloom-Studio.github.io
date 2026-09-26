@@ -1,0 +1,353 @@
+/*! penloom.css — the shared design layer for every Penloom Studio site.
+ *  One file, no build step, no external requests. Per-brand pages override the accent pair
+ *  (--a1/--a2) and nothing else; that is what makes twelve brands look like one house.
+ */
+
+/* ── tokens ──────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+
+  --ink: #06070b;
+  --ink-2: #0b0d14;
+  --panel: #10131c;
+  --panel-2: #151926;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --text: #f3f5fa;
+  --dim: #98a1b8;
+  --faint: #6b7488;
+
+  /* brand accent pair — the only thing a brand page needs to change */
+  --a1: #6366f1;
+  --a2: #a855f7;
+  --on-accent: #ffffff;
+
+  --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter,
+    Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* fluid type scale */
+  --t-display: clamp(2.75rem, 1.2rem + 6.4vw, 6rem);
+  --t-h2: clamp(2rem, 1.2rem + 2.6vw, 3.25rem);
+  --t-h3: clamp(1.25rem, 1rem + 0.9vw, 1.75rem);
+  --t-lead: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  --t-body: 1rem;
+  --t-small: 0.875rem;
+  --t-micro: 0.75rem;
+
+  --r-sm: 10px;
+  --r: 16px;
+  --r-lg: 24px;
+  --r-pill: 999px;
+
+  --pad: clamp(20px, 4vw, 40px);
+  --gap: clamp(14px, 1.6vw, 22px);
+  --section: clamp(64px, 9vw, 132px);
+  --wrap: 1240px;
+
+  --shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.9);
+  --shadow-lift: 0 40px 90px -30px rgba(0, 0, 0, 0.95);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ── reset ───────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+* { margin: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* atmosphere: two accent auroras + a fine grain, so flat panels never read as flat */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 520px at 78% -8%, color-mix(in oklab, var(--a2) 22%, transparent), transparent 62%),
+    radial-gradient(760px 460px at -6% 12%, color-mix(in oklab, var(--a1) 16%, transparent), transparent 58%);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.32;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+img, svg, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--a1);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection { background: color-mix(in oklab, var(--a1) 55%, transparent); color: #fff; }
+
+/* ── layout ──────────────────────────────────────────────────────────────── */
+.wrap { width: 100%; max-width: var(--wrap); margin-inline: auto; padding-inline: var(--pad); }
+.section { padding-block: var(--section); position: relative; }
+.stack { display: flex; flex-direction: column; gap: var(--gap); }
+
+/* ── type ────────────────────────────────────────────────────────────────── */
+h1, h2, h3 { font-weight: 800; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; }
+h1 { font-size: var(--t-display); }
+h2 { font-size: var(--t-h2); }
+h3 { font-size: var(--t-h3); line-height: 1.15; letter-spacing: -0.02em; }
+
+.grad {
+  background: linear-gradient(96deg, var(--a1), var(--a2) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lead { font-size: var(--t-lead); color: var(--dim); max-width: 56ch; text-wrap: pretty; }
+.muted { color: var(--dim); }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.eyebrow::before {
+  content: "";
+  width: 26px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--a1), transparent);
+}
+
+/* ── nav ─────────────────────────────────────────────────────────────────── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(14px) saturate(140%);
+  background: color-mix(in oklab, var(--ink) 78%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 66px; gap: 18px; }
+.wordmark { display: flex; align-items: baseline; gap: 9px; font-weight: 800; letter-spacing: -0.02em; font-size: 1.05rem; }
+.wordmark small { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); }
+.navlinks { display: flex; align-items: center; gap: 6px; }
+.navlinks a {
+  padding: 8px 12px;
+  border-radius: var(--r-pill);
+  font-size: var(--t-small);
+  color: var(--dim);
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.navlinks a:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); }
+@media (max-width: 640px) { .navlinks a.hide-sm { display: none; } }
+
+/* ── buttons ─────────────────────────────────────────────────────────────── */
+.btn {
+  --btn-bg: linear-gradient(96deg, var(--a1), var(--a2));
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: var(--btn-bg);
+  color: var(--on-accent);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), filter 0.25s var(--ease);
+  box-shadow: 0 18px 40px -20px color-mix(in oklab, var(--a1) 90%, transparent);
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 26px 50px -22px color-mix(in oklab, var(--a1) 95%, transparent); }
+.btn .arw { transition: transform 0.25s var(--ease); }
+.btn:hover .arw { transform: translateX(5px); }
+
+.btn.ghost {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--line-strong);
+  color: var(--text);
+  box-shadow: none;
+}
+.btn.ghost:hover { background: rgba(255, 255, 255, 0.09); }
+
+/* ── cards / bento ───────────────────────────────────────────────────────── */
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); }
+.col-3 { grid-column: span 3; }
+.col-4 { grid-column: span 4; }
+.col-6 { grid-column: span 6; }
+.col-8 { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
+
+.card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(20px, 2.4vw, 30px);
+  min-height: 220px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+/* accent wash + a hairline that lights up on hover */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+  background: radial-gradient(120% 130% at 100% 0%, color-mix(in oklab, var(--a2) 40%, transparent), transparent 58%);
+  transition: opacity 0.4s var(--ease), transform 0.6s var(--ease);
+}
+.card:hover { transform: translateY(-6px); border-color: var(--line-strong); box-shadow: var(--shadow-lift); }
+.card:hover::before { opacity: 0.95; transform: scale(1.06); }
+
+.card .kicker {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text) 62%, transparent);
+  margin-bottom: auto;
+}
+.card h3 { margin-top: 14px; }
+.card p { color: color-mix(in oklab, var(--text) 74%, transparent); font-size: 0.95rem; max-width: 46ch; }
+.card .go { margin-top: 14px; display: inline-flex; align-items: center; gap: 9px; font-weight: 700; font-size: 0.93rem; }
+.card .go .arw { transition: transform 0.3s var(--ease); }
+.card:hover .go .arw { transform: translateX(6px); }
+.card.tall { min-height: 340px; }
+.card .price { font-family: var(--mono); font-size: 0.95rem; color: var(--text); }
+
+/* per-brand card accents, so one grid can carry the whole house */
+.a-ai { --a1: #6366f1; --a2: #a855f7; }
+.a-smb { --a1: #f59e0b; --a2: #f97316; }
+.a-hist { --a1: #e11d48; --a2: #7c1d3f; }
+.a-law { --a1: #38bdf8; --a2: #2563eb; }
+.a-faith { --a1: #eab308; --a2: #b45309; }
+.a-grit { --a1: #f43f5e; --a2: #b91c1c; }
+.a-pet { --a1: #34d399; --a2: #0ea5e9; }
+.a-sleep { --a1: #818cf8; --a2: #1e293b; }
+
+/* ── page furniture shared by every brand landing ────────────────────────── */
+.hero { padding-block: clamp(72px, 11vw, 150px) clamp(56px, 8vw, 110px); }
+.hero h1 { max-width: 16ch; }
+.hero .lead { margin-top: 26px; }
+.hero .cta,
+.band .cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+.hero .pills { margin-top: 38px; }
+
+.rule { height: 1px; background: linear-gradient(90deg, var(--line-strong), transparent); }
+
+.sechead { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 34px; }
+.sechead h2 { max-width: 20ch; }
+.sechead .lead { font-size: var(--t-body); max-width: 46ch; }
+
+.groupname {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 44px 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.band {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: linear-gradient(150deg, var(--panel-2), var(--ink-2));
+  padding: clamp(28px, 5vw, 60px);
+  text-align: center;
+}
+.band h2 { margin-bottom: 16px; }
+.band .lead { margin-inline: auto; }
+.band .cta { justify-content: center; }
+
+.note { font-size: var(--t-small); color: var(--faint); }
+.note a { color: var(--a2); }
+
+.checks { list-style: none; padding: 0; display: grid; gap: 8px; font-size: 0.93rem; color: var(--dim); }
+.checks li { display: flex; gap: 10px; align-items: flex-start; }
+.checks li::before { content: "✓"; color: var(--a1); font-weight: 800; }
+
+.free { color: #34d399; font-weight: 700; font-family: var(--mono); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.soon { display: inline-block; font-size: var(--t-micro); color: var(--faint); border: 1px dashed var(--line-strong); border-radius: var(--r-sm); padding: 3px 9px; }
+
+.card img { border-radius: var(--r-sm); border: 1px solid var(--line); margin-bottom: 4px; }
+.card .buy { margin-top: 12px; align-self: flex-start; }
+
+/* ── pills / trust ───────────────────────────────────────────────────────── */
+.pills { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--dim);
+  font-size: var(--t-small);
+}
+.pill b { color: var(--text); font-weight: 650; }
+
+/* ── footer ──────────────────────────────────────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--line);
+  padding-block: 48px 72px;
+  color: var(--faint);
+  font-size: var(--t-small);
+}
+.footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; justify-content: space-between; }
+.footer a:hover { color: var(--text); }
+
+/* ── canvas-fx hosts ─────────────────────────────────────────────────────── */
+/* An fx host must clip its own canvas and never trap clicks meant for the page. */
+[data-fx] { position: relative; overflow: hidden; }
+[data-fx] > canvas { z-index: 0; }
+[data-fx] > div { position: relative; z-index: 1; }
+
+/* ── responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .col-3, .col-4 { grid-column: span 6; }
+  .col-8 { grid-column: span 12; }
+}
+@media (max-width: 620px) {
+  .grid { gap: 12px; }
+  .col-3, .col-4, .col-6, .col-8 { grid-column: span 12; }
+  .card { min-height: 180px; }
+  .card.tall { min-height: 260px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

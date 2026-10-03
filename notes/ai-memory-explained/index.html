@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Memory Explained: What ChatGPT, Claude, and Gemini Actually Remember About You</title>
+<link rel="canonical" href="https://penloomstudio.com/notes/ai-memory-explained/">
+<meta name="description" content="A plain-English walkthrough of how ChatGPT, Claude, and Gemini &quot;remember&quot; you — what they store, where the settings live, and how to turn it off.">
+<meta property="og:title" content="AI Memory Explained: What ChatGPT, Claude, and Gemini Actually Remember About You">
+<meta property="og:description" content="A plain-English walkthrough of how ChatGPT, Claude, and Gemini &quot;remember&quot; you — what they store, where the settings live, and how to turn it off.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/notes/ai-memory-explained/">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #16181c; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 1rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+  a { color: #2563eb; } @media (prefers-color-scheme: dark) { a { color: #7aa2ff; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #94a3b8; font-style: italic; }
+  pre { background: #f4f4f5; padding: .9rem 1rem; border-radius: 8px; overflow-x: auto; font-size: .9rem; white-space: pre-wrap; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { pre { background: #23262d; } }
+  .cta { margin: 2.5rem 0 0; padding: 1.1rem 1.25rem; border: 1px solid #94a3b8; border-radius: 10px; }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+  ul, ol { padding-left: 1.3rem; }
+  li { margin: .3rem 0; }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "AI Memory Explained: What ChatGPT, Claude, and Gemini Actually Remember About You",
+ "name": "AI Memory Explained: What ChatGPT, Claude, and Gemini Actually Remember About You",
+ "description": "A plain-English walkthrough of how ChatGPT, Claude, and Gemini remember you — what they store, where the settings live, and how to turn it off.",
+ "url": "https://penloomstudio.com/notes/ai-memory-explained/",
+ "inLanguage": "en-US",
+ "publisher": { "@type": "Organization", "name": "Cogloom" }
+}
+</script>
+</head>
+<body>
+<p class="kicker">Penloom Studio &middot; Notes</p>
+<h1>AI Memory Explained: What ChatGPT, Claude, and Gemini Actually Remember About You</h1>
+<p>If you've ever had ChatGPT bring up something from three conversations ago and wondered "wait, how does it know that?" &mdash; you're not imagining it. All three of the big assistants now have some form of memory. None of them work quite the way people assume, and none of them are recording a transcript of everything you've ever typed.</p>
+<p>Here's what's actually happening under the hood, tool by tool, and where to go turn it off if you'd rather it forgot you entirely.</p>
+
+<h2>The short version: they don't save conversations, they save summaries</h2>
+<p>This is the part that surprises people most: ChatGPT, Claude, and Gemini all describe their memory the same way &mdash; as extracted facts and preferences, not a recording.</p>
+<ul>
+  <li><strong>ChatGPT</strong> runs an auto-updating <strong>memory summary</strong>: a running synthesis of what it's picked up from your chats, files, and connected apps. You can edit it directly &mdash; either by typing a correction into the box at the bottom of the memory settings screen, or by highlighting text in the summary and correcting it on the spot. OpenAI's own help page notes the summary "may not include everything ChatGPT remembers," and suggests just asking it directly. There's also an older system still available &mdash; explicit "saved memories" you or the model chose to save, plus a "reference chat history" pattern-recall feature with no list view &mdash; but that's now a legacy, opt-in path reachable from inside the memory settings, not the default experience.</li>
+  <li><strong>Claude</strong> builds a memory summary and per-topic files from your chats &mdash; Anthropic is explicit that this is "not a verbatim transcript."</li>
+  <li><strong>Gemini</strong> calls its version "Personal context" &mdash; it learns from past chats to personalize replies. Separately, there's a "Saved info" list for things you've stated outright, like your name or your job.</li>
+</ul>
+<p>Same idea, three different names. None of them hand you a searchable chat log &mdash; they hand you distilled facts, which is also why editing a memory sometimes feels like correcting a person's impression of you rather than deleting a file.</p>
+
+<h2>ChatGPT: where the controls live</h2>
+<p>Settings path: <strong>profile menu &rarr; Settings &rarr; Personalization &rarr; Memory</strong>. You can also just type "what do you remember about me?" into a chat and ChatGPT will tell you.</p>
+<p>A couple of things worth knowing before you go looking:</p>
+<ul>
+  <li>If you switch on <strong>Temporary Chat</strong>, OpenAI's own memory FAQ states plainly that temporary chats "do not use existing memories or create new memories." It's a clean, memory-free lane for a one-off conversation.</li>
+  <li>If you delete something from saved memories, OpenAI's FAQ notes it may still sit in an internal log for up to 30 days &mdash; worth knowing if "delete" is doing real work for you, not just tidying the visible list.</li>
+</ul>
+
+<h2>Claude: memory by topic, with sensitive subjects off by default</h2>
+<p>Claude's memory lives at <strong>Settings &rarr; Memory &rarr; Topics</strong>. Instead of one blob of text, it's organized as a set of topic files &mdash; open one, use the prompt bar to correct it, or delete the whole topic. There's also a "Pause memory" option if you want it to stop learning temporarily without wiping what's already there, and a full "Reset memory" if you want a clean slate.</p>
+<p>Two defaults worth flagging:</p>
+<ul>
+  <li>Claude excludes sensitive subjects &mdash; health, race, ethnicity, religion, politics, gender identity &mdash; from memory <strong>by default</strong>. There's a toggle if you actually want it remembering those.</li>
+  <li><strong>Incognito chats</strong> never save to memory at all. Nothing said inside an incognito conversation gets added to what Claude recalls later &mdash; though an incognito chat can still draw on memory that already existed from your earlier, ordinary chats. This has been available on every Claude plan, including free, since it first launched.</li>
+</ul>
+<p>Memory now also carries across into <strong>Claude Cowork</strong>, so a preference you set in a normal chat follows you there too.</p>
+
+<h2>Gemini: find it under "Personal Intelligence"</h2>
+<p>If you're hunting for Gemini's memory settings, look for <strong>Personal Intelligence</strong> in the menu &mdash; that's where they live. On Android, the path is Menu &rarr; profile picture/initial &rarr; Personal Intelligence &rarr; toggle Memory.</p>
+<p>A few conditions gate whether you'll even see this option:</p>
+<ul>
+  <li>You need to be 18 or older.</li>
+  <li>It has to be a personal Google Account &mdash; not a work, school, or supervised account.</li>
+  <li>"Keep Activity" needs to be turned on.</li>
+</ul>
+<p>If you want to check what it's stored, ask directly &mdash; "what do you remember about me?" surfaces your Saved Info. And same as the other two, there's an escape hatch: a <strong>Temporary Chat</strong> that Google states plainly it won't use to remember or personalize anything.</p>
+
+<h2>The pattern across all three</h2>
+<p>Strip away the different names and the shape is identical everywhere:</p>
+<ol>
+  <li>There's an ambient, auto-updating summary of what the assistant has picked up about you.</li>
+  <li>There's a way to see and edit that summary directly, in plain language.</li>
+  <li>There's a "don't remember this one" mode for a single conversation (Temporary Chat / Incognito).</li>
+  <li>There's a full reset if you want to start over.</li>
+</ol>
+<p>Once you know that shape, you can find the equivalent controls in pretty much any assistant that ships memory &mdash; the menu labels move, the underlying idea doesn't.</p>
+
+<div class="cta">
+<p>If you want the rest of this laid out the same way &mdash; plain English, screenshots, no jargon &mdash; <a href="https://penloomstudio.com/ai-basics-chatgpt.html"><strong>Class 1 of AI Basics</strong></a> starts at $9 and walks through ChatGPT from the very first screen.</p>
+</div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"1452d068a14945f28d17e115765f7a18"}'></script>
+</body>
+</html>

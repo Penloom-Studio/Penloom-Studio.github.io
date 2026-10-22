@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which of the agent&#x27;s 16 commits broke it? Let `git bisect run` find it in 4 test runs — cogloom</title>
+<link rel="canonical" href="https://penloomstudio.com/cogloom/lessons/git-bisect-run-find-bad-ai-commit.html">
+<meta name="description" content="An agent made 16 commits, and somewhere along the way add 2 3 started returning -1. I gave git bisect one good commit, one bad commit and a 3-line…">
+<meta property="og:title" content="Which of the agent&#x27;s 16 commits broke it? Let `git bisect run` find it in 4 test runs">
+<meta property="og:description" content="An agent made 16 commits, and somewhere along the way add 2 3 started returning -1. I gave git bisect one good commit, one bad commit and a 3-line…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/cogloom/lessons/git-bisect-run-find-bad-ai-commit.html">
+<meta property="og:image" content="https://penloomstudio.com/og/cogloom.png">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #0d1117; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 .4rem; }
+  h2 { font-size: 1.25rem; margin: 2.2rem 0 .5rem; }
+  h3 { font-size: 1.05rem; margin: 1.5rem 0 .4rem; }
+  a { color: #4f46e5; } @media (prefers-color-scheme: dark) { a { color: #8b8ff5; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #6366F1; font-style: italic; }
+  pre { background: #f4f4f5; padding: .9rem 1rem; border-radius: 8px; overflow-x: auto;
+    font-size: .87rem; white-space: pre-wrap; }
+  code { font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { pre { background: #161b22; } }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .2rem; }
+  .where { color: #64748b; font-size: .95rem; margin: 0 0 1.4rem; }
+  .dek { font-size: 1.08rem; color: #475569; margin: 0 0 1.6rem; }
+  @media (prefers-color-scheme: dark) { .dek { color: #a5b0c2; } }
+  .cta { margin: 2.2rem 0; padding: 1.1rem 1.25rem; border: 1px solid #6366F1; border-radius: 10px; }
+  .cta p { margin: 0 0 .8rem; }
+  .btn { display: inline-block; background: #6366F1; color: #fff; text-decoration: none;
+    font-weight: 600; padding: .65rem 1.1rem; border-radius: 8px; }
+  .btn:hover { background: #4f46e5; }
+  .rule { border-left: 3px solid #34D399; padding: .1rem 1rem; margin: 1.4rem 0; }
+  ul, ol { padding-left: 1.3rem; } li { margin: .35rem 0; }
+  hr { border: 0; border-top: 1px solid #94a3b8; margin: 2.4rem 0; }
+  footer { margin-top: 2.6rem; padding-top: 1.2rem; border-top: 1px solid #94a3b8;
+    color: #64748b; font-size: .93rem; }
+</style>
+</head>
+<body>
+<p class="where"><a href="/landing-cogloom-motion.html">&larr; cogloom</a> &middot; <a href="/cogloom/lessons/">All free lessons</a></p>
+<p class="kicker">cogloom &middot; Free lesson</p>
+<h1>Which of the agent&#x27;s 16 commits broke it? Let `git bisect run` find it in 4 test runs</h1>
+<p><strong>Result first:</strong> an agent made 16 commits, and somewhere along the way <code>add 2 3</code> started returning <code>-1</code>. I gave <code>git bisect</code> one good commit, one bad commit and a 3-line test script. It ran the test <strong>4 times</strong> and named the first bad commit, "commit 11", which is exactly the one where the bug was planted.</p>
+<pre><code class="language-bash">printf '#!/usr/bin/env bash\nsource ./calc.sh\n[ &quot;$(add 2 3)&quot; = 5 ]\n' &gt; ../test.sh &amp;&amp; chmod +x ../test.sh
+git bisect start HEAD &lt;known-good-commit&gt;
+git bisect run ../test.sh
+git bisect reset          # go back to where you started
+</code></pre>
+<p><strong>The rules for the test script (from the git docs):</strong> it "should exit with code 0 if the current source code is good/old, and exit with a code between 1 and 127 (inclusive), except 125, if the current source code is bad/new." Exit code <strong>125</strong> means "this commit can't be tested, skip it." "Any other exit code will abort the bisect process."</p>
+<p><strong>Why this suits agent workflows:</strong>
+- Agents make many small commits, and bisect is a binary search, so the number of test runs grows slowly as the history grows (here 4 runs for 16 commits).
+- Keep the test script <strong>outside</strong> the repo or untracked, as <code>../test.sh</code> is here, so checking out old commits doesn't change the test itself.
+- Use exit 125 for commits that don't build, rather than marking them bad.</p>
+<p><strong>Do this now:</strong> next time an agent session ends with a regression, write the one-line check first, then run <code>git bisect run</code> before reading any diffs.</p>
+<h2>Sources</h2>
+<ul>
+<li>git documentation, git-bisect: https://git-scm.com/docs/git-bisect</li>
+</ul>
+<hr>
+<p class="where">Also on dev.to: <a href="https://dev.to/penloom_studio_829b7817d3/which-of-the-agents-16-commits-broke-it-let-git-bisect-run-find-it-in-4-test-runs-3ih2">read this lesson on dev.to</a>. More free lessons: <a href="/cogloom/lessons/">cogloom lessons index</a>.</p>
+</body>
+</html>

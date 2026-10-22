@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run two AI coding agents at once without them overwriting each other: `git worktree` — cogloom</title>
+<link rel="canonical" href="https://penloomstudio.com/cogloom/lessons/git-worktree-parallel-ai-agents.html">
+<meta name="description" content="Two &quot;agents&quot; edited the same file, app.txt, at the same moment, each in its own folder on its own branch. The main checkout stayed untouched. When I…">
+<meta property="og:title" content="Run two AI coding agents at once without them overwriting each other: `git worktree`">
+<meta property="og:description" content="Two &quot;agents&quot; edited the same file, app.txt, at the same moment, each in its own folder on its own branch. The main checkout stayed untouched. When I…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/cogloom/lessons/git-worktree-parallel-ai-agents.html">
+<meta property="og:image" content="https://penloomstudio.com/og/cogloom.png">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #0d1117; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 .4rem; }
+  h2 { font-size: 1.25rem; margin: 2.2rem 0 .5rem; }
+  h3 { font-size: 1.05rem; margin: 1.5rem 0 .4rem; }
+  a { color: #4f46e5; } @media (prefers-color-scheme: dark) { a { color: #8b8ff5; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #6366F1; font-style: italic; }
+  pre { background: #f4f4f5; padding: .9rem 1rem; border-radius: 8px; overflow-x: auto;
+    font-size: .87rem; white-space: pre-wrap; }
+  code { font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { pre { background: #161b22; } }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .2rem; }
+  .where { color: #64748b; font-size: .95rem; margin: 0 0 1.4rem; }
+  .dek { font-size: 1.08rem; color: #475569; margin: 0 0 1.6rem; }
+  @media (prefers-color-scheme: dark) { .dek { color: #a5b0c2; } }
+  .cta { margin: 2.2rem 0; padding: 1.1rem 1.25rem; border: 1px solid #6366F1; border-radius: 10px; }
+  .cta p { margin: 0 0 .8rem; }
+  .btn { display: inline-block; background: #6366F1; color: #fff; text-decoration: none;
+    font-weight: 600; padding: .65rem 1.1rem; border-radius: 8px; }
+  .btn:hover { background: #4f46e5; }
+  .rule { border-left: 3px solid #34D399; padding: .1rem 1rem; margin: 1.4rem 0; }
+  ul, ol { padding-left: 1.3rem; } li { margin: .35rem 0; }
+  hr { border: 0; border-top: 1px solid #94a3b8; margin: 2.4rem 0; }
+  footer { margin-top: 2.6rem; padding-top: 1.2rem; border-top: 1px solid #94a3b8;
+    color: #64748b; font-size: .93rem; }
+</style>
+</head>
+<body>
+<p class="where"><a href="/landing-cogloom-motion.html">&larr; cogloom</a> &middot; <a href="/cogloom/lessons/">All free lessons</a></p>
+<p class="kicker">cogloom &middot; Free lesson</p>
+<h1>Run two AI coding agents at once without them overwriting each other: `git worktree`</h1>
+<p><strong>Result first:</strong> two "agents" edited the same file, <code>app.txt</code>, at the same moment, each in its own folder on its own branch. The main checkout stayed untouched. When I tried to check out the same branch a second time, git refused: <code>fatal: 'agent-a' is already used by worktree</code>.</p>
+<pre><code class="language-bash">git worktree add -b agent-a ../wt-a      # folder + branch for agent A
+git worktree add -b agent-b ../wt-b      # folder + branch for agent B
+git worktree list                        # see all of them
+git worktree remove ../wt-a              # clean up when A's branch is merged
+</code></pre>
+<p><strong>What the docs say:</strong> "A git repository can support multiple working trees, allowing you to check out more than one branch at a time." git also has a safeguard: by default it won't create a worktree for a branch that "is already checked out by another worktree" (<code>--force</code> overrides that).</p>
+<p><strong>Why this matters for agents:</strong>
+1. Give each agent its own worktree and branch. They never share uncommitted files.
+2. Review each branch as a normal diff or pull request, one at a time.
+3. All worktrees share one repository, so commits made in one are visible to the others without pushing. That saves disk space compared with full clones, but it also means a careless <code>git branch -D</code> in one folder affects every worktree.</p>
+<p><strong>Do this now:</strong> before your next multi-agent session, create one worktree per agent and point each agent at its own folder.</p>
+<h2>Sources</h2>
+<ul>
+<li>git documentation, git-worktree: https://git-scm.com/docs/git-worktree</li>
+</ul>
+<hr>
+<p class="where">Also on dev.to: <a href="https://dev.to/penloom_studio_829b7817d3/run-two-ai-coding-agents-at-once-without-them-overwriting-each-other-git-worktree-474k">read this lesson on dev.to</a>. More free lessons: <a href="/cogloom/lessons/">cogloom lessons index</a>.</p>
+</body>
+</html>

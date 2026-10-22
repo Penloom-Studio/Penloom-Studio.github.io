@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your AI suggested `pip install` for a package that doesn&#x27;t exist. Check before you install. — cogloom</title>
+<link rel="canonical" href="https://penloomstudio.com/cogloom/lessons/check-ai-suggested-packages-exist.html">
+<meta name="description" content="A made-up but plausible package name, fastjson-schema-validator-pro-xq7, returns &quot;No matching distribution found&quot; from pip and E404 from npm. A real…">
+<meta property="og:title" content="Your AI suggested `pip install` for a package that doesn&#x27;t exist. Check before you install.">
+<meta property="og:description" content="A made-up but plausible package name, fastjson-schema-validator-pro-xq7, returns &quot;No matching distribution found&quot; from pip and E404 from npm. A real…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://penloomstudio.com/cogloom/lessons/check-ai-suggested-packages-exist.html">
+<meta property="og:image" content="https://penloomstudio.com/og/cogloom.png">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 42rem; margin: 0 auto; padding: 2rem 1.15rem 4rem;
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #0d1117; } }
+  h1 { font-size: 1.8rem; line-height: 1.2; margin: .2rem 0 .4rem; }
+  h2 { font-size: 1.25rem; margin: 2.2rem 0 .5rem; }
+  h3 { font-size: 1.05rem; margin: 1.5rem 0 .4rem; }
+  a { color: #4f46e5; } @media (prefers-color-scheme: dark) { a { color: #8b8ff5; } }
+  blockquote { margin: 1.5rem 0; padding: .1rem 1rem; border-left: 3px solid #6366F1; font-style: italic; }
+  pre { background: #f4f4f5; padding: .9rem 1rem; border-radius: 8px; overflow-x: auto;
+    font-size: .87rem; white-space: pre-wrap; }
+  code { font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { pre { background: #161b22; } }
+  .kicker { color: #64748b; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .2rem; }
+  .where { color: #64748b; font-size: .95rem; margin: 0 0 1.4rem; }
+  .dek { font-size: 1.08rem; color: #475569; margin: 0 0 1.6rem; }
+  @media (prefers-color-scheme: dark) { .dek { color: #a5b0c2; } }
+  .cta { margin: 2.2rem 0; padding: 1.1rem 1.25rem; border: 1px solid #6366F1; border-radius: 10px; }
+  .cta p { margin: 0 0 .8rem; }
+  .btn { display: inline-block; background: #6366F1; color: #fff; text-decoration: none;
+    font-weight: 600; padding: .65rem 1.1rem; border-radius: 8px; }
+  .btn:hover { background: #4f46e5; }
+  .rule { border-left: 3px solid #34D399; padding: .1rem 1rem; margin: 1.4rem 0; }
+  ul, ol { padding-left: 1.3rem; } li { margin: .35rem 0; }
+  hr { border: 0; border-top: 1px solid #94a3b8; margin: 2.4rem 0; }
+  footer { margin-top: 2.6rem; padding-top: 1.2rem; border-top: 1px solid #94a3b8;
+    color: #64748b; font-size: .93rem; }
+</style>
+</head>
+<body>
+<p class="where"><a href="/landing-cogloom-motion.html">&larr; cogloom</a> &middot; <a href="/cogloom/lessons/">All free lessons</a></p>
+<p class="kicker">cogloom &middot; Free lesson</p>
+<h1>Your AI suggested `pip install` for a package that doesn&#x27;t exist. Check before you install.</h1>
+<p><strong>Result first:</strong> a made-up but plausible package name, <code>fastjson-schema-validator-pro-xq7</code>, returns "No matching distribution found" from pip and <code>E404</code> from npm. A real one, <code>requests</code>, lists its versions. That one-second check catches a hallucinated dependency before <code>install</code> ever runs.</p>
+<pre><code class="language-bash">pip index versions &lt;name&gt;                          # lists versions if the package exists on PyPI
+curl -s -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/&lt;name&gt;/json   # 200 = exists, 404 = not on PyPI
+npm view &lt;name&gt; version                            # E404 if the package isn't on the npm registry
+</code></pre>
+<p><strong>Why this matters (peer-reviewed, USENIX Security 2025):</strong> Spracklen et al. generated 576,000 code samples with 16 code-generating LLMs. They found the average share of hallucinated packages was "at least 5.2% for commercial models and 21.7% for open-source models," with 205,474 unique hallucinated names. The authors' repository explains the risk: an attacker can publish a malicious package under a name that models tend to hallucinate.</p>
+<p><strong>So "it exists" is not the same as "it's safe."</strong> A hallucinated name may already have been registered by someone. Before you install a package an AI suggested:
+1. Check that it exists (the commands above).
+2. Check that it is the package you meant: open its project page and source repository from the registry, not from the AI's answer.
+3. Prefer packages you or your team already use, and pin versions in your lockfile.</p>
+<p><strong>Do this now:</strong> add a rule to your agent's instructions: "Before suggesting an install, run the registry check and show its output."</p>
+<h2>Sources</h2>
+<ul>
+<li>USENIX Security 2025 paper page, Spracklen et al., "We Have a Package for You!": https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen</li>
+<li>arXiv version: https://arxiv.org/abs/2406.10279</li>
+<li>Authors' code and data repository (risk explanation): https://github.com/Spracks/PackageHallucination/</li>
+</ul>
+<hr>
+<p class="where">Also on dev.to: <a href="https://dev.to/penloom_studio_829b7817d3/your-ai-suggested-pip-install-for-a-package-that-doesnt-exist-check-before-you-install-3gc3">read this lesson on dev.to</a>. More free lessons: <a href="/cogloom/lessons/">cogloom lessons index</a>.</p>
+</body>
+</html>

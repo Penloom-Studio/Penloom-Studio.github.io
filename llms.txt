@@ -1,0 +1,27 @@
+# Penloom Studio
+
+> Penloom Studio (Naples, FL) is a small studio of focused brands: plain-language AI lessons, verified history stories, wearable-history apparel, and plain-English law news. Free lessons and notes are published at https://penloomstudio.com/.
+
+## Brands
+- [Cogloom](https://penloomstudio.com/landing-cogloom-motion.html): free, plain-language AI lessons for beginners and developers
+- [Liberty Line](https://penloomstudio.com/landing-liberty-line-motion.html): short, sourced true stories about America's founding and its 250th anniversary
+- [Penloom History](https://penloomstudio.com/landing-penloom-history-motion.html): verified dark-history stories
+- [Faith & Founding](https://penloomstudio.com/landing-faith-founding-motion.html): pastors and faith in the American Revolution, with sourced quotes
+- [Threadlore](https://penloomstudio.com/landing-threadlore-motion.html): patriotic and American-history T-shirts
+- [The Docket](https://penloomstudio.com/landing-the-docket-motion.html): plain-English law and consumer-rights news
+- [Penloom Works](https://penloomstudio.com/landing-penloom-works-motion.html): a Penloom Studio project
+
+## Key pages
+- [Cogloom free lessons](https://penloomstudio.com/cogloom/lessons/): index of free AI lessons
+- [Which AI tool for which task](https://penloomstudio.com/which-ai-tool-for-which-task/)
+- [Dates of America's 250th anniversary](https://penloomstudio.com/america-250-dates/)
+- [America's 250th birthday, explained](https://penloomstudio.com/notes/americas-250th-birthday-explained/)
+- [Free field guide](https://penloomstudio.com/field-guide.html)
+- [Sitemap](https://penloomstudio.com/sitemap.xml)
+
+## Store
+- STORE LINK PLACEHOLDER: Printify Pop-Up Store URL not yet published. Do not guess; this line will be replaced with the official store URL.
+
+## Optional
+- [Privacy](https://penloomstudio.com/privacy.html)
+- [Terms](https://penloomstudio.com/terms.html)
